@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#ifndef CLIENT
-#define CLIENT
+#ifndef SERVER
+#define SERVER
 //
 #define WIN32_LEAN_AND_MEAN
 
@@ -32,7 +32,6 @@ double ServerRun()
 	WSADATA wsaData;
     int iResult;
 	int parameters;
-
     SOCKET ListenSocket = INVALID_SOCKET;
     SOCKET ClientSocket = INVALID_SOCKET;
 
@@ -118,15 +117,39 @@ double ServerRun()
     double duration;
     start = std::clock();
 	
-
+	bool inputget = FALSE;
     // Receive until the peer shuts down the connection
 	do {
 		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-		if (iResult > 0) {
-	//		printf("Bytes received: %d\n", iResult);
-	//		printf("Bytes received: %s\n", recvbuf);
+		if (iResult > 0) 
+		{
+			if(iResult == 4)
+			{
+				file.open("C:\\Users\\Andy\\Desktop\\Client\\111.txt", ios::in | ios::binary);	
+				inputget = TRUE;
+			}
+			else if(iResult <= 8)
+			{
+				file.open("C:\\Users\\Andy\\Desktop\\Client\\222.txt", ios::in | ios::binary);	
+				inputget = TRUE;
+			}
+			else if(iResult <= 16)
+			{
+				file.open("C:\\Users\\Andy\\Desktop\\Client\\333.txt", ios::in | ios::binary);
+				inputget = TRUE;
+			}
+			else if(iResult <= 32 )
+			{
+				file.open("C:\\Users\\Andy\\Desktop\\Client\\444.txt", ios::in | ios::binary);	
+				inputget = TRUE;
+			}
+			else
+			{
+				file.open("C:\\Users\\Andy\\Desktop\\Client\\555.txt", ios::in | ios::binary);	
+				inputget = TRUE;
+			}
 
-        }
+		}
         else if (iResult == 0)
             printf("Connection closing...\n");
         else  {
@@ -135,10 +158,8 @@ double ServerRun()
             WSACleanup();
             return 1;
         }
-    } while (iResult > 0);
+    } while ( (iResult > 0) && (inputget = FALSE) );
 
-
-	  file.open("C:\\Users\\CME\\Desktop\\test3.txt", ios::in|ios::binary); //open the file
 
 	  if (file.is_open())
 	  {
@@ -156,20 +177,20 @@ double ServerRun()
 	  }
 
 
-	iResult = send( ConnectSocket, sendbuf, fileSize, 0 );
+	iResult = send( ClientSocket, sendbuf, fileSize, 0 );
     if (iResult == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
+        closesocket(ClientSocket);
         WSACleanup();
         return 1;
     }
 
 	    // shutdown the connection since no more data will be sent
-    iResult = shutdown(ConnectSocket, SD_SEND);
+    iResult = shutdown(ClientSocket, SD_SEND);
 
     if (iResult == SOCKET_ERROR) {
         //printf("shutdown failed with error: %d\n", WSAGetLastError());
-        closesocket(ConnectSocket);
+        closesocket(ClientSocket);
         WSACleanup();
         return 1;
     }
@@ -177,9 +198,9 @@ double ServerRun()
 
 	duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
-	 cout<<"Time:"<< duration <<endl;
-	 cout << "Throughput: " << endl;
 
+	 double throughput = (double)(((double)fileSize/1000000)/duration);
+	cout << "Throughput: " << throughput << endl;
 	 
 	 // shutdown the connection since we're done
     iResult = shutdown(ClientSocket, SD_SEND);
@@ -194,7 +215,7 @@ double ServerRun()
     closesocket(ClientSocket);
     WSACleanup();
 
-    return 0;
+    return throughput;
 	
 }
 

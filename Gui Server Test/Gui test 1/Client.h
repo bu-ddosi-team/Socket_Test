@@ -26,7 +26,7 @@
 
 using namespace std;
 
-
+int parameters;
 
 double ClientRun(int parameters)
 {
@@ -46,9 +46,7 @@ double ClientRun(int parameters)
 	FILE * pFile;
 	pFile = fopen ("fwrite_test.txt", "wb");
     
-    char recvbuf[DEFAULT_BUFLEN];
     int iResult;
-    int recvbuflen = DEFAULT_BUFLEN;
     
     // Initialize Winsock
     iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -63,7 +61,7 @@ double ClientRun(int parameters)
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    iResult = getaddrinfo("192.168.0.1", DEFAULT_PORT, &hints, &result); //"155.41.91.123"
+    iResult = getaddrinfo("155.41.24.99", DEFAULT_PORT, &hints, &result); //"155.41.91.123"
     if ( iResult != 0 ) {
 		printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
@@ -103,8 +101,26 @@ double ClientRun(int parameters)
    	 clock_t start = std::clock();
 	 double duration;
 
-	     // Send an initial buffer
-	 iResult = send( ConnectSocket, sendbuf, fileSize, 0 );
+	 // Send an initial buffer
+	 if(parameters > 100)
+	 {
+		 sendbuf ="fileSize, 0 );iResult = send( ConnectSocket, sendbuf, fileSize, 0 );";
+	 }
+	 else if(parameters > 70)
+	 {
+		 sendbuf ="fourteen1414";
+	 }
+	 else if(parameters > 30)
+	 {
+		 sendbuf ="six66";
+	 }
+	 else
+	 {
+		 sendbuf ="444";
+	 }
+	 
+	 
+	 iResult = send( ConnectSocket, sendbuf, sizeof(sendbuf), 0 );
 
     if (iResult == SOCKET_ERROR) {
         printf("send failed with error: %d\n", WSAGetLastError());

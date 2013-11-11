@@ -1,7 +1,7 @@
 #pragma once
 #include <stdlib.h>
 #include <fstream>
-
+#include "Client.h"
 namespace Guitest1 {
 
 	using namespace System;
@@ -40,24 +40,29 @@ namespace Guitest1 {
 	protected: 
 	private: System::Windows::Forms::TabPage^  tabPage1;
 	private: System::Windows::Forms::GroupBox^  groupBox1;
+	private: System::Windows::Forms::ComboBox^  profileName;
 
 
 
 
-	private: System::Windows::Forms::ComboBox^  comboBox1;
+
 	private: System::Windows::Forms::RadioButton^  radioButton3;
 	private: System::Windows::Forms::RadioButton^  radioButton2;
 	private: System::Windows::Forms::RadioButton^  radioButton1;
 	private: System::Windows::Forms::TabPage^  tabPage2;
 	private: System::Windows::Forms::TabPage^  tabPage3;
-	private: System::Windows::Forms::NumericUpDown^  numericUpDown1;
+	private: System::Windows::Forms::NumericUpDown^  SweepNumber;
+
 	private: System::Windows::Forms::Button^  button2;
 	private: System::Windows::Forms::Button^  button1;
 
 	private: System::Windows::Forms::Label^  label1;
-	private: System::Windows::Forms::NumericUpDown^  numericUpDown4;
-	private: System::Windows::Forms::NumericUpDown^  numericUpDown3;
-	private: System::Windows::Forms::NumericUpDown^  numericUpDown2;
+	private: System::Windows::Forms::NumericUpDown^  StepSize;
+
+	private: System::Windows::Forms::NumericUpDown^  SampleSize;
+
+	private: System::Windows::Forms::NumericUpDown^  SweepDelay;
+
 	private: System::Windows::Forms::Label^  label5;
 	private: System::Windows::Forms::Label^  label4;
 	private: System::Windows::Forms::Label^  label3;
@@ -88,8 +93,10 @@ namespace Guitest1 {
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel2;
 	private: System::Windows::Forms::Label^  label7;
 	private: System::Windows::Forms::Label^  label6;
-	private: System::Windows::Forms::TextBox^  textBox1;
-	private: System::Windows::Forms::ComboBox^  comboBox2;
+	private: System::Windows::Forms::TextBox^  SaveName;
+
+	private: System::Windows::Forms::ComboBox^  SaveLocation;
+
 	private: System::ComponentModel::IContainer^  components;
 
 	protected: 
@@ -124,8 +131,8 @@ namespace Guitest1 {
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
 			this->label7 = (gcnew System::Windows::Forms::Label());
 			this->label6 = (gcnew System::Windows::Forms::Label());
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->comboBox2 = (gcnew System::Windows::Forms::ComboBox());
+			this->SaveName = (gcnew System::Windows::Forms::TextBox());
+			this->SaveLocation = (gcnew System::Windows::Forms::ComboBox());
 			this->chart2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Chart());
 			this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripDropDownButton1 = (gcnew System::Windows::Forms::ToolStripDropDownButton());
@@ -139,13 +146,13 @@ namespace Guitest1 {
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->numericUpDown4 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->numericUpDown3 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->numericUpDown2 = (gcnew System::Windows::Forms::NumericUpDown());
-			this->numericUpDown1 = (gcnew System::Windows::Forms::NumericUpDown());
+			this->StepSize = (gcnew System::Windows::Forms::NumericUpDown());
+			this->SampleSize = (gcnew System::Windows::Forms::NumericUpDown());
+			this->SweepDelay = (gcnew System::Windows::Forms::NumericUpDown());
+			this->SweepNumber = (gcnew System::Windows::Forms::NumericUpDown());
 			this->button2 = (gcnew System::Windows::Forms::Button());
 			this->button1 = (gcnew System::Windows::Forms::Button());
-			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->profileName = (gcnew System::Windows::Forms::ComboBox());
 			this->radioButton3 = (gcnew System::Windows::Forms::RadioButton());
 			this->radioButton2 = (gcnew System::Windows::Forms::RadioButton());
 			this->radioButton1 = (gcnew System::Windows::Forms::RadioButton());
@@ -164,10 +171,10 @@ namespace Guitest1 {
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->chart2))->BeginInit();
 			this->statusStrip1->SuspendLayout();
 			this->groupBox1->SuspendLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown4))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown3))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown2))->BeginInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->StepSize))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->SampleSize))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->SweepDelay))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->SweepNumber))->BeginInit();
 			this->tabPage2->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->BeginInit();
 			this->SuspendLayout();
@@ -187,8 +194,8 @@ namespace Guitest1 {
 			// 
 			this->tabPage1->Controls->Add(this->label7);
 			this->tabPage1->Controls->Add(this->label6);
-			this->tabPage1->Controls->Add(this->textBox1);
-			this->tabPage1->Controls->Add(this->comboBox2);
+			this->tabPage1->Controls->Add(this->SaveName);
+			this->tabPage1->Controls->Add(this->SaveLocation);
 			this->tabPage1->Controls->Add(this->chart2);
 			this->tabPage1->Controls->Add(this->statusStrip1);
 			this->tabPage1->Controls->Add(this->groupBox1);
@@ -222,20 +229,21 @@ namespace Guitest1 {
 			this->label6->TabIndex = 18;
 			this->label6->Text = L"Output will be saved in:";
 			// 
-			// textBox1
+			// SaveName
 			// 
-			this->textBox1->Location = System::Drawing::Point(465, 49);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(203, 22);
-			this->textBox1->TabIndex = 17;
+			this->SaveName->Location = System::Drawing::Point(465, 49);
+			this->SaveName->Name = L"SaveName";
+			this->SaveName->Size = System::Drawing::Size(203, 22);
+			this->SaveName->TabIndex = 17;
 			// 
-			// comboBox2
+			// SaveLocation
 			// 
-			this->comboBox2->FormattingEnabled = true;
-			this->comboBox2->Location = System::Drawing::Point(465, 19);
-			this->comboBox2->Name = L"comboBox2";
-			this->comboBox2->Size = System::Drawing::Size(203, 24);
-			this->comboBox2->TabIndex = 16;
+			this->SaveLocation->FormattingEnabled = true;
+			this->SaveLocation->Location = System::Drawing::Point(465, 19);
+			this->SaveLocation->Name = L"SaveLocation";
+			this->SaveLocation->Size = System::Drawing::Size(203, 24);
+			this->SaveLocation->TabIndex = 16;
+			this->SaveLocation->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::comboBox2_SelectedIndexChanged);
 			// 
 			// chart2
 			// 
@@ -310,13 +318,13 @@ namespace Guitest1 {
 			this->groupBox1->Controls->Add(this->label3);
 			this->groupBox1->Controls->Add(this->label2);
 			this->groupBox1->Controls->Add(this->label1);
-			this->groupBox1->Controls->Add(this->numericUpDown4);
-			this->groupBox1->Controls->Add(this->numericUpDown3);
-			this->groupBox1->Controls->Add(this->numericUpDown2);
-			this->groupBox1->Controls->Add(this->numericUpDown1);
+			this->groupBox1->Controls->Add(this->StepSize);
+			this->groupBox1->Controls->Add(this->SampleSize);
+			this->groupBox1->Controls->Add(this->SweepDelay);
+			this->groupBox1->Controls->Add(this->SweepNumber);
 			this->groupBox1->Controls->Add(this->button2);
 			this->groupBox1->Controls->Add(this->button1);
-			this->groupBox1->Controls->Add(this->comboBox1);
+			this->groupBox1->Controls->Add(this->profileName);
 			this->groupBox1->Location = System::Drawing::Point(11, 77);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(310, 401);
@@ -370,34 +378,37 @@ namespace Guitest1 {
 			this->label1->Text = L"Profile Name";
 			this->label1->Click += gcnew System::EventHandler(this, &Form1::label1_Click);
 			// 
-			// numericUpDown4
+			// StepSize
 			// 
-			this->numericUpDown4->Location = System::Drawing::Point(169, 215);
-			this->numericUpDown4->Name = L"numericUpDown4";
-			this->numericUpDown4->Size = System::Drawing::Size(120, 22);
-			this->numericUpDown4->TabIndex = 13;
+			this->StepSize->Location = System::Drawing::Point(169, 215);
+			this->StepSize->Name = L"StepSize";
+			this->StepSize->Size = System::Drawing::Size(120, 22);
+			this->StepSize->TabIndex = 13;
+			this->StepSize->ValueChanged += gcnew System::EventHandler(this, &Form1::numericUpDown4_ValueChanged);
 			// 
-			// numericUpDown3
+			// SampleSize
 			// 
-			this->numericUpDown3->Location = System::Drawing::Point(169, 177);
-			this->numericUpDown3->Name = L"numericUpDown3";
-			this->numericUpDown3->Size = System::Drawing::Size(120, 22);
-			this->numericUpDown3->TabIndex = 12;
+			this->SampleSize->Location = System::Drawing::Point(169, 177);
+			this->SampleSize->Name = L"SampleSize";
+			this->SampleSize->Size = System::Drawing::Size(120, 22);
+			this->SampleSize->TabIndex = 12;
+			this->SampleSize->ValueChanged += gcnew System::EventHandler(this, &Form1::numericUpDown3_ValueChanged);
 			// 
-			// numericUpDown2
+			// SweepDelay
 			// 
-			this->numericUpDown2->Location = System::Drawing::Point(169, 140);
-			this->numericUpDown2->Name = L"numericUpDown2";
-			this->numericUpDown2->Size = System::Drawing::Size(120, 22);
-			this->numericUpDown2->TabIndex = 11;
+			this->SweepDelay->Location = System::Drawing::Point(169, 140);
+			this->SweepDelay->Name = L"SweepDelay";
+			this->SweepDelay->Size = System::Drawing::Size(120, 22);
+			this->SweepDelay->TabIndex = 11;
+			this->SweepDelay->ValueChanged += gcnew System::EventHandler(this, &Form1::numericUpDown2_ValueChanged);
 			// 
-			// numericUpDown1
+			// SweepNumber
 			// 
-			this->numericUpDown1->Location = System::Drawing::Point(169, 101);
-			this->numericUpDown1->Name = L"numericUpDown1";
-			this->numericUpDown1->Size = System::Drawing::Size(120, 22);
-			this->numericUpDown1->TabIndex = 10;
-			this->numericUpDown1->ValueChanged += gcnew System::EventHandler(this, &Form1::numericUpDown1_ValueChanged);
+			this->SweepNumber->Location = System::Drawing::Point(169, 101);
+			this->SweepNumber->Name = L"SweepNumber";
+			this->SweepNumber->Size = System::Drawing::Size(120, 22);
+			this->SweepNumber->TabIndex = 10;
+			this->SweepNumber->ValueChanged += gcnew System::EventHandler(this, &Form1::numericUpDown1_ValueChanged);
 			// 
 			// button2
 			// 
@@ -407,6 +418,7 @@ namespace Guitest1 {
 			this->button2->TabIndex = 9;
 			this->button2->Text = L"Start Scan";
 			this->button2->UseVisualStyleBackColor = true;
+			this->button2->Click += gcnew System::EventHandler(this, &Form1::button2_Click);
 			// 
 			// button1
 			// 
@@ -416,14 +428,16 @@ namespace Guitest1 {
 			this->button1->TabIndex = 8;
 			this->button1->Text = L"Save Settings";
 			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &Form1::button1_Click);
 			// 
-			// comboBox1
+			// profileName
 			// 
-			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Location = System::Drawing::Point(116, 69);
-			this->comboBox1->Name = L"comboBox1";
-			this->comboBox1->Size = System::Drawing::Size(173, 24);
-			this->comboBox1->TabIndex = 3;
+			this->profileName->FormattingEnabled = true;
+			this->profileName->Location = System::Drawing::Point(116, 69);
+			this->profileName->Name = L"profileName";
+			this->profileName->Size = System::Drawing::Size(173, 24);
+			this->profileName->TabIndex = 3;
+			this->profileName->SelectedIndexChanged += gcnew System::EventHandler(this, &Form1::comboBox1_SelectedIndexChanged);
 			// 
 			// radioButton3
 			// 
@@ -435,6 +449,7 @@ namespace Guitest1 {
 			this->radioButton3->TabIndex = 11;
 			this->radioButton3->Text = L"Stop";
 			this->radioButton3->UseVisualStyleBackColor = true;
+			this->radioButton3->CheckedChanged += gcnew System::EventHandler(this, &Form1::radioButton3_CheckedChanged);
 			// 
 			// radioButton2
 			// 
@@ -452,12 +467,10 @@ namespace Guitest1 {
 			this->radioButton1->Appearance = System::Windows::Forms::Appearance::Button;
 			this->radioButton1->AutoSize = true;
 			this->radioButton1->BackColor = System::Drawing::SystemColors::Control;
-			this->radioButton1->Checked = true;
 			this->radioButton1->Location = System::Drawing::Point(49, 19);
 			this->radioButton1->Name = L"radioButton1";
 			this->radioButton1->Size = System::Drawing::Size(44, 27);
 			this->radioButton1->TabIndex = 9;
-			this->radioButton1->TabStop = true;
 			this->radioButton1->Text = L"Run";
 			this->radioButton1->UseVisualStyleBackColor = false;
 			this->radioButton1->CheckedChanged += gcnew System::EventHandler(this, &Form1::radioButton1_CheckedChanged_1);
@@ -556,10 +569,10 @@ namespace Guitest1 {
 			this->statusStrip1->PerformLayout();
 			this->groupBox1->ResumeLayout(false);
 			this->groupBox1->PerformLayout();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown4))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown3))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown2))->EndInit();
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->numericUpDown1))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->StepSize))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->SampleSize))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->SweepDelay))->EndInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->SweepNumber))->EndInit();
 			this->tabPage2->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->dataGridView1))->EndInit();
 			this->ResumeLayout(false);
@@ -584,9 +597,21 @@ private: System::Void toolStripStatusLabel2_Click(System::Object^  sender, Syste
 private: System::Void toolStripStatusLabel1_Click(System::Object^  sender, System::EventArgs^  e) {
 		 }
 private: System::Void radioButton1_CheckedChanged_1(System::Object^  sender, System::EventArgs^  e) {
+		
+			 double vSweepNumber, vSweepDelay, vSampleSize, vStepSize;
+			 vSweepNumber = Convert::ToDouble(SweepNumber->Text);	 
+			 vSweepDelay = Convert::ToDouble(SweepDelay->Text);	
+			 vSampleSize = Convert::ToDouble(SampleSize->Text);	
+			 vStepSize = Convert::ToDouble(StepSize->Text);	
+
+			 int parameters = 0;
+			 parameters  = (int)(vSweepNumber + vSweepDelay + vSampleSize + vStepSize)%200;
+
+
+
 			 double throughPut;
 			 throughPut = ClientRun(parameters);
-			 textBox1 -> Text = Convert::ToString(throughPut);
+			 SaveName-> Text = Convert::ToString(throughPut);
 /*			 
 	//Server Code. Comment to make way for client code			 
 			 system("\"C:\\Users\\Andy\\Documents\\Visual Studio 2012\\Projects\\Gui test 1\\Debug\\socket test 2.exe\"");	
@@ -620,6 +645,22 @@ private: System::Void radioButton1_CheckedChanged_1(System::Object^  sender, Sys
   
 		 }	//end RUN button 
 		 
+private: System::Void numericUpDown2_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void numericUpDown3_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void numericUpDown4_ValueChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void comboBox1_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void comboBox2_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void radioButton3_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
+		 }
+private: System::Void button2_Click(System::Object^  sender, System::EventArgs^  e) {
+		 }
 };
 
 

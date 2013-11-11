@@ -44,9 +44,7 @@ double ClientRun()
 	FILE * pFile;
 	pFile = fopen ("fwrite_test.txt", "wb");
     
-    char recvbuf[DEFAULT_BUFLEN];
     int iResult;
-    int recvbuflen = DEFAULT_BUFLEN;
     
     // Initialize Winsock
     iResult = WSAStartup(MAKEWORD(2,2), &wsaData);

@@ -4,7 +4,7 @@
 #include "Client.h"
 #include "Server.h"
 
-namespace Client_GUI {
+namespace GUIClientTest {
 
 	using namespace System;
 	using namespace System::ComponentModel;
@@ -38,9 +38,10 @@ namespace Client_GUI {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::Button^  Start_Button;
+
 	private: System::Windows::Forms::TextBox^  textBox1;
 	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::Button^  Start_Button;
 	protected: 
 
 	protected: 
@@ -112,9 +113,10 @@ namespace Client_GUI {
 		}
 #pragma endregion
 	private: System::Void Start_Button_Click(System::Object^  sender, System::EventArgs^  e) {
-	//		 double throughPut;
+			 double throughPut;
 			 throughPut = ServerRun();
-	//		 textBox1 -> Text = Convert::ToString(throughPut);
+			 textBox1 -> Text = Convert::ToString(throughPut);
+			 
 			 }
 	private: System::Void textBox1_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 
