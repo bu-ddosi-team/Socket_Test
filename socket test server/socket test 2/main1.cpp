@@ -7,6 +7,12 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <fstream>
+#include <vector>
+#include <time.h>
+#include <cstdio>
+#include <ctime>
+
 using namespace std;
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -15,9 +21,19 @@ using namespace std;
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
 
+
 int __cdecl main(void) 
 {
-    WSADATA wsaData;
+
+	//Nov 7. Binary vs Ascii files Do it in binary first.
+//	ofstream output;
+//	output.open("Out_Test.txt", /*ios::app |*/ ios::out | ios::binary);
+//	if(output.is_open())
+//	{
+	 FILE * pFile;
+	pFile = fopen ("fwrite_test.txt", "wb");
+    
+	WSADATA wsaData;
     int iResult;
 
     SOCKET ListenSocket = INVALID_SOCKET;
@@ -29,7 +45,7 @@ int __cdecl main(void)
     int iSendResult;
     char recvbuf[DEFAULT_BUFLEN];
     int recvbuflen = DEFAULT_BUFLEN;
-    
+    	memset(recvbuf, 0, 512);
     // Initialize Winsock
     iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
     if (iResult != 0) {
@@ -92,22 +108,45 @@ int __cdecl main(void)
     // No longer need server socket
     closesocket(ListenSocket);
 
+
+	clock_t start;
+    double duration;
+    start = std::clock();
+
     // Receive until the peer shuts down the connection
-    do {
+	do {
 
-        iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-        if (iResult > 0) {
-            printf("Bytes received: %d\n", iResult);
+		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
+		if (iResult > 0) {
+	//		printf("Bytes received: %d\n", iResult);
+	//		printf("Bytes received: %s\n", recvbuf);
+			// write to outfile
+//			data.insert(data.end(), recvbuf, recvbuf + iResult);
+		//	char temp[iResult] = recvbuf;
+//			output << recvbuf;
 
-        // Echo the buffer back to the sender
-            iSendResult = send( ClientSocket, recvbuf, iResult, 0 );
-            if (iSendResult == SOCKET_ERROR) {
-                printf("send failed with error: %d\n", WSAGetLastError());
-                closesocket(ClientSocket);
+			fwrite (recvbuf , sizeof(char), sizeof(recvbuf), pFile);
+			memset(recvbuf, 0, 512);
+//			while(!data.empty())
+	//		{
+//				temp = data.front(); 
+//				data.pop_front();
+//				if(temp != '\r'){
+//				output << temp;
+//				}
+//			}
+
+/*			
+			// Echo the buffer back to the sender
+			iSendResult = send( ClientSocket, recvbuf, iResult, 0 );
+			if (iSendResult == SOCKET_ERROR) {
+				printf("send failed with error: %d\n", WSAGetLastError());
+				closesocket(ClientSocket);
                 WSACleanup();
                 return 1;
             }
-            printf("Bytes sent: %d\n", iSendResult);
+     //       printf("Bytes sent: %d\n", iSendResult);
+	 */
         }
         else if (iResult == 0)
             printf("Connection closing...\n");
@@ -119,7 +158,12 @@ int __cdecl main(void)
         }
 
     } while (iResult > 0);
+	  fclose (pFile);
+	duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
+	 cout<<"Time:"<< duration <<endl;
+	 cout << "Throughput: " << endl;
+//	output.close();
     // shutdown the connection since we're done
     iResult = shutdown(ClientSocket, SD_SEND);
     if (iResult == SOCKET_ERROR) {
@@ -134,4 +178,6 @@ int __cdecl main(void)
     WSACleanup();
 
     return 0;
+	
+
 }
