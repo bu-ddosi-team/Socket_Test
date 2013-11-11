@@ -28,9 +28,7 @@ using namespace std;
 
 double ServerRun()
 {
-	 FILE * pFile;
-	pFile = fopen ("fwrite_test.txt", "wb");
-    
+
 	WSADATA wsaData;
     int iResult;
 
@@ -149,6 +147,7 @@ double ServerRun()
         }
 		
 		
+
     } while (iResult > 0);
 	  fclose (pFile);
 	duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;

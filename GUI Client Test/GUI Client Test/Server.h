@@ -26,23 +26,31 @@
 
 using namespace std;
 
-double ServerRun(int parameters)
+double ServerRun()
 {
 	
 	WSADATA wsaData;
     int iResult;
+	int parameters;
 
     SOCKET ListenSocket = INVALID_SOCKET;
     SOCKET ClientSocket = INVALID_SOCKET;
 
     struct addrinfo *result = NULL;
     struct addrinfo hints;
+	
+	char *sendbuf;// = "this is a test";
+	int fileSize;
 
     int iSendResult;
     char recvbuf[DEFAULT_BUFLEN];
     int recvbuflen = DEFAULT_BUFLEN;
     memset(recvbuf, 0, 512);
-    
+
+    ifstream file; 
+
+ 
+
 	// Initialize Winsock
     iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
     if (iResult != 0) {
@@ -110,32 +118,14 @@ double ServerRun(int parameters)
     double duration;
     start = std::clock();
 	
-	//Open File for data storage
-	FILE * pFile;
-	pFile = fopen ("fwrite_test.txt", "wb");
-    
+
     // Receive until the peer shuts down the connection
 	do {
-
 		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
 		if (iResult > 0) {
 	//		printf("Bytes received: %d\n", iResult);
 	//		printf("Bytes received: %s\n", recvbuf);
 
-			fwrite (recvbuf , sizeof(char), sizeof(recvbuf), pFile);
-			memset(recvbuf, 0, 512);
-
-/*	
-			// Echo the buffer back to the sender
-			iSendResult = send( ClientSocket, recvbuf, iResult, 0 );
-			if (iSendResult == SOCKET_ERROR) {
-				printf("send failed with error: %d\n", WSAGetLastError());
-				closesocket(ClientSocket);
-                WSACleanup();
-                return 1;
-            }
-     //       printf("Bytes sent: %d\n", iSendResult);
-	 */
         }
         else if (iResult == 0)
             printf("Connection closing...\n");
@@ -145,9 +135,46 @@ double ServerRun(int parameters)
             WSACleanup();
             return 1;
         }
-
     } while (iResult > 0);
-	  fclose (pFile);
+
+
+	  file.open("C:\\Users\\CME\\Desktop\\test3.txt", ios::in|ios::binary); //open the file
+
+	  if (file.is_open())
+	  {
+		  file.seekg(0, ios::end);
+		  fileSize = file.tellg();
+
+		  cout << "The file size is " <<  fileSize << " bytes" << endl;
+
+		  file.seekg(0, ios::beg); //sets location to the beginning of the file
+
+		  sendbuf = new char[fileSize];
+		  file.read(sendbuf, fileSize); //write file to buffer
+
+		  file.close();
+	  }
+
+
+	iResult = send( ConnectSocket, sendbuf, fileSize, 0 );
+    if (iResult == SOCKET_ERROR) {
+        printf("send failed with error: %d\n", WSAGetLastError());
+        closesocket(ConnectSocket);
+        WSACleanup();
+        return 1;
+    }
+
+	    // shutdown the connection since no more data will be sent
+    iResult = shutdown(ConnectSocket, SD_SEND);
+
+    if (iResult == SOCKET_ERROR) {
+        //printf("shutdown failed with error: %d\n", WSAGetLastError());
+        closesocket(ConnectSocket);
+        WSACleanup();
+        return 1;
+    }
+
+
 	duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
 	 cout<<"Time:"<< duration <<endl;

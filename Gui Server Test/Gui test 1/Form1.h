@@ -585,7 +585,7 @@ private: System::Void toolStripStatusLabel1_Click(System::Object^  sender, Syste
 		 }
 private: System::Void radioButton1_CheckedChanged_1(System::Object^  sender, System::EventArgs^  e) {
 			 double throughPut;
-			 throughPut = ClientRun();
+			 throughPut = ClientRun(parameters);
 			 textBox1 -> Text = Convert::ToString(throughPut);
 /*			 
 	//Server Code. Comment to make way for client code			 
