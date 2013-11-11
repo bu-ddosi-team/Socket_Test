@@ -85,6 +85,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\Desktop\Client\Client.cpp" />
+    <ClCompile Include="..\..\..\..\..\Desktop\Client\Client_GUI.cpp" />
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="GUI Client Test.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -93,6 +95,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\Desktop\Client\Client.h" />
     <ClInclude Include="Form1.h">
       <FileType>CppForm</FileType>
     </ClInclude>

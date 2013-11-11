@@ -2,6 +2,7 @@
 
 #include <stdlib.h>
 #include "Client.h"
+#include "Server.h"
 
 namespace Client_GUI {
 
@@ -64,9 +65,10 @@ namespace Client_GUI {
 			// 
 			// Start_Button
 			// 
-			this->Start_Button->Location = System::Drawing::Point(96, 70);
+			this->Start_Button->Location = System::Drawing::Point(124, 87);
+			this->Start_Button->Margin = System::Windows::Forms::Padding(4);
 			this->Start_Button->Name = L"Start_Button";
-			this->Start_Button->Size = System::Drawing::Size(97, 54);
+			this->Start_Button->Size = System::Drawing::Size(129, 66);
 			this->Start_Button->TabIndex = 0;
 			this->Start_Button->Text = L"START";
 			this->Start_Button->UseVisualStyleBackColor = true;
@@ -74,47 +76,53 @@ namespace Client_GUI {
 			// 
 			// textBox1
 			// 
-			this->textBox1->Location = System::Drawing::Point(93, 167);
+			this->textBox1->Location = System::Drawing::Point(124, 206);
+			this->textBox1->Margin = System::Windows::Forms::Padding(4);
 			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(100, 20);
+			this->textBox1->Size = System::Drawing::Size(132, 22);
 			this->textBox1->TabIndex = 1;
 			this->textBox1->TextChanged += gcnew System::EventHandler(this, &Form1::textBox1_TextChanged);
 			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
-			this->label1->Location = System::Drawing::Point(22, 170);
+			this->label1->Location = System::Drawing::Point(29, 209);
+			this->label1->Margin = System::Windows::Forms::Padding(4, 0, 4, 0);
 			this->label1->Name = L"label1";
-			this->label1->Size = System::Drawing::Size(65, 13);
+			this->label1->Size = System::Drawing::Size(86, 17);
 			this->label1->TabIndex = 2;
 			this->label1->Text = L"Throughput:";
 			this->label1->Click += gcnew System::EventHandler(this, &Form1::label1_Click);
 			// 
 			// Form1
 			// 
-			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
+			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(284, 262);
+			this->ClientSize = System::Drawing::Size(379, 322);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->Start_Button);
+			this->Margin = System::Windows::Forms::Padding(4);
 			this->Name = L"Form1";
 			this->Text = L"Client";
+			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
 	private: System::Void Start_Button_Click(System::Object^  sender, System::EventArgs^  e) {
-			 double throughPut;
-			 throughPut = ClientRun();
-			 textBox1 -> Text = Convert::ToString(throughPut);
+	//		 double throughPut;
+			 throughPut = ServerRun();
+	//		 textBox1 -> Text = Convert::ToString(throughPut);
 			 }
 	private: System::Void textBox1_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 
 			 }
 	private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) {
 			 }
-	};
+	private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
+			 }
+};
 }
 

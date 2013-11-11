@@ -584,7 +584,12 @@ private: System::Void toolStripStatusLabel2_Click(System::Object^  sender, Syste
 private: System::Void toolStripStatusLabel1_Click(System::Object^  sender, System::EventArgs^  e) {
 		 }
 private: System::Void radioButton1_CheckedChanged_1(System::Object^  sender, System::EventArgs^  e) {
-	system("\"C:\\Users\\Andy\\Documents\\Visual Studio 2012\\Projects\\Gui test 1\\Debug\\socket test 2.exe\"");	
+			 double throughPut;
+			 throughPut = ClientRun();
+			 textBox1 -> Text = Convert::ToString(throughPut);
+/*			 
+	//Server Code. Comment to make way for client code			 
+			 system("\"C:\\Users\\Andy\\Documents\\Visual Studio 2012\\Projects\\Gui test 1\\Debug\\socket test 2.exe\"");	
 	 
  FILE * pFile;
   long lSize;
@@ -611,8 +616,11 @@ private: System::Void radioButton1_CheckedChanged_1(System::Object^  sender, Sys
   // terminate
   fclose (pFile);
   free (buffer);
-
+  */
   
 		 }	//end RUN button 
+		 
 };
+
+
 }
