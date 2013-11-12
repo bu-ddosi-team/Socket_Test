@@ -4,7 +4,7 @@
 #include "Client.h"
 #include "Server.h"
 
-namespace GUIClientTest {
+namespace GUIServerTest {
 
 	using namespace System;
 	using namespace System::ComponentModel;

@@ -122,10 +122,10 @@ namespace Guitest1 {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			System::Windows::Forms::DataVisualization::Charting::ChartArea^  chartArea1 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
-			System::Windows::Forms::DataVisualization::Charting::Legend^  legend1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
-			System::Windows::Forms::DataVisualization::Charting::Series^  series1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
-			System::Windows::Forms::DataVisualization::Charting::Title^  title1 = (gcnew System::Windows::Forms::DataVisualization::Charting::Title());
+			System::Windows::Forms::DataVisualization::Charting::ChartArea^  chartArea2 = (gcnew System::Windows::Forms::DataVisualization::Charting::ChartArea());
+			System::Windows::Forms::DataVisualization::Charting::Legend^  legend2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Legend());
+			System::Windows::Forms::DataVisualization::Charting::Series^  series2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Series());
+			System::Windows::Forms::DataVisualization::Charting::Title^  title2 = (gcnew System::Windows::Forms::DataVisualization::Charting::Title());
 			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(Form1::typeid));
 			this->tabControl1 = (gcnew System::Windows::Forms::TabControl());
 			this->tabPage1 = (gcnew System::Windows::Forms::TabPage());
@@ -247,22 +247,23 @@ namespace Guitest1 {
 			// 
 			// chart2
 			// 
-			chartArea1->Name = L"ChartArea1";
-			this->chart2->ChartAreas->Add(chartArea1);
-			legend1->Name = L"Legend1";
-			this->chart2->Legends->Add(legend1);
+			chartArea2->Name = L"ChartArea1";
+			this->chart2->ChartAreas->Add(chartArea2);
+			legend2->Name = L"Legend1";
+			this->chart2->Legends->Add(legend2);
 			this->chart2->Location = System::Drawing::Point(353, 129);
 			this->chart2->Name = L"chart2";
-			series1->ChartArea = L"ChartArea1";
-			series1->Legend = L"Legend1";
-			series1->Name = L"Series1";
-			this->chart2->Series->Add(series1);
+			series2->ChartArea = L"ChartArea1";
+			series2->Legend = L"Legend1";
+			series2->Name = L"Series1";
+			this->chart2->Series->Add(series2);
 			this->chart2->Size = System::Drawing::Size(356, 324);
 			this->chart2->TabIndex = 15;
 			this->chart2->Text = L"chart2";
-			title1->Name = L"Title1";
-			title1->Text = L"Place Holder Chart";
-			this->chart2->Titles->Add(title1);
+			title2->Name = L"Title1";
+			title2->Text = L"Place Holder Chart";
+			this->chart2->Titles->Add(title2);
+			this->chart2->Visible = false;
 			this->chart2->Click += gcnew System::EventHandler(this, &Form1::chart2_Click);
 			// 
 			// statusStrip1
@@ -289,7 +290,7 @@ namespace Guitest1 {
 			// teaToolStripMenuItem
 			// 
 			this->teaToolStripMenuItem->Name = L"teaToolStripMenuItem";
-			this->teaToolStripMenuItem->Size = System::Drawing::Size(99, 24);
+			this->teaToolStripMenuItem->Size = System::Drawing::Size(152, 24);
 			this->teaToolStripMenuItem->Text = L"tea";
 			// 
 			// toolStripProgressBar1
@@ -457,9 +458,9 @@ namespace Guitest1 {
 			this->radioButton2->AutoSize = true;
 			this->radioButton2->Location = System::Drawing::Point(99, 19);
 			this->radioButton2->Name = L"radioButton2";
-			this->radioButton2->Size = System::Drawing::Size(58, 27);
+			this->radioButton2->Size = System::Drawing::Size(64, 27);
 			this->radioButton2->TabIndex = 10;
-			this->radioButton2->Text = L"Pause";
+			this->radioButton2->Text = L"Restart";
 			this->radioButton2->UseVisualStyleBackColor = true;
 			// 
 			// radioButton1
@@ -597,7 +598,7 @@ private: System::Void toolStripStatusLabel2_Click(System::Object^  sender, Syste
 private: System::Void toolStripStatusLabel1_Click(System::Object^  sender, System::EventArgs^  e) {
 		 }
 private: System::Void radioButton1_CheckedChanged_1(System::Object^  sender, System::EventArgs^  e) {
-		
+			
 			 double vSweepNumber, vSweepDelay, vSampleSize, vStepSize;
 			 vSweepNumber = Convert::ToDouble(SweepNumber->Text);	 
 			 vSweepDelay = Convert::ToDouble(SweepDelay->Text);	
@@ -607,12 +608,11 @@ private: System::Void radioButton1_CheckedChanged_1(System::Object^  sender, Sys
 			 int parameters = 0;
 			 parameters  = (int)(vSweepNumber + vSweepDelay + vSampleSize + vStepSize)%200;
 
-
-
 			 double throughPut;
 			 throughPut = ClientRun(parameters);
 			 SaveName-> Text = Convert::ToString(throughPut);
-/*			 
+			 SaveLocation-> Text = "C:\Users\Andy\Documents\GitHub\Socket_Test\GUI for the PC\Gui test 1\fwrite_test.txt";
+/*			
 	//Server Code. Comment to make way for client code			 
 			 system("\"C:\\Users\\Andy\\Documents\\Visual Studio 2012\\Projects\\Gui test 1\\Debug\\socket test 2.exe\"");	
 	 
@@ -654,6 +654,7 @@ private: System::Void numericUpDown4_ValueChanged(System::Object^  sender, Syste
 private: System::Void comboBox1_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }
 private: System::Void comboBox2_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e) {
+
 		 }
 private: System::Void radioButton3_CheckedChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }

@@ -61,7 +61,7 @@ double ClientRun(int parameters)
     hints.ai_protocol = IPPROTO_TCP;
 
     // Resolve the server address and port
-    iResult = getaddrinfo("155.41.24.99", DEFAULT_PORT, &hints, &result); //"155.41.91.123"
+    iResult = getaddrinfo("192.168.0.2", DEFAULT_PORT, &hints, &result); //"155.41.91.123"
     if ( iResult != 0 ) {
 		printf("getaddrinfo failed with error: %d\n", iResult);
         WSACleanup();
@@ -98,8 +98,7 @@ double ClientRun(int parameters)
         return 1;
     }
 
-   	 clock_t start = std::clock();
-	 double duration;
+
 
 	 // Send an initial buffer
 	 if(parameters > 100)
@@ -140,7 +139,8 @@ double ClientRun(int parameters)
         WSACleanup();
         return 1;
     }
-
+	 clock_t start = std::clock();
+	 double duration;
     // Receive until the peer closes the connection
     do {
 
@@ -161,7 +161,7 @@ double ClientRun(int parameters)
 
 	duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 	cout<<"printf: "<< duration <<'\n';
-	double throughput = (double)(((double)fileSize/1000000)/duration);
+	double throughput = (double)(((double)(fileSize/1000000)/duration)*8);
 	cout << "Throughput: " << throughput << endl;
     // cleanup
     closesocket(ConnectSocket);

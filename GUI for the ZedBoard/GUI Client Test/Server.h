@@ -123,14 +123,14 @@ double ServerRun()
 		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
 		if (iResult > 0) 
 		{
-			if(iResult == 4)
+			if(iResult <= 4)
 			{
 				file.open("C:\\Users\\Andy\\Desktop\\Client\\111.txt", ios::in | ios::binary);	
 				inputget = TRUE;
 			}
 			else if(iResult <= 8)
 			{
-				file.open("C:\\Users\\Andy\\Desktop\\Client\\222.txt", ios::in | ios::binary);	
+				file.open("C:\\Users\\Andy\\Desktop\\Client\\444.txt", ios::in | ios::binary);	
 				inputget = TRUE;
 			}
 			else if(iResult <= 16)
@@ -140,7 +140,7 @@ double ServerRun()
 			}
 			else if(iResult <= 32 )
 			{
-				file.open("C:\\Users\\Andy\\Desktop\\Client\\444.txt", ios::in | ios::binary);	
+				file.open("C:\\Users\\Andy\\Desktop\\Client\\222.txt", ios::in | ios::binary);	
 				inputget = TRUE;
 			}
 			else
@@ -199,7 +199,7 @@ double ServerRun()
 	duration = ( std::clock() - start ) / (double) CLOCKS_PER_SEC;
 
 
-	 double throughput = (double)(((double)fileSize/1000000)/duration);
+	 double throughput = (double)((((double)fileSize/1000000)/duration)*8);
 	cout << "Throughput: " << throughput << endl;
 	 
 	 // shutdown the connection since we're done
