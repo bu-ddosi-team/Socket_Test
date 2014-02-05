@@ -108,8 +108,10 @@ int mnum;
 char mtype;
 int setting = 10000;
 srand(time(0));
-	while ((len = recv(new_s, buf, sizeof(buf), 0)) > 0) {
-	if(buf[0] == 's'){
+std::cout << "under srrand" << std::endl;
+	while ((len = recv(new_s, buf, sizeof(buf), 0)) > 0) 
+	{std::cout << buf<< std::endl;
+	if(buf[0] == 's'){ std::cout << "s is hit" << std::endl;
 	    while ( line < 1000) {
 	      rnum = rand() % setting;
 	      mnum = rand()%20;
@@ -128,7 +130,7 @@ srand(time(0));
 	      send( new_s, reply, len, 0);
 	    }
 	}
-	else if(buf[0] == 'w'){
+	else if(buf[0] == 'w'){ std::cout << "w is hit" << std::endl;
 	   std::ifstream file ("111.txt", std::ifstream::in);
 	   if (file.is_open())
 		  {		  
@@ -139,19 +141,27 @@ srand(time(0));
 			
 			
 				len = strlen( sendbuf); 					
-				send( new_s, sendbuf, len, 0);
-
+				int sss = send( new_s, sendbuf, len, 0);
+				std::cout <<sss << std::endl;	
 
 			  }
 
 
 			  file.close();
+			  sendbuf[0] = 'f';
+			 int sss= send( new_s, sendbuf, len, 0);
+			  std::cout <<sss <<sendbuf<< std::endl;	
+
 		  }
 	}
-	else{
+	else{ std::cout << "no hits" << std::endl;
 		setting += 50;
-		send( new_s, buf, len, 0);
+			  sendbuf[0] = 'f';
+			 int sss= send( new_s, sendbuf, len, 0);
+			  std::cout <<sss <<sendbuf<< std::endl;
 	}
+	 sendbuf[0] = 'f';
+	 send( new_s, sendbuf, len, 0);
 	memset(buf,0,MAX_LINE);
 	line = 0;
 	}
