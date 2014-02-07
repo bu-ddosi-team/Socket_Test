@@ -18,7 +18,7 @@
 #include <fstream>
 #include <iostream>
 #include <cstdio>
-#include <time.h>	
+#include <time.h>
 #include <ctime>
 
 #define SERVER_PORT	27015
@@ -79,7 +79,7 @@ main(int argc, char *argv[])
 
 	char *sendbuf;// = "this is a test";
 	int fileSize;
-//	ifstream file; 	
+//	ifstream file;
   /*
    * Loop accepting new connections and servicing them
    */
@@ -95,22 +95,17 @@ main(int argc, char *argv[])
     ++conn;
     line = 0;
 /////////////////////////////////////////////////
-
-
-	int	strSize = MAX_LINE;
-
-
-
-
 //////////////////////////////////////////////////
+int	strSize = MAX_LINE;
 int rnum;
-int mnum; 
+int mnum;
 char mtype;
 int setting = 10000;
 srand(time(0));
 std::cout << "under srrand" << std::endl;
-	while ((len = recv(new_s, buf, sizeof(buf), 0)) > 0) 
-	{std::cout << buf<< std::endl;
+	while ((len = recv(new_s, buf, sizeof(buf), 0)) > 0)
+	{
+	std::cout << buf<< std::endl;
 	if(buf[0] == 's'){ std::cout << "s is hit" << std::endl;
 	    while ( line < 1000) {
 	      rnum = rand() % setting;
@@ -130,37 +125,48 @@ std::cout << "under srrand" << std::endl;
 	      send( new_s, reply, len, 0);
 	    }
 	}
-	else if(buf[0] == 'w'){ std::cout << "w is hit" << std::endl;
-	   std::ifstream file ("111.txt", std::ifstream::in);
+	else if(buf[0] == 'w'){ std::cout << "w is hit" << std::endl;char f = 'f';
+	      sprintf( reply, "%c", f);
+	      len = strlen( reply);
+	      send( new_s, reply, len, 0);// memset(sendbuf,0,len);
+	   std::ifstream file ("222.txt", std::ifstream::in);
 	   if (file.is_open())
-		  {		  
+		  {
 			  while(!file.eof() )
-			  {	
+			  {
 				sendbuf = new char[strSize];
 				file.read(sendbuf, strSize);
-			
-			
-				len = strlen( sendbuf); 					
+				len = strlen( sendbuf);
 				int sss = send( new_s, sendbuf, len, 0);
-				std::cout <<sss << std::endl;	
-
+				std::cout <<sss << std::endl;
+std::cout << "test Inside";
 			  }
-
-
 			  file.close();
-			  sendbuf[0] = 'f';
-			 int sss= send( new_s, sendbuf, len, 0);
-			  std::cout <<sss <<sendbuf<< std::endl;	
-
+//			  sendbuf[0] = 'f';
+ //             int sss= send( new_s, sendbuf, len, 0);
+//			  std::cout <<sss <<sendbuf<< std::endl;
+	sleep(5);
+	char *sendf= new char[strSize];
+	      sprintf( sendf, "%c", f);
+	      len = strlen( sendf);
+	      send( new_s, sendf, len, 0);
+std::cout << "test";
 		  }
-	}
-	else{ std::cout << "no hits" << std::endl;
-		setting += 50;
 			  sendbuf[0] = 'f';
-			 int sss= send( new_s, sendbuf, len, 0);
-			  std::cout <<sss <<sendbuf<< std::endl;
+              int sss= send( new_s, sendbuf, len, 0);
+			  std::cout <<sss <<sendbuf<< std::endl;std::cout << "test2";
+
+
+}
+	else{
+        std::cout << "no hits" << std::endl;
+		setting += 50;
+		sendbuf[0] = 'f';
+        int sss= send( new_s, sendbuf, len, 0);
+        std::cout <<sss <<sendbuf<< std::endl;
+std::cout << "test3";
 	}
-	 sendbuf[0] = 'f';
+	 sendbuf[0] = 'f';std::cout << "test4";
 	 send( new_s, sendbuf, len, 0);
 	memset(buf,0,MAX_LINE);
 	line = 0;
@@ -202,7 +208,7 @@ int main(int argc, char *argv[])
     exit(1);
   }
 
- // set the "reuse" option 
+ // set the "reuse" option
   rc = setsockopt( s, SOL_SOCKET, SO_REUSEADDR, &c_one, sizeof(c_one));
 
   //
@@ -222,10 +228,10 @@ int main(int argc, char *argv[])
   }
 
   conn = 0;
-	
-  
+
+
    //Loop accepting new connections and servicing them
-   
+
   while (1) {
     len = sizeof(sin);
     if ((new_s = accept(s, (struct sockaddr *)&sin, &len)) < 0) {
@@ -242,7 +248,7 @@ int main(int argc, char *argv[])
       }
       buf[len] = 0;
       fputs(buf, stdout);
-      // now send the reply 
+      // now send the reply
       sprintf( reply, "Connection %d Line %d length=%d\n",
 	       conn, line, len);
       len = strlen( reply);
@@ -270,10 +276,10 @@ int main(int argc, char *argv[])
 
 //    struct addrinfo *result = NULL;
 //    struct addrinfo hints;
-//	
+//
 //	//char *sendbuf;// = "this is a test";
 //	//int fileSize;
-// //   ifstream file; 
+// //   ifstream file;
 
 //    int iSendResult;
 //    char recvbuf[DEFAULT_BUFLEN];
@@ -282,7 +288,7 @@ int main(int argc, char *argv[])
 
 
 
-//	
+//
 
 //	// Initialize Winsock
 //    iResult = WSAStartup(MAKEWORD(2,2), &wsaData);
@@ -350,21 +356,21 @@ int main(int argc, char *argv[])
 //	clock_t start;
 //    double duration;
 //    start = std::clock();
-//	
+//
 //	bool inputget = FALSE;
 //    // Receive until the peer shuts down the connection
 //	do {
 //		iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
-//		if (iResult > 0) 
-//		{	
+//		if (iResult > 0)
+//		{
 //			//if(iResult <= 4)
 //			//{
-//			//	file.open("C:\\Users\\Yan Zhang\\Desktop\\Client\\111.txt", ios::in | ios::binary);	
+//			//	file.open("C:\\Users\\Yan Zhang\\Desktop\\Client\\111.txt", ios::in | ios::binary);
 //			//	inputget = TRUE;
 //			//}
 //			//else if(iResult <= 8)
 //			//{
-//			//	file.open("C:\\Users\\Yan Zhang\\Desktop\\Client\\444.txt", ios::in | ios::binary);	
+//			//	file.open("C:\\Users\\Yan Zhang\\Desktop\\Client\\444.txt", ios::in | ios::binary);
 //			//	inputget = TRUE;
 //			//}
 //			//else if(iResult <= 16)
@@ -374,12 +380,12 @@ int main(int argc, char *argv[])
 //			//}
 //			//else if(iResult <= 32 )
 //			//{
-//			//	file.open("C:\\Users\\Yan Zhang\\Desktop\\Client\\222.txt", ios::in | ios::binary);	
+//			//	file.open("C:\\Users\\Yan Zhang\\Desktop\\Client\\222.txt", ios::in | ios::binary);
 //			//	inputget = TRUE;
 //			//}
 //			//else
 //			//{
-//			//	file.open("C:\\Users\\Yan Zhang\\Desktop\\Client\\555.txt", ios::in | ios::binary);	
+//			//	file.open("C:\\Users\\Yan Zhang\\Desktop\\Client\\555.txt", ios::in | ios::binary);
 //			//	inputget = TRUE;
 //			//}
 
@@ -408,14 +414,14 @@ int main(int argc, char *argv[])
 //		  //sendbuf = new char[fileSize];
 //		  //file.read(sendbuf, fileSize); //write file to buffer
 //		  //file.close();
-//			
+//
 //			  //use .readsome(char* s, streamsize n) in fture?
 //			sendbuf = new char[strSize];
 //			file.read(sendbuf, strSize);
 //			fifoQ.push(sendbuf);
 
 //			iResult = send( ClientSocket, sendbuf, fileSize, 0 );
-//			if (iResult == SOCKET_ERROR) 
+//			if (iResult == SOCKET_ERROR)
 //			{
 //				printf("send failed with error: %d\n", WSAGetLastError());
 //				closesocket(ClientSocket);
@@ -423,7 +429,7 @@ int main(int argc, char *argv[])
 //				return 1;
 //			}
 
-//			
+//
 //		  }
 //		  file.close();
 //	  }
@@ -441,7 +447,7 @@ int main(int argc, char *argv[])
 //				return 1;
 //			}
 //		}
-//	
+//
 //	}
 //	    // shutdown the connection since no more data will be sent
 //    iResult = shutdown(ClientSocket, SD_SEND);
@@ -459,7 +465,7 @@ int main(int argc, char *argv[])
 
 //	 double throughput = (double)((((double)fileSize/1000000)/duration)*8);
 //	cout << "Throughput: " << throughput << endl;
-//	 
+//
 //	 // shutdown the connection since we're done
 //    iResult = shutdown(ClientSocket, SD_SEND);
 //    if (iResult == SOCKET_ERROR) {
@@ -474,7 +480,7 @@ int main(int argc, char *argv[])
 //    WSACleanup();
 
 //    return throughput;
-//	
+//
 //}
 //
 
@@ -485,7 +491,7 @@ void * datain(void)
 
 	//char *sendbuf;// = "this is a test";
 	//int fileSize;
- //   ifstream file; 
+ //   ifstream file;
 
 	int	strSize = 512;
 
@@ -493,7 +499,7 @@ void * datain(void)
 	  {
 		  file.seekg(0,strSize);
 		  while(!file.eof() && (fifoQ.size() > 10) )
-		  {		
+		  {
 			  //use .readsome(char* s, streamsize n) in fture?
 			sendbuf = new char[strSize];
 			file.read(sendbuf, strSize);
