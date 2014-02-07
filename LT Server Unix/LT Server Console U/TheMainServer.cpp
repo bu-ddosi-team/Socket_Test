@@ -14,6 +14,7 @@
 #include <netdb.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <math.h>
 
 #include <fstream>
 #include <iostream>
@@ -31,6 +32,9 @@
 int
 main(int argc, char *argv[])
 {
+  
+  uint32_t ubsend[MAX_LINE];
+  
   struct sockaddr_in sin;
   char buf[MAX_LINE];
   char reply[MAX_LINE];
@@ -101,15 +105,17 @@ int rnum;
 int mnum;
 char mtype;
 int setting = 10000;
+char f = 'f';
 srand(time(0));
 std::cout << "under srrand" << std::endl;
 	while ((len = recv(new_s, buf, sizeof(buf), 0)) > 0)
 	{
 	std::cout << buf<< std::endl;
-	if(buf[0] == 's'){ std::cout << "s is hit" << std::endl;
+	if(buf[0] == 's'){ 
+	    std::cout << "s is hit" << std::endl;
 	    while ( line < 1000) {
-	      rnum = rand() % setting;
-	      mnum = rand()%20;
+	      rnum = rand()%setting;
+	      mnum = rand()%1000;
 		if(mnum == 0){mtype = 'f';}
 		else if(mnum == 1){mtype = 'e';}
 		else {mtype = 'b';}
@@ -124,51 +130,62 @@ std::cout << "under srrand" << std::endl;
 	#endif
 	      send( new_s, reply, len, 0);
 	    }
-	}
-	else if(buf[0] == 'w'){ std::cout << "w is hit" << std::endl;char f = 'f';
 	      sprintf( reply, "%c", f);
 	      len = strlen( reply);
-	      send( new_s, reply, len, 0);// memset(sendbuf,0,len);
-	   std::ifstream file ("222.txt", std::ifstream::in);
+	      send( new_s, reply, len, 0);
+	}
+	else if(buf[0] == 'w'){ 
+  	   std::cout << "w is hit" << std::endl;
+	   sprintf( reply, "%c", f);
+	   len = strlen( reply);
+	   send( new_s, reply, len, 0);
+	   std::ifstream file ("111.txt", std::ifstream::in | std::ios::binary);
 	   if (file.is_open())
 		  {
-			  while(!file.eof() )
-			  {
-				sendbuf = new char[strSize];
-				file.read(sendbuf, strSize);
-				len = strlen( sendbuf);
-				int sss = send( new_s, sendbuf, len, 0);
-				std::cout <<sss << std::endl;
-std::cout << "test Inside";
+			//  sendbuf = new char[strSize];
+			  int sBuf[100];
+			  for (int i=0; i<100; i++) {
+			  	if (i%2==0) {
+//					sBuf[i]=i;
+			  		sBuf[i]=(char)(10000*(double)cos((double)(i/30)+1.6));
+//			  		sBuf[i]=(int)(10000*(double)sin((double)(i/30)));
+			  	}
+				else {
+			  		sBuf[i]=(char)(10000*(double)cos((double)(i/30)));
+			  	}
 			  }
+			  	
+				int sss = send( new_s, (char*)sBuf, 100, 0);
+
 			  file.close();
-//			  sendbuf[0] = 'f';
- //             int sss= send( new_s, sendbuf, len, 0);
-//			  std::cout <<sss <<sendbuf<< std::endl;
-	sleep(5);
-	char *sendf= new char[strSize];
-	      sprintf( sendf, "%c", f);
-	      len = strlen( sendf);
-	      send( new_s, sendf, len, 0);
-std::cout << "test";
+
+//	sleep(5);
+			      char *sendf= new char[strSize];
+			      sprintf( sendf, "%c", f);
+			      len = strlen( sendf);
+			      send( new_s, sendf, len, 0);
+			      std::cout << "test";
 		  }
-			  sendbuf[0] = 'f';
-              int sss= send( new_s, sendbuf, len, 0);
-			  std::cout <<sss <<sendbuf<< std::endl;std::cout << "test2";
-
-
-}
-	else{
-        std::cout << "no hits" << std::endl;
-		setting += 50;
-		sendbuf[0] = 'f';
-        int sss= send( new_s, sendbuf, len, 0);
-        std::cout <<sss <<sendbuf<< std::endl;
-std::cout << "test3";
+		std::cout << "test2";
 	}
-	 sendbuf[0] = 'f';std::cout << "test4";
-	 send( new_s, sendbuf, len, 0);
-	memset(buf,0,MAX_LINE);
+	else{
+	
+        std::cout << "no hits" << "else";
+//	int myInt = something;    ////////////////////////////////////
+//	int tmp = htonl((uint32_t)myInt);////////////////////////
+//	write(socket, &tmp, sizeof(tmp));/////////////////////////////
+//		uint32_t *bbb; 
+//				std::cout << bbb;	
+//		char *test = new char[512];
+//				std::cout << bbb;	
+//		sprintf(test, "%c%c%c%c",f,f,f,f);
+//		std::cout << bbb;	
+//		memcpy(bbb,test,4);
+//		std::cout << bbb;
+
+	}
+	std::cout << "out of while loop" << std::endl;
+
 	line = 0;
 	}
     close(new_s);
