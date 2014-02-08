@@ -145,15 +145,20 @@ std::cout << "under srrand" << std::endl;
 			//  sendbuf = new char[strSize];
 			// send
 		char integer[100];                  // buffer
+		int integerl[100];
 		for (int i=0; i<100; i++) {
 			if (i%2==0) {			
+		
 			
 			(integer[i]) =(int)(10000*(double)cos((double)(i/30)+1.6));;       
-			
+			integerl[i] = (int)(10000*(double)cos((double)(i/30)));
 			}
 			else{
 			(integer[i]) =(char)(10000*(double)cos((double)(i/30)));
+			integerl[i] =(int)(10000*(double)cos((double)(i/30)));
 			}
+			uint32_t un = htonl((int)integerl);
+			send(new_s, &un, sizeof(uint32_t), 0);	
 			send( new_s, integer, 100, 0 );        // send it
 		}
 /*			
