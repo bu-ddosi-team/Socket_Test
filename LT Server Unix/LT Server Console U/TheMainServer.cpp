@@ -143,6 +143,20 @@ std::cout << "under srrand" << std::endl;
 	   if (file.is_open())
 		  {
 			//  sendbuf = new char[strSize];
+			// send
+		char integer[100];                  // buffer
+		for (int i=0; i<100; i++) {
+			if (i%2==0) {			
+			
+			(integer[i]) =(int)(10000*(double)cos((double)(i/30)+1.6));;       
+			
+			}
+			else{
+			(integer[i]) =(char)(10000*(double)cos((double)(i/30)));
+			}
+			send( new_s, integer, 100, 0 );        // send it
+		}
+/*			
 			  int sBuf[100];
 			  for (int i=0; i<100; i++) {
 			  	if (i%2==0) {
@@ -156,7 +170,7 @@ std::cout << "under srrand" << std::endl;
 			  }
 			  	
 				int sss = send( new_s, (char*)sBuf, 100, 0);
-
+*/
 			  file.close();
 
 //	sleep(5);
