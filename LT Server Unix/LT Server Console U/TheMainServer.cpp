@@ -21,6 +21,7 @@
 #include <cstdio>
 #include <time.h>
 #include <ctime>
+#include <string>
 
 #define SERVER_PORT	27015
 // #define MAX_PENDING	5
@@ -139,28 +140,52 @@ std::cout << "under srrand" << std::endl;
 	   sprintf( reply, "%c", f);
 	   len = strlen( reply);
 	   send( new_s, reply, len, 0);
-	   std::ifstream file ("111.txt", std::ifstream::in | std::ios::binary);
-	   if (file.is_open())
-		  {
+//	   std::ifstream file ("111.txt", std::ifstream::in | std::ios::binary);
+//	   if (file.is_open())
+//		  {
 			//  sendbuf = new char[strSize];
-			// send
+			// send//
+		 int my_id[100] = {0};
+		 int my_net_id[100];// = htonl(my_id);
+//		 send(new_s, (const char*)&my_net_id, 4, 0);
 		char integer[100];                  // buffer
 		int integerl[100];
 		for (int i=0; i<100; i++) {
-			if (i%2==0) {			
-		
-			
+			(integer[i]) =i;       
+			integerl[i] = i;
+			my_id[i] =  i;
+/*			if (i%2==0) {				
 			(integer[i]) =(int)(10000*(double)cos((double)(i/30)+1.6));;       
 			integerl[i] = (int)(10000*(double)cos((double)(i/30)));
+			my_id[i] =  (int)(10000*(double)cos((double)(i/30)));
 			}
 			else{
 			(integer[i]) =(char)(10000*(double)cos((double)(i/30)));
 			integerl[i] =(int)(10000*(double)cos((double)(i/30)));
+			my_id[i] =  (int)(10000*(double)cos((double)(i/30)));
 			}
-			uint32_t un = htonl((int)integerl);
-			send(new_s, &un, sizeof(uint32_t), 0);	
-			send( new_s, integer, 100, 0 );        // send it
+*/			my_net_id[i] = htonl(my_id[i]);
 		}
+//		string tttt = "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT";
+			uint32_t un = htonl((int)integerl);
+			send(new_s, &un, sizeof(uint32_t)*100, 0);
+			std::cout << un <<std::endl;	
+//			      char *liner= new char[strSize];/
+//			      sprintf( liner, "%s", tttt);
+//			      len = strlen( liner);
+//			      send( new_s, liner, len, 0);
+//			      std::cout << "liner1";		
+			      	
+			send( new_s, integer, 100, 0 );        // send it
+			std::cout << integer<<std::endl;;	
+//			      sprintf( liner, "%s", tttt);
+//			      len = strlen( liner);
+//			      send( new_s, liner, len, 0);
+//			      std::cout << "liner2";
+			      
+
+			send(new_s, (const char*)&my_net_id, 100*sizeof(int), 0);
+			std::cout << my_id<<std::endl;;	
 /*			
 			  int sBuf[100];
 			  for (int i=0; i<100; i++) {
@@ -176,7 +201,7 @@ std::cout << "under srrand" << std::endl;
 			  	
 				int sss = send( new_s, (char*)sBuf, 100, 0);
 */
-			  file.close();
+//			  file.close();
 
 //	sleep(5);
 			      char *sendf= new char[strSize];
@@ -184,7 +209,7 @@ std::cout << "under srrand" << std::endl;
 			      len = strlen( sendf);
 			      send( new_s, sendf, len, 0);
 			      std::cout << "test";
-		  }
+//		  }
 		std::cout << "test2";
 	}
 	else{
