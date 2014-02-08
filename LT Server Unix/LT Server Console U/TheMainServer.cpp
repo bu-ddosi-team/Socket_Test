@@ -21,7 +21,7 @@
 #include <cstdio>
 #include <time.h>
 #include <ctime>
-#include <string>
+
 
 #define SERVER_PORT	27015
 // #define MAX_PENDING	5
@@ -154,17 +154,17 @@ std::cout << "under srrand" << std::endl;
 			(integer[i]) =i;       
 			integerl[i] = i;
 			my_id[i] =  i;
-/*			if (i%2==0) {				
-			(integer[i]) =(int)(10000*(double)cos((double)(i/30)+1.6));;       
-			integerl[i] = (int)(10000*(double)cos((double)(i/30)));
-			my_id[i] =  (int)(10000*(double)cos((double)(i/30)));
-			}
-			else{
-			(integer[i]) =(char)(10000*(double)cos((double)(i/30)));
-			integerl[i] =(int)(10000*(double)cos((double)(i/30)));
-			my_id[i] =  (int)(10000*(double)cos((double)(i/30)));
-			}
-*/			my_net_id[i] = htonl(my_id[i]);
+			my_net_id[i] = htonl(my_id[i]);
+//			if (i%2==0) {				
+//			(integer[i]) =(int)(10000*(double)cos((double)(i/30)+1.6));;       
+//			integerl[i] = (int)(10000*(double)cos((double)(i/30)));
+//			my_id[i] =  (int)(10000*(double)cos((double)(i/30)));
+//			}
+//			else{
+//			(integer[i]) =(char)(10000*(double)cos((double)(i/30)));
+//			integerl[i] =(int)(10000*(double)cos((double)(i/30)));
+//			my_id[i] =  (int)(10000*(double)cos((double)(i/30)));
+//			}			
 		}
 //		string tttt = "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT";
 			uint32_t un = htonl((int)integerl);
@@ -176,16 +176,16 @@ std::cout << "under srrand" << std::endl;
 //			      send( new_s, liner, len, 0);
 //			      std::cout << "liner1";		
 			      	
-			send( new_s, integer, 100, 0 );        // send it
-			std::cout << integer<<std::endl;;	
+//			send( new_s, integer, 100, 0 );        // send it
+//			std::cout << integer<<std::endl;;	
 //			      sprintf( liner, "%s", tttt);
 //			      len = strlen( liner);
 //			      send( new_s, liner, len, 0);
 //			      std::cout << "liner2";
 			      
 
-			send(new_s, (const char*)&my_net_id, 100*sizeof(int), 0);
-			std::cout << my_id<<std::endl;;	
+//			send(new_s, (const char*)&my_net_id, 100*sizeof(int), 0);
+//			std::cout << my_id<<std::endl;;	
 /*			
 			  int sBuf[100];
 			  for (int i=0; i<100; i++) {
