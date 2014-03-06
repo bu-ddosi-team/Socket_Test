@@ -1,5 +1,4 @@
 
-#define SEND_BINARY
 
 #define DEFAULT_BUFLEN 512
 #define DEFAULT_PORT "27015"
@@ -29,6 +28,10 @@
 // #define SERVER_PORT    5791
 #define MAX_PENDING     1
 #define MAX_LINE	256
+
+extern int startCollecting(int servSocket);
+extern int gotWDebug(int servSocket);
+
 
 int
 main(int argc, char *argv[])
@@ -113,62 +116,23 @@ std::cout << "under srrand" << std::endl;
 	{
 	std::cout << buf<< std::endl;
 	if(buf[0] == 'w'){ 
-	    std::cout << "w is hit" << std::endl;
-	    while ( line < 1000) {
-	      rnum = rand()%setting;
-	      mnum = rand()%1000;
-		if(mnum == 0){mtype = 'f';}
-		else if(mnum == 1){mtype = 'e';}
-		else {mtype = 'b';}
-	      ++line;
-	#ifdef BINARY_DATA
-	      for( int i=0; i<MAX_LINE; i++)
-		reply[i] = i ^ 0xff;
-	      len = MAX_LINE;
-	#else
-	      sprintf( reply, "%c%d\n", mtype, rnum);
-	      len = strlen( reply);
-	#endif
-	      send( new_s, reply, len, 0);
-	    }
-	      sprintf( reply, "%c", f);
-	      len = strlen( reply);
-	      send( new_s, reply, len, 0);
+		pid_t pid = fork();
+		if(pid == 0){
+		std::cout << "gotwdebug" << std::endl;
+			gotWDebug(new_s);
+		}
+		else{
+		std::cout << "parent gwd" << std::endl;
+		}
 	}
 	else if(buf[0] == 's'){ 
-  	   std::cout << "s is hit" << std::endl;
-	   sprintf( reply, "%c", f);
-	   len = strlen( reply);
-	   send( new_s, reply, len, 0);
-//	   std::ifstream file ("111.txt", std::ifstream::in | std::ios::binary);
-//	   if (file.is_open())
-//		  {
-			//  sendbuf = new char[strSize];
-			// send//
-		 int my_id[100] = {0};
-		 int my_net_id[100];// = htonl(my_id);
-//		 send(new_s, (const char*)&my_net_id, 4, 0);
-		char integer[100];                  // buffer
-		int integerl[100];
-		for (int i=0; i<100; i++) {
-			integerl[i] = (int)(10000*(double)cos((double)(i/30)+1.6));
-			integerl[i] =(int)(10000*(double)cos((double)(i/30)));
+		pid_t pid = fork();
+		if(pid == 0){
+			startCollecting(new_s);
 		}
-
-			uint32_t un = htonl((int)integerl);
-			send(new_s, &un, sizeof(uint32_t)*100, 0);
-			std::cout << un <<std::endl;	
-
-//			  file.close();
-
-
-			      char *sendf= new char[strSize];
-			      sprintf( sendf, "%c", f);
-			      len = strlen( sendf);
-			      send( new_s, sendf, len, 0);
-			      std::cout << "test";
-//		  }
-		std::cout << "test2";
+		else{
+		
+		}
 	}
 	else{
 	
