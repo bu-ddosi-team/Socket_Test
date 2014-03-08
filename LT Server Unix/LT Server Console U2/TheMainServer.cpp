@@ -20,7 +20,8 @@
 #include <cstdio>
 #include <time.h>
 #include <ctime>
-
+#include <signal.h>
+#include <sys/wait.h>
 
 #define SERVER_PORT	27015
 // #define MAX_PENDING	5
@@ -31,7 +32,7 @@
 
 extern int startCollecting(int servSocket);
 extern int gotWDebug(int servSocket);
-
+extern int fileCollecting(int servSocket);
 
 int
 main(int argc, char *argv[])
@@ -110,49 +111,95 @@ int mnum;
 char mtype;
 int setting = 10000;
 char f = 'f';
+int status;
 srand(time(0));
 std::cout << "under srrand" << std::endl;
+
 	while ((len = recv(new_s, buf, sizeof(buf), 0)) > 0)
 	{
 	std::cout << buf<< std::endl;
 	if(buf[0] == 'w'){ 
 		pid_t pid = fork();
 		if(pid == 0){
-		std::cout << "gotwdebug" << std::endl;
+			std::cout << "gotwdebug" << std::endl;
 			gotWDebug(new_s);
+			std::cout << "Terminating gotwdebug" << std::endl;
+			_exit(0);
 		}
 		else{
-		std::cout << "parent gwd" << std::endl;
+			std::cout << "parent gwd" << std::endl;
+			pid_t pid2 = fork();
+			if(pid2 == 0){
+				len = recv(new_s, buf, sizeof(buf), 0);
+				if(buf[0] == 'c'){
+					std::cout << "Killing gotwdebug" << std::endl;
+					kill(pid,SIGTERM);
+				} 
+			}
+			waitpid(pid, &status, WNOHANG);
+			if(WIFEXITED(status)){
+				std::cout << "killing killer" << std::endl;
+				kill(pid2,SIGTERM);
+			}	
 		}
 	}
 	else if(buf[0] == 's'){ 
 		pid_t pid = fork();
 		if(pid == 0){
+			std::cout << "startCollecting" << std::endl;
 			startCollecting(new_s);
+			std::cout << "Terminating collector" << std::endl;
+			_exit(0);
 		}
 		else{
-		
+			std::cout << "parent collector" << std::endl;
+			pid_t pid2 = fork();
+			if(pid2 == 0){
+				len = recv(new_s, buf, sizeof(buf), 0);
+				if(buf[0] == 'c'){
+					std::cout << "Killing collector" << std::endl;
+					kill(pid,SIGTERM);
+				} 
+			}
+			waitpid(pid, &status, WNOHANG);
+			if(WIFEXITED(status)){
+				std::cout << "Killing killer" << std::endl;
+				kill(pid2,SIGTERM);
+			}
+		}
+	}
+	else if(buf[0] == 'r'){ 
+		pid_t pid = fork();
+		if(pid == 0){
+			std::cout << "fileCollecting" << std::endl;
+			fileCollecting(new_s);
+			std::cout << "Terminating collector" << std::endl;
+			_exit(0);
+		}
+		else{
+			std::cout << "parent collector" << std::endl;
+			pid_t pid2 = fork();
+			if(pid2 == 0){
+				len = recv(new_s, buf, sizeof(buf), 0);
+				if(buf[0] == 'c'){
+					std::cout << "Killing collector" << std::endl;
+					kill(pid,SIGTERM);
+				} 
+			}
+			waitpid(pid, &status, WNOHANG);
+			if(WIFEXITED(status)){
+				std::cout << "Killing killer" << std::endl;
+				kill(pid2,SIGTERM);
+			}
 		}
 	}
 	else{
 	
-        std::cout << "no hits" << "else";
-//	int myInt = something;    ////////////////////////////////////
-//	int tmp = htonl((uint32_t)myInt);////////////////////////
-//	write(socket, &tmp, sizeof(tmp));/////////////////////////////
-//		uint32_t *bbb; 
-//				std::cout << bbb;	
-//		char *test = new char[512];
-//				std::cout << bbb;	
-//		sprintf(test, "%c%c%c%c",f,f,f,f);
-//		std::cout << bbb;	
-//		memcpy(bbb,test,4);
-//		std::cout << bbb;
+	        std::cout << "no hits" << "else";
 
 	}
 	std::cout << "out of while loop" << std::endl;
 
-	line = 0;
 	}
     close(new_s);
   }
