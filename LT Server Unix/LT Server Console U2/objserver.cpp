@@ -19,6 +19,7 @@
 
 #define MAX_LINE	256
 //Temp main
+/*
 int main( int argc, char* argv[])
 {
 
@@ -26,6 +27,7 @@ int main( int argc, char* argv[])
 
 
 }
+*/
 
 int gotWDebug(int new_s)
 {

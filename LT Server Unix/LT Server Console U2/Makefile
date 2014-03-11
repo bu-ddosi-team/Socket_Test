@@ -3,25 +3,30 @@ $(shell export LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH)
 
 PROGS = test2
 OBJS = objserver.o
-LIBS = libobjserver.so
+LIBS = libobjserver.a #libobjserver.so
 all: $(LIBS) $(PROGS) $(OBJS)
 
-###
-libobjserver.so: objserver.o
-	gcc -shared -o $@ objserver.o
+### shared library
+#libobjserver.so: objserver.o
+#	gcc -shared -o $@ objserver.o
+
+#static library
+libobjserver.a: objserver.o
+	ar rc libobjserver.a objserver.o
+	ranlib libobjserver.a
+
 	
 objserver.o: objserver.cpp
-	g++ -fPIC -c objserver.cpp
+#	g++ -fPIC -c objserver.cpp
+	g++ -c objserver.cpp
+
 
 test2: TheMainServer.cpp
 	g++ -o $@ TheMainServer.cpp -L. -lobjserver
 
-#libobjserver.a: objserver.o
-#	ar rc libobjserver.a objserver.o
-#	ranlib libobjserver.a
 	
 	
 clean:
-	rm -f *.0 *~ *.so $(PROGS)
+	rm -f *.0 *~ *.so *.a $(PROGS)
 
 
