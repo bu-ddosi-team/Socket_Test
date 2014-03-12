@@ -29,25 +29,44 @@ int main( int argc, char* argv[])
 }
 */
 
+struct sName
+{
+	/* data */
+	
+	
+};
+
+class ServerObj{
+
+public:
+	int gotWDebug(int);
+	int fileCollecting(int);
+	int startCollecting(int);
+	
+private:
+
+};
+
+
 int gotWDebug(int new_s)
 {
 	char *sendbuf;// = "this is a test";
 	int fileSize;
 	char f = 'f';
 	char buf[MAX_LINE];
-	  char reply[MAX_LINE];
- 	 int conn, line;
- 	 int len;
- 	 int s;
+	char reply[MAX_LINE];
+ 	int conn, line;
+ 	int len;
+ 	int s;
   	int strSize = MAX_LINE;
   	
   	int rnum;
-int mnum;
-char mtype;
-int setting = 10000;
+	int mnum;
+	char mtype;
+	int setting = 10000;
 
 
-	    std::cout << "w is hit" << std::endl;
+//	    std::cout << "w is hit" << std::endl;
 	    while ( line < 1000) {
 	      rnum = rand()%setting;
 	      mnum = rand()%1000;
@@ -82,15 +101,11 @@ int startCollecting(int new_s)
  	 int s;
   	int strSize = MAX_LINE;
   	
-  	   std::cout << "s is hit" << std::endl;
+//  	   std::cout << "s is hit" << std::endl;
 	   sprintf( reply, "%c", f);
 	   len = strlen( reply);
 	   send( new_s, reply, len, 0);
-//	   std::ifstream file ("111.txt", std::ifstream::in | std::ios::binary);
-//	   if (file.is_open())
-//		  {
-			//  sendbuf = new char[strSize];
-			// send//
+
 		 int my_id[100] = {0};
 		 int my_net_id[100];// = htonl(my_id);
 //		 send(new_s, (const char*)&my_net_id, 4, 0);
@@ -103,14 +118,11 @@ int startCollecting(int new_s)
 			uint32_t un = htonl((int)integerl);
 			send(new_s, &un, sizeof(uint32_t)*100, 0);
 
-//			  file.close();
+
 			      char *sendf= new char[strSize];
 			      sprintf( sendf, "%c", f);
 			      len = strlen( sendf);
 			      send( new_s, sendf, len, 0);
-
-//		  }
-
 
 }
 
@@ -123,13 +135,13 @@ int fileCollecting(int new_s)
 	int fileSize;
 	char f = 'f';
 	char buf[MAX_LINE];
-	  char reply[MAX_LINE];
- 	 int conn, line;
- 	 int len;
- 	 int s;
+	char reply[MAX_LINE];
+ 	int conn, line;
+ 	int len;
+ 	int s;
   	int strSize = MAX_LINE;
 
-  	   std::cout << "s is hit" << std::endl;
+ // 	   std::cout << "s is hit" << std::endl;
 	   sprintf( reply, "%c", f);
 	   len = strlen( reply);
 	   send( new_s, reply, len, 0);
@@ -137,9 +149,8 @@ int fileCollecting(int new_s)
 	   while (!file.eof())
 		  {
 			  sendbuf = new char[strSize];
-			// send//
-
-			 file.read(sendbuf, strSize);
+			 
+			  file.read(sendbuf, strSize);
 			  int sss = send( new_s, sendbuf, len, 0);
 
 	//			std::cout << "sending file" << std::endl;
@@ -151,7 +162,7 @@ int fileCollecting(int new_s)
 
 		  }
 	file.close();
-				std::cout << "Closing file" << std::endl;
+	std::cout << "Closing file" << std::endl;
 }
 
 
