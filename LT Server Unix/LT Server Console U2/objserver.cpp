@@ -33,7 +33,6 @@ struct sName
 {
 	/* data */
 	
-	
 };
 
 class ServerObj{
@@ -111,12 +110,22 @@ int startCollecting(int new_s)
 //		 send(new_s, (const char*)&my_net_id, 4, 0);
 		int integerl[100];
 		for (int i=0; i<100; i++) {
-			integerl[i] = (int)(10000*(double)cos((double)(i/30)+1.6));
-			integerl[i] =(int)(10000*(double)cos((double)(i/30)));
+//			integerl[i] = (int)(10000*(double)cos((double)(i/30)+1.6));
+//			integerl[i] =(int)(10000*(double)cos((double)(i/30)));
+		if (i%2==0) {
+
+			integerl[i]=(int)(10000*(double)cos((double)(i/10.0)+1.57));
+
+		}
+		else {
+
+			 integerl[i]=(int)(10000*(double)cos((double)(i/10.0)));
+
+		}
 		}
 
-			uint32_t un = htonl((int)integerl);
-			send(new_s, &un, sizeof(uint32_t)*100, 0);
+			//uint32_t un = htonl((int)integerl);
+			send(new_s, &integerl, sizeof(uint32_t)*100, 0);
 
 
 			      char *sendf= new char[strSize];
@@ -145,7 +154,7 @@ int fileCollecting(int new_s)
 	   sprintf( reply, "%c", f);
 	   len = strlen( reply);
 	   send( new_s, reply, len, 0);
-	   std::ifstream file ("testdata", std::ifstream::in | std::ios::binary);
+	   std::ifstream file ("sincoswaves.txt", std::ifstream::in | std::ios::binary);
 	   while (!file.eof())
 		  {
 			  sendbuf = new char[strSize];
@@ -153,7 +162,7 @@ int fileCollecting(int new_s)
 			  file.read(sendbuf, strSize);
 			  int sss = send( new_s, sendbuf, len, 0);
 
-	//			std::cout << "sending file" << std::endl;
+				std::cout << sendbuf<< std::endl;
 
 			      char *sendf= new char[strSize];
 			      sprintf( sendf, "%c", f);

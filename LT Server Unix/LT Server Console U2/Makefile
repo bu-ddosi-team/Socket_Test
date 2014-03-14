@@ -15,7 +15,7 @@ libobjserver.a: objserver.o
 	ar rc libobjserver.a objserver.o
 	ranlib libobjserver.a
 
-	
+	 ###should be objTest
 objserver.o: objserver.cpp
 #	g++ -fPIC -c objserver.cpp
 	g++ -c objserver.cpp

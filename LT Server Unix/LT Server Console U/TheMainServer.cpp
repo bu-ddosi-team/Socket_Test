@@ -155,23 +155,23 @@ std::cout << "under srrand" << std::endl;
 //			integerl[i] = i;
 //			my_id[i] =  i;
 //			my_net_id[i] = htonl(my_id[i]);
-//			if (i%2==0) {				
-//			(integer[i]) =(int)(10000*(double)cos((double)(i/30)+1.6));;       
+			if (i%2==0) {				
+//			(integer[i]) =(int)(10000*(double)cos((double)(i/30)+1.6));       
 			integerl[i] = (int)(10000*(double)cos((double)(i/30)+1.6));
 //			my_id[i] =  (int)(10000*(double)cos((double)(i/30)));
-//			}
-//			else{
+			}
+			else{
 //			(integer[i]) =(char)(10000*(double)cos((double)(i/30)));
 			integerl[i] =(int)(10000*(double)cos((double)(i/30)));
 //			my_id[i] =  (int)(10000*(double)cos((double)(i/30)));
-//			}			
+			}			
 		}
 //		string tttt = "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT";
 			uint32_t un = htonl((int)integerl);
 			send(new_s, &un, sizeof(uint32_t)*100, 0);
 			std::cout << un <<std::endl;	
 	      	
-//			send( new_s, integer, 100, 0 );        // send it
+//			send( new_s, integer, 100, 0 );        // send it/
 //			std::cout << integer<<std::endl;;	
 		      
 

@@ -22,6 +22,7 @@
 #include <ctime>
 #include <signal.h>
 #include <sys/wait.h>
+#include <exception>
 
 #define SERVER_PORT	27015
 // #define MAX_PENDING	5
@@ -100,6 +101,17 @@ try{
 //char f = 'f';
 int status;
 //srand(time(0));
+
+			char *sendbuf;// = "this is a test";
+	int fileSize;
+	char f = 'f';
+	char buf[MAX_LINE];
+	  char reply[MAX_LINE];
+ 	 int conn, line;
+ 	 int len;
+ 	 int s;
+  	int strSize = MAX_LINE;
+
 std::cout << "Starting persistent connection" << std::endl;
 
 	while ((len = recv(new_s, buf, sizeof(buf), 0)) > 0)
@@ -130,7 +142,7 @@ std::cout << "Starting persistent connection" << std::endl;
 				}	
 			}
 		}
-		else if(buf[0] == 's'){ 
+		else if(buf[0] == 's'){ 			     
 			pid_t pid = fork();
 			if(pid == 0){
 				std::cout << "startCollecting" << std::endl;
@@ -154,6 +166,7 @@ std::cout << "Starting persistent connection" << std::endl;
 					kill(pid2,SIGTERM);
 				}
 			}
+			
 		}
 		else if(buf[0] == 'r'){ 
 			pid_t pid = fork();
@@ -194,6 +207,7 @@ std::cout << "Starting persistent connection" << std::endl;
   }//end try
   catch(int e) {	std::cout << "int exception...\n" << std::endl;		}
   catch(char e){	std::cout << "char exception...\n" << std::endl;	}
+  catch (const std::exception& e)  {    std::cout << e.what() << std::endl;  }
   catch(...){	std::cout << "default exception...\n" << std::endl;	}
 
 
