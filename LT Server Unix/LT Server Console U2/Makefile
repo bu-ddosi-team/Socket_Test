@@ -1,28 +1,28 @@
 $(shell export LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH)
 
 
-PROGS = test2
-OBJS = objserver.o
-LIBS = libobjserver.a #libobjserver.so
+PROGS = test
+OBJS = DsauServer.o
+LIBS = libDsauServer.a #libDsauServer.so
 all: $(LIBS) $(PROGS) $(OBJS)
 
 ### shared library
-#libobjserver.so: objserver.o
-#	gcc -shared -o $@ objserver.o
+#libDsauServer.so: DsauServer.o
+#	gcc -shared -o $@ DsauServer.o
 
 #static library
-libobjserver.a: objserver.o
-	ar rc libobjserver.a objserver.o
-	ranlib libobjserver.a
+libDsauServer.a: DsauServer.o
+	ar rc libDsauServer.a DsauServer.o
+	ranlib libDsauServer.a
 
 	 ###should be objTest
-objserver.o: objserver.cpp
-#	g++ -fPIC -c objserver.cpp
-	g++ -c objserver.cpp
+DsauServer.o: DsauServer.cpp
+#	g++ -fPIC -c DsauServer.cpp
+	g++ -c DsauServer.cpp
 
 
-test2: TheMainServer.cpp
-	g++ -o $@ TheMainServer.cpp -L. -lobjserver
+test: TheMainServer.cpp DsauServer.o
+	g++ -o $@ TheMainServer.cpp -L. -lDsauServer
 
 	
 	

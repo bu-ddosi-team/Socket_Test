@@ -19,30 +19,6 @@
 
 #define MAX_LINE	256
 
-class DsauServer{
-  
-	public:
-		DsauServer();
-		int gotRandDebug(int);
-		int fileCollecting(int);
-		int startCollecting(int);
-			
-	private:
-		int nSweep;
-		double dSweep;
-		double minF;
-		double maxF;
-		int nStep;
-		int nSample;
-		char *C_sweep;
-		char *C_step;
-		char *C_sample;
-		char *C_delay;
-		char *C_min;
-		char *C_max;			
-
-};
-
 
 struct Control
 {
@@ -53,31 +29,40 @@ struct Control
 	double minF;//e
 	double maxF;//f
 
-
-		
-}; 	
 	char *C_sweep;
 	char *C_step;
 	char *C_sample;
 	char *C_delay;
 	char *C_min;
 	char *C_max;
+		
+}; 	
 
+/*
 	int writeToAddr(int, char, Control, char*);
 	int gotRandDebug(int);
 	int fileCollecting(int);
 	int startCollecting(int);
-//Make template classes for these.
-	double d_getPCVal(char*);
-	int i_getPCVal(char*);
-	int isValid(int, int); //you can combine both isValids if you pass by reference
-	double isValid(int, double);
 	int loadSavedSettings(char*, Control&);
 	int readFromAddress(char , int *, double *, int *);
-
-
-
-
+*/	
+	double d_getPCVal(char*);
+	int i_getPCVal(char*);
+	int isValid(int, int); 
+	double isValid(int, double);
+		
+int isValid(int addrloc, int iVal, double dVal);
+int a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf);
+int writeToAddr(int new_s, char addrloc, Control& param, char *buf);
+int loadSavedSettings(char *fileName, Control& settings);
+int saveToFile(char *fileName, Control settings);
+int readFromAddress(int new_s,char addrloc, int *iVal, double *dVal, int *type);
+int gotRandDebug(int new_s);
+int fileCollecting(int new_s);
+int startCollecting(int new_s);
+	
+	
+	
 int isValid(int addrloc, int iVal, double dVal)
 {
 #define mSweep 100
@@ -180,7 +165,9 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 	  	 	return 1;
 		  }
 		  else
-		  {   fprintf(stderr, "%d is %s \n", iVal, "Not a valid value for number of Sweeps");}
+		  {   
+		  fprintf(stderr, "%d is %s \n", iVal, "Not a valid value for number of Sweeps");
+		  }
 		  break;
 		case 'b':	//nstep
 //	  	  iVal = i_getPCVal(buf);
@@ -191,7 +178,9 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 	  	 	return 1;	  
 	  	  }
 		  else
-		  {  fprintf(stderr, "%d is %s \n", iVal, "Not a valid value for number of steps");		  }
+		  {  
+		  fprintf(stderr, "%d is %s \n", iVal, "Not a valid value for number of steps");		  
+		  }
 		  break;	
 		case 'c':	//nSample
 //	  	  iVal = i_getPCVal(buf);
@@ -202,7 +191,9 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 	  	 	return 1;  	  	 
 	  	  }
 		  else
-		  {  fprintf(stderr, "%d is %s \n",iVal,  "Not a valid value for number of samples");	  } 
+		  {  
+		  fprintf(stderr, "%d is %s \n",iVal,  "Not a valid value for number of samples");	  
+		  } 
 		  break;
 		case 'd':	//dsweeep
 //	  	  dVal = d_getPCVal(buf);
@@ -213,18 +204,22 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 	  	 	return 1;  	  	  	  
 	  	  }
 		  else
-		  {  fprintf(stderr, "%f is %s \n", dVal, "Not a valid value for sweep delay");	  }
+		  {  
+		  fprintf(stderr, "%f is %s \n", dVal, "Not a valid value for sweep delay");	 
+		   }
 		  break;	
 		case 'e':	//minF
 //	  	  dVal = d_getPCVal(buf);
 	  	  if(a_getPCVal(&iVal, &dVal, addrloc, buf))//isValid(addrloc, dVal))
 	  	  {  
-	  		  param.minF = dVal; 	  
+	  		param.minF = dVal; 	  
 	  	 	printf("Setting minF to %f\n", dVal);	 
 	  	 	return 1; 	  	  	  
 	  	  }
 		  else
-		  {  fprintf(stderr, "%f is %s \n", dVal, "Not a valid value for minimum frequency");	  }		
+		  {  
+		  fprintf(stderr, "%f is %s \n", dVal, "Not a valid value for minimum frequency");	  
+		  }		
 		  break;
 		case 'f':	//maxF
 //	  	  dVal = d_getPCVal(buf);
@@ -235,12 +230,20 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 	  	 	return 1;	  	  	  	  
 	  	  }
 		  else
-		  {  fprintf(stderr, "%f is %s \n",dVal, "Not a valid value for maximum frequency");	  }		 
+		  { 
+		   fprintf(stderr, "%f is %s \n",dVal, "Not a valid value for maximum frequency");	  
+		   }		 
 		  break;			  		  	
 		default:
 		  fprintf(stderr, "%s \n", "Not a valid address");
+		  char *sendf= new char[MAX_LINE];
+		  sprintf( sendf, "%c%s ", 'e', "Not a valid address");
+		  send( new_s, sendf, strlen( sendf), 0);		  
 		  return -1;
 	}	//include print error function for error codes
+	char *sendf= new char[MAX_LINE];
+	sprintf( sendf, "%c%s ", 'e', "Not a Valid Value");
+	send( new_s, sendf, strlen( sendf), 0);
  return 0;
 }
 
@@ -249,9 +252,8 @@ int loadSavedSettings(char *fileName, Control& settings){
 	char pset1[128];	char pset4[128];
 	char pset2[128];	char pset5[128];
 	char pset3[128];	char pset6[128];
-	fprintf(stderr, "opening cs \n");
+	fprintf(stderr, "opening %s \n", fileName);
 	std::ifstream ifile (fileName, std::ifstream::in );
-//	while(!ifile.eof() && ifile.is_open() ){
 		ifile.getline(pset1, 128);
 		ifile.getline(pset2, 128);
 		ifile.getline(pset3, 128);
@@ -259,12 +261,20 @@ int loadSavedSettings(char *fileName, Control& settings){
 		ifile.getline(pset5, 128);
 		ifile.getline(pset6, 128);
 	ifile.close(); 
-	 C_sweep  = pset1;
-	 C_step   = pset2;
-	 C_sample = pset3;
-	 C_delay  = pset4;
-	 C_min    = pset5;
-	 C_max    = pset6;	
+	
+	 settings.C_sweep  = pset1;
+	 settings.C_step   = pset2;
+	 settings.C_sample = pset3;
+	 settings.C_delay  = pset4;
+	 settings.C_min    = pset5;
+	 settings.C_max    = pset6;
+	 
+	 settings.nSweep   = atoi(pset1); 
+	 settings.nStep    = atoi(pset2);
+	 settings.nSample  = atoi(pset3);	
+	 settings.dSweep   = atof(pset4);
+	 settings.minF 	   = atof(pset5);
+	 settings.maxF     = atof(pset6);
 /*	
 	fprintf(stdout, "nsweep = %s \n", pset1);
 	fprintf(stdout, "nsweep = %s \n", pset2);
@@ -277,59 +287,76 @@ int loadSavedSettings(char *fileName, Control& settings){
 }
 int saveToFile(char *fileName, Control settings)
 {
-	if(C_sweep == NULL || C_step == NULL || C_sample == NULL || C_delay == NULL || C_min == NULL || C_max == NULL)
+	if(settings.C_sweep == NULL || settings.C_step == NULL || settings.C_sample == NULL || settings.C_delay == NULL || settings.C_min == NULL || settings.C_max == NULL)
 	{
 	  fprintf(stderr, "Unable to save settings to file. One or more values are NULL \n");
 	}
  	std::ofstream ofile(fileName, std::ofstream::out);
-	ofile << C_sweep;
-	ofile << C_step;
-	ofile << C_sample;
-	ofile << C_delay;
-	ofile << C_min;
-	ofile << C_max;
+	ofile << settings.C_sweep;
+	ofile << settings.C_step;
+	ofile << settings.C_sample;
+	ofile << settings.C_delay;
+	ofile << settings.C_min;
+	ofile << settings.C_max;
  	ofile.close();
  	printf("Settings Saved\n");
   return 0;
 
 }
-int readFromAddress(char addrloc, int *iVal, double *dVal, int *type){
+int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type){
 //we'll be simulating reading from the zynq with reading from a txt file. If we are using xml for settings data, we'll need to add code to handle it but it will be much more convient for accessing data.
 	Control settings;
  	loadSavedSettings("Control_Settings.txt", settings);
-	
 	
 	switch(addrloc)
 	{
 		case 'a':	//nsweep		
 	  	  *iVal = settings.nSweep;
+	  	  printf("Sweep number is %d Saved\n", *iVal);
 		  *type = 1;
 		  break;
 		case 'b':	//nstep
 	  	  *iVal = settings.nStep;
-		  *type = 1;
+	  	  printf("Step Number is %d Saved\n", *iVal);
+		  *type = 2;
 		  break;	
 		case 'c':	//nSample
 	  	  *iVal = settings.nSample;
-		  *type = 1;
+	  	  printf("Sample Number %d Saved\n", *iVal);
+		  *type = 3;
 		  break;
 		case 'd':	//dsweeep
 	  	  *dVal = settings.dSweep;
-		  *type = 2;
+	  	  printf("Sweep Delay is %f Saved\n", *dVal);
+		  *type = 4;
 		  break;	
 		case 'e':	//minF
 	  	  *dVal = settings.minF;
-		  *type = 2;
+	  	  printf("Min Frequency is %f Saved\n", *dVal);
+		  *type = 5;
 		  break;
 		case 'f':	//maxF
 	  	  *dVal = settings.maxF;
-		  *type = 2;		 
+	  	  printf("Max Frequency is %f Saved\n", *dVal);
+		  *type = 6;		 
 		  break;			  		  	
 		default:
 		  fprintf(stderr, "%s \n", "Not a valid address");
-		  return -1;
+		  char *sendf= new char[MAX_LINE];
+		  sprintf( sendf, "%c%s ", 'e', "Not a valid address");
+		  send( new_s, sendf,strlen( sendf), 0);
+		  return 0;
 	
 	}
+	
+	/***
+	//Server code to send back response? or do something else?
+	***/
+	char *sendf= new char[MAX_LINE];
+	sprintf( sendf, "%c", 'f');
+	send( new_s, sendf, strlen( sendf), 0);
+		
+	
 return 1;
 }
 
@@ -359,10 +386,8 @@ int gotRandDebug(int new_s)
 		else if(mnum == 1){mtype = 'e';}
 		else {mtype = 'b';}
 	      ++line;
-
 	      sprintf( reply, "%c%d\n", mtype, rnum);
 	      len = strlen( reply);
-
 	      send( new_s, reply, len, 0);
 	    }
 	      sprintf( reply, "%c", f);
@@ -384,7 +409,7 @@ int startCollecting(int new_s)
  	 int conn, line;
  	 int len;
  	 int s;
-  	int strSize = MAX_LINE;
+
   	
 //  	   std::cout << "s is hit" << std::endl;
 	   sprintf( reply, "%c", f);
@@ -409,7 +434,7 @@ int startCollecting(int new_s)
 		}
 	//uint32_t un = htonl((int)integerl);
 	send(new_s, &integerl, sizeof(uint32_t)*100, 0);
-	char *sendf= new char[strSize];
+	char *sendf= new char[MAX_LINE];
 	sprintf( sendf, "%c", f);
 	len = strlen( sendf);
 	send( new_s, sendf, len, 0);
@@ -429,7 +454,7 @@ int fileCollecting(int new_s)
  	int conn, line;
  	int len;
  	int s;
-  	int strSize = MAX_LINE;
+
 
  // 	   std::cout << "s is hit" << std::endl;
 	   sprintf( reply, "%c", f);
@@ -438,14 +463,14 @@ int fileCollecting(int new_s)
 	   std::ifstream file ("sincoswaves.txt", std::ifstream::in | std::ios::binary);
 	   while (!file.eof())
 		  {
-			  sendbuf = new char[strSize];
+			  sendbuf = new char[MAX_LINE];
 			 
-			  file.read(sendbuf, strSize);
+			  file.read(sendbuf, MAX_LINE);
 			  int sss = send( new_s, sendbuf, len, 0);
 
 				std::cout << sendbuf<< std::endl;
 
-			      char *sendf= new char[strSize];
+			      char *sendf= new char[MAX_LINE];
 			      sprintf( sendf, "%c", f);
 			      len = strlen( sendf);
 			      send( new_s, sendf, len, 0);
