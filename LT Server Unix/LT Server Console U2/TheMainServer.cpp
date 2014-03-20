@@ -23,11 +23,13 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <exception>
+//#include "DsauServer.h"
+
 
 #define SERVER_PORT	27015
 // #define MAX_PENDING	5
 
-// #define SERVER_PORT    5791
+
 #define MAX_PENDING     1
 #define MAX_LINE	256
 
@@ -60,7 +62,7 @@ extern int isValid(int addrloc, int iVal, double dVal);
 extern int a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf);
 extern int loadSavedSettings(char *fileName, Control& settings);
 extern int saveToFile(char *fileName, Control settings);
-extern int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type);
+extern int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type, Control& settings);
 extern int gotRandDebug(int new_s);
 extern int fileCollecting(int new_s);
 extern int startCollecting(int new_s);
@@ -71,7 +73,7 @@ extern int startCollecting(int new_s);
 
 
 Control param; 
-
+/*
 void debuggingalone()
 {
   int ival, type;
@@ -92,14 +94,15 @@ void debuggingalone()
 
  
   printf("----------------------------------------\n");
-  readFromAddress(1, test[1], &ival, &dval, &type);
+  readFromAddress(1, test[1], &ival, &dval, &type, param);
 
 }
+*/
 //////////////////////////////////////
 int main(int argc, char *argv[])
 {
 //  Control param; 
-  debuggingalone();
+//  debuggingalone();
   
   uint32_t ubsend[MAX_LINE];
   struct sockaddr_in sin;
@@ -209,6 +212,7 @@ std::cout << "Starting persistent connection" << std::endl;
 			if(pid == 0){
 				char addrloc = buf[1];
 				writeToAddr(new_s, addrloc, param, buf);
+				saveToFile("Control_Settings", param);
 				_exit(0);
 			}
 			else{
@@ -232,8 +236,9 @@ std::cout << "Starting persistent connection" << std::endl;
 			pid_t pid = fork();
 			if(pid == 0){
 				char addrloc = buf[1];
-				int iVal, dVal, type;
-//				readFromAddress(new_s, addrloc,*iVal, *dVal, *type);
+				int iVal, type;
+				double dVal;
+				readFromAddress(new_s, addrloc, &iVal, &dVal, &type, param);
 				_exit(0);
 			}
 			else{

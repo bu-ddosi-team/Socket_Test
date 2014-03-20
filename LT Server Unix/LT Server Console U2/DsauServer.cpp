@@ -18,6 +18,16 @@
 
 
 #define MAX_LINE	256
+#define maxSweep 100
+#define minSweep 1
+#define maxStep 400
+#define minStep 10
+#define maxSample 64000
+#define minSample 1000
+#define maxDelay 100
+#define minDelay 1
+#define mminF 100
+#define mmaxF 100000
 
 
 struct Control
@@ -56,41 +66,34 @@ int a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf);
 int writeToAddr(int new_s, char addrloc, Control& param, char *buf);
 int loadSavedSettings(char *fileName, Control& settings);
 int saveToFile(char *fileName, Control settings);
-int readFromAddress(int new_s,char addrloc, int *iVal, double *dVal, int *type);
+int readFromAddress(int new_s,char addrloc, int *iVal, double *dVal, int *type, Control& settings);
 int gotRandDebug(int new_s);
 int fileCollecting(int new_s);
 int startCollecting(int new_s);
 	
 	
 	
-int isValid(int addrloc, int iVal, double dVal)
+int isValid(char addrloc, int iVal, double dVal)
 {
-#define mSweep 100
-#define mStep 400
-#define mSample 64000
-#define mDelay 1
-#define mminF 100
-#define mmaxF 100000
-
 	switch(addrloc)
 	{
 	      case 'a':
-		if((iVal > 0) && (iVal < mSweep))
+		if((iVal >minSweep) && (iVal < maxSweep))
 		{	return 1;	}
 		else
 		{	return 0;	}
 	      case 'b':
-		if((iVal > 0) && (iVal < mStep))
+		if((iVal > minStep) && (iVal < maxStep))
 		{	return 1;	}
 		else
 		{	return 0;	}	      
 	      case 'c':
-		if((iVal > 0) && (iVal < mSample))
+		if((iVal > minSample) && (iVal < maxSample))
 		{	return 1;	}
 		else
 		{	return 0;	}	      
 	      case 'd':
-		if((dVal > 0) && (dVal < mDelay))
+		if((dVal >minDelay) && (dVal < maxDelay))
 		{	return 1;	}
 		else
 		{	return 0;	}
@@ -154,6 +157,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 {
 	int iVal = 0;
 	double dVal = 0;
+	char *sendf= new char[MAX_LINE];
 	switch(addrloc)
 	{
 		case 'a':	//nsweep		
@@ -167,6 +171,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  else
 		  {   
 		  fprintf(stderr, "%d is %s \n", iVal, "Not a valid value for number of Sweeps");
+		  sprintf( sendf, "%c%s", 'e', "Not a valid value for number of Sweeps");
 		  }
 		  break;
 		case 'b':	//nstep
@@ -179,7 +184,8 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 	  	  }
 		  else
 		  {  
-		  fprintf(stderr, "%d is %s \n", iVal, "Not a valid value for number of steps");		  
+		  fprintf(stderr, "%d is %s \n", iVal, "Not a valid value for number of steps");		
+		  sprintf( sendf, "%c%s", 'e', "Not a valid value for number of Steps");  
 		  }
 		  break;	
 		case 'c':	//nSample
@@ -193,6 +199,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  else
 		  {  
 		  fprintf(stderr, "%d is %s \n",iVal,  "Not a valid value for number of samples");	  
+		  sprintf( sendf, "%c%s", 'e', "Not a valid value for number of samples");
 		  } 
 		  break;
 		case 'd':	//dsweeep
@@ -206,7 +213,8 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  else
 		  {  
 		  fprintf(stderr, "%f is %s \n", dVal, "Not a valid value for sweep delay");	 
-		   }
+		  sprintf( sendf, "%c%s", 'e', "Not a valid value for Sweep delay");
+		  }
 		  break;	
 		case 'e':	//minF
 //	  	  dVal = d_getPCVal(buf);
@@ -219,6 +227,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  else
 		  {  
 		  fprintf(stderr, "%f is %s \n", dVal, "Not a valid value for minimum frequency");	  
+		  sprintf( sendf, "%c%s", 'e', "Not a valid value for minimum frequency");
 		  }		
 		  break;
 		case 'f':	//maxF
@@ -232,18 +241,19 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  else
 		  { 
 		   fprintf(stderr, "%f is %s \n",dVal, "Not a valid value for maximum frequency");	  
+		   sprintf( sendf, "%c%s", 'e', "Not a valid value for maximum frequency");
 		   }		 
 		  break;			  		  	
 		default:
 		  fprintf(stderr, "%s \n", "Not a valid address");
-		  char *sendf= new char[MAX_LINE];
 		  sprintf( sendf, "%c%s ", 'e', "Not a valid address");
 		  send( new_s, sendf, strlen( sendf), 0);		  
 		  return -1;
 	}	//include print error function for error codes
-	char *sendf= new char[MAX_LINE];
-	sprintf( sendf, "%c%s ", 'e', "Not a Valid Value");
+
 	send( new_s, sendf, strlen( sendf), 0);
+//	sprintf( sendf, "%c%s ", 'e', "Not a Valid Value");
+//	send( new_s, sendf, strlen( sendf), 0);
  return 0;
 }
 
@@ -285,6 +295,7 @@ int loadSavedSettings(char *fileName, Control& settings){
 */
 
 }
+
 int saveToFile(char *fileName, Control settings)
 {
 	if(settings.C_sweep == NULL || settings.C_step == NULL || settings.C_sample == NULL || settings.C_delay == NULL || settings.C_min == NULL || settings.C_max == NULL)
@@ -303,47 +314,53 @@ int saveToFile(char *fileName, Control settings)
   return 0;
 
 }
-int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type){
+
+int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type, Control& settings){
 //we'll be simulating reading from the zynq with reading from a txt file. If we are using xml for settings data, we'll need to add code to handle it but it will be much more convient for accessing data.
-	Control settings;
+
  	loadSavedSettings("Control_Settings.txt", settings);
-	
+	char *sendf= new char[MAX_LINE];	
 	switch(addrloc)
 	{
 		case 'a':	//nsweep		
 	  	  *iVal = settings.nSweep;
-	  	  printf("Sweep number is %d Saved\n", *iVal);
+	  	  printf("Sweep number is %d \n", *iVal);
+		  sprintf( sendf, "%c%d", 'b', *iVal);	  	  
 		  *type = 1;
 		  break;
 		case 'b':	//nstep
 	  	  *iVal = settings.nStep;
-	  	  printf("Step Number is %d Saved\n", *iVal);
+	  	  printf("Step Number is %d \n", *iVal);
+		  sprintf( sendf, "%c%d", 'b',*iVal);
 		  *type = 2;
 		  break;	
 		case 'c':	//nSample
 	  	  *iVal = settings.nSample;
-	  	  printf("Sample Number %d Saved\n", *iVal);
+	  	  printf("Sample Number %d \n", *iVal);
+	  	  sprintf( sendf, "%c%d", 'b',*iVal);
 		  *type = 3;
 		  break;
 		case 'd':	//dsweeep
 	  	  *dVal = settings.dSweep;
-	  	  printf("Sweep Delay is %f Saved\n", *dVal);
+	  	  printf("Sweep Delay is %f \n", *dVal);
+	  	  sprintf( sendf, "%c%f", 'b',*dVal);
 		  *type = 4;
 		  break;	
 		case 'e':	//minF
 	  	  *dVal = settings.minF;
-	  	  printf("Min Frequency is %f Saved\n", *dVal);
+	  	  printf("Min Frequency is %f \n", *dVal);
+	  	  sprintf( sendf, "%c%f", 'b',*dVal);		 
 		  *type = 5;
 		  break;
 		case 'f':	//maxF
 	  	  *dVal = settings.maxF;
-	  	  printf("Max Frequency is %f Saved\n", *dVal);
+	  	  printf("Max Frequency is %f \n", *dVal);
+	  	  sprintf( sendf, "%c%f", 'b',*dVal);
 		  *type = 6;		 
 		  break;			  		  	
 		default:
 		  fprintf(stderr, "%s \n", "Not a valid address");
-		  char *sendf= new char[MAX_LINE];
-		  sprintf( sendf, "%c%s ", 'e', "Not a valid address");
+		  sprintf( sendf, "%c%s", 'e', "Not a valid address");
 		  send( new_s, sendf,strlen( sendf), 0);
 		  return 0;
 	
@@ -352,8 +369,10 @@ int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type)
 	/***
 	//Server code to send back response? or do something else?
 	***/
-	char *sendf= new char[MAX_LINE];
+//	fprintf(stderr, "%s \n", sendf);
+	send( new_s, sendf, strlen( sendf), 0);
 	sprintf( sendf, "%c", 'f');
+//	fprintf(stderr, "%s \n", sendf);	
 	send( new_s, sendf, strlen( sendf), 0);
 		
 	
@@ -484,7 +503,7 @@ int fileCollecting(int new_s)
 /////////////////////////////////////////////////////////////////////////////////////
 //Deprecrated?
 
-int isValid(int addrloc, int iVal){
+int isValid(char addrloc, int iVal){
 //check nsweep, nstep, nsample
 //define ranges, but later move them to correct area.
 #define mSweep 100
@@ -513,7 +532,7 @@ int isValid(int addrloc, int iVal){
 	}
 	return 0;
 }
-double isValid(int addrloc, double dVal){
+double isValid(char addrloc, double dVal){
 //check delay, minf, maxf
 //define ranges, but later move them to correct area.
 #define mDelay 1

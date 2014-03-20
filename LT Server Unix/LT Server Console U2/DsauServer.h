@@ -1,19 +1,3 @@
-#include <stdio.h>
-#include <string.h>
-#include <errno.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <math.h>
-
-#include <fstream>
-#include <iostream>
-#include <cstdio>
-#include <time.h>
-#include <ctime>
 
 
 class DsauServer{
@@ -24,13 +8,9 @@ class DsauServer{
 		int fileCollecting(int new_s);
 		int startCollecting(int new_s);
 		
-	double d_getPCVal(char*);
-	int i_getPCVal(char*);
-	int isValid(int, int); 
-	double isValid(int, double);
-	
+
 		int writeToAddr(int new_s, char addrloc, DsauServer& settings, char *buf);
-		int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type);				
+		int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type, DsauServer& settings);				
 		int isValid(int addrloc, int iVal, double dVal);
 		int a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf);
 		int loadSavedSettings(char *fileName, DsauServer& settings);
@@ -44,7 +24,13 @@ class DsauServer{
 	.
 	.
 	.
-	***/			
+	***/		
+	
+	double d_getPCVal(char* buf);
+	int i_getPCVal(char* buf);
+	int isValid(int addrloc, int iVal); 
+	double isValid(int addrloc, double dVal);
+			
 	private:
 		int nSweep;
 		double dSweep;
