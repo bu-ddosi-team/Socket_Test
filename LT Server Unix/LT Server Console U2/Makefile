@@ -16,7 +16,7 @@ libDsauServer.a: DsauServer.o
 	ranlib libDsauServer.a
 
 	 ###should be objTest
-DsauServer.o: DsauServer.cpp
+DsauServer.o: DsauServer.cpp DsauServer.h
 #	g++ -fPIC -c DsauServer.cpp
 	g++ -c DsauServer.cpp
 
@@ -27,6 +27,6 @@ test: TheMainServer.cpp DsauServer.o
 	
 	
 clean:
-	rm -f *.0 *~ *.so *.a $(PROGS)
+	rm -f *.0 *~ *.so *.a *.o $(PROGS)
 
 

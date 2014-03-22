@@ -14,7 +14,7 @@
 #include <cstdio>
 #include <time.h>
 #include <ctime>
-#include "DsauServer.h"
+
 
 
 #define MAX_LINE	256
@@ -29,7 +29,7 @@
 #define mminF 100
 #define mmaxF 100000
 
-/*
+
 struct Control
 {
 	int nSweep; //a
@@ -47,7 +47,7 @@ struct Control
 	char *C_max;
 		
 }; 	
-*/
+
 /*
 	int writeToAddr(int, char, Control, char*);
 	int gotRandDebug(int);
@@ -56,41 +56,24 @@ struct Control
 	int loadSavedSettings(char*, Control&);
 	int readFromAddress(char , int *, double *, int *);
 */	
-/*			
 	double d_getPCVal(char*);
 	int i_getPCVal(char*);
 	int isValid(int, int); 
 	double isValid(int, double);
-
+		
 int isValid(int addrloc, int iVal, double dVal);
 int a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf);
-int writeToAddr(int new_s, char addrloc, DsauServer& param, char *buf);
-int loadSavedSettings(char *fileName, DsauServer& settings);
-int saveToFile(char *fileName, DsauServer settings);
-int readFromAddress(int new_s,char addrloc, int *iVal, double *dVal, int *type, DsauServer& settings);
+int writeToAddr(int new_s, char addrloc, Control& param, char *buf);
+int loadSavedSettings(char *fileName, Control& settings);
+int saveToFile(char *fileName, Control settings);
+int readFromAddress(int new_s,char addrloc, int *iVal, double *dVal, int *type, Control& settings);
 int gotRandDebug(int new_s);
 int fileCollecting(int new_s);
 int startCollecting(int new_s);
-*/	
-DsauServer::DsauServer()
-{
-		int nSweep=0;		//Number of Sweeps: pointed to with addrloc 'a'
-		int nStep=0;		//Number of Steps: pointed to with addrloc 'b'
-		int nSample=0;		//Number of Samples: pointed to with addrloc 'c'
-		double dSweep=0;		//Delay between Sweeps: pointed to with addrloc 'd'
-		double minF=0;		//Minimum Frequency: pointed to with addrloc 'e'
-		double maxF=0;		//Maximum Frequency: pointed to with addrloc 'f'
-		char *C_sweep=NULL;		//character format of the above values
-		char *C_step=NULL;
-		char *C_sample=NULL;
-		char *C_delay=NULL;
-		char *C_min=NULL;
-		char *C_max=NULL;			
-		char leds=0;
-
-
-}
-int DsauServer::isValid(char addrloc, int iVal, double dVal)
+	
+	
+	
+int isValid(char addrloc, int iVal, double dVal)
 {
 	switch(addrloc)
 	{
@@ -130,7 +113,7 @@ int DsauServer::isValid(char addrloc, int iVal, double dVal)
 	}
 }
 
-int DsauServer::a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf)
+int a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf)
 {
 	int len = strlen(buf);
 	char data[len-2];
@@ -170,7 +153,7 @@ int DsauServer::a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf)
 
 }
 
-int DsauServer::writeToAddr(int new_s, char addrloc, DsauServer& param, char *buf)
+int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 {
 	int iVal = 0;
 	double dVal = 0;
@@ -274,7 +257,7 @@ int DsauServer::writeToAddr(int new_s, char addrloc, DsauServer& param, char *bu
  return 0;
 }
 
-int DsauServer::loadSavedSettings(char *fileName, DsauServer& settings){
+int loadSavedSettings(char *fileName, Control& settings){
 	int buf_size = 128;
 	char pset1[128];	char pset4[128];
 	char pset2[128];	char pset5[128];
@@ -313,7 +296,7 @@ int DsauServer::loadSavedSettings(char *fileName, DsauServer& settings){
 
 }
 
-int DsauServer::saveToFile(char *fileName, DsauServer settings)
+int saveToFile(char *fileName, Control settings)
 {
 	if(settings.C_sweep == NULL || settings.C_step == NULL || settings.C_sample == NULL || settings.C_delay == NULL || settings.C_min == NULL || settings.C_max == NULL)
 	{
@@ -332,7 +315,7 @@ int DsauServer::saveToFile(char *fileName, DsauServer settings)
 
 }
 
-int DsauServer::readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type, DsauServer& settings){
+int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type, Control& settings){
 //we'll be simulating reading from the zynq with reading from a txt file. If we are using xml for settings data, we'll need to add code to handle it but it will be much more convient for accessing data.
 
  	loadSavedSettings("Control_Settings.txt", settings);
@@ -396,7 +379,7 @@ int DsauServer::readFromAddress(int new_s, char addrloc, int *iVal, double *dVal
 return 1;
 }
 
-int DsauServer::gotRandDebug(int new_s)
+int gotRandDebug(int new_s)
 {
 	char *sendbuf;// = "this is a test";
 	int fileSize;
@@ -434,7 +417,7 @@ int DsauServer::gotRandDebug(int new_s)
 
 
 
-int DsauServer::startCollecting(int new_s)
+int startCollecting(int new_s)
 {
 
 	char *sendbuf;// = "this is a test";
@@ -479,7 +462,7 @@ int DsauServer::startCollecting(int new_s)
 
 
 
-int DsauServer::fileCollecting(int new_s)
+int fileCollecting(int new_s)
 {
 
 	char *sendbuf;// = "this is a test";
@@ -520,7 +503,7 @@ int DsauServer::fileCollecting(int new_s)
 /////////////////////////////////////////////////////////////////////////////////////
 //Deprecrated?
 
-int DsauServer::isValid(char addrloc, int iVal){
+int isValid(char addrloc, int iVal){
 //check nsweep, nstep, nsample
 //define ranges, but later move them to correct area.
 #define mSweep 100
@@ -549,7 +532,7 @@ int DsauServer::isValid(char addrloc, int iVal){
 	}
 	return 0;
 }
-double DsauServer::isValid(char addrloc, double dVal){
+double isValid(char addrloc, double dVal){
 //check delay, minf, maxf
 //define ranges, but later move them to correct area.
 #define mDelay 1
@@ -580,7 +563,7 @@ double DsauServer::isValid(char addrloc, double dVal){
 	return 0;
 
 }
-double DsauServer::d_getPCVal( char *buf){
+double d_getPCVal( char *buf){
 	int len = strlen(buf);
 	char data[len-2];
 	std::string buffer(buf);
@@ -593,7 +576,7 @@ double DsauServer::d_getPCVal( char *buf){
 	return pval;
 }
 
-int DsauServer::i_getPCVal( char *buf){
+int i_getPCVal( char *buf){
 	int len = strlen(buf);
 	char data[len-2];
 	std::string buffer(buf);
