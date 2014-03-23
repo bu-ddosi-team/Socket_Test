@@ -46,6 +46,10 @@ Delay between Sweeps		'd'
 Minimum Frequency		'e'
 Maximum Frequency		'f'
 
+TODO:
+Gains				'g'
+Laser Diode Settings		'h'
+
 w------------------------------------------------------------------------------------
 The w message type takes in a char value for the address and a string of numbers for the data section. Like r, w only accepts address values between a and f. address values a, b, and c work with integers while d, e, f work with doubles. 
 

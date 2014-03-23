@@ -1,9 +1,9 @@
 $(shell export LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH)
 
 
-PROGS = test
-OBJS = DsauServer.o
-LIBS = libDsauServer.a #libDsauServer.so
+PROGS = test otest
+OBJS = DsauServer.o odscpp.o
+LIBS = libDsauServer.a libods.a#libDsauServer.so
 all: $(LIBS) $(PROGS) $(OBJS)
 
 ### shared library
@@ -24,7 +24,15 @@ DsauServer.o: DsauServer.cpp DsauServer.h
 test: TheMainServer.cpp DsauServer.o
 	g++ -o $@ TheMainServer.cpp -L. -lDsauServer
 
+libods.a: odscpp.o
+	ar rc libods.a odscpp.o
+	ranlib libods.a
+
+odscpp.o: odscpp.cpp
+	g++ -c odscpp.cpp
 	
+otest: SNC.cpp odscpp.o
+	g++ -o $@ SNC.cpp -L. -lods	
 	
 clean:
 	rm -f *.0 *~ *.so *.a *.o $(PROGS)

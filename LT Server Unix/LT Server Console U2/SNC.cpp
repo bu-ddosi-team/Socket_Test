@@ -23,7 +23,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <exception>
-#include "DsauServer.h"
+//#include "DsauServer.h"
 
 
 #define SERVER_PORT	27015
@@ -71,8 +71,8 @@ extern int startCollecting(int new_s);
 
 
 
-DsauServer Dsau;
-//Control param; 
+//DsauServer Dsau;
+Control param; 
 //
 /*
 void debuggingalone()
@@ -104,7 +104,7 @@ int S_Handler(int new_s, char *buf){
 	pid_t pid = fork();
 	if(pid == 0){
 		std::cout << "startCollecting" << std::endl;
-		DsauServer::startCollecting(new_s);
+		startCollecting(new_s);
 		std::cout << "Terminating child start collector" << std::endl;
 		_exit(0);
 	}
@@ -203,46 +203,50 @@ int status;
  	 int s;
   	int strSize = MAX_LINE;
 
-DsauServer param;
+//DsauServer param;
 std::cout << "Starting persistent connection" << std::endl;
-	while ((len = recv(new_s, buf, sizeof(buf), 0)) > 0)
+    	char *sendf= new char[MAX_LINE];
+	sprintf( sendf, "%c", f);
+	len = strlen( sendf);
+	while ( len = recv(new_s, buf, sizeof(buf), 0))
 	{
 //		std::cout << "Message received: \"" << buf<< "\"" << std::endl;
+//		len = recv(new_s, buf, sizeof(buf), 0);
 		fprintf(stderr, "Message received:%s \" ", buf);
 		if(buf[0] == 's'){ 
-			S_Handler(new_s, buf);
-/*						     
-			pid_t pid = fork();
-			if(pid == 0){
+//			S_Handler(new_s, buf);
+						     
+//			pid_t pid = fork();
+//			if(pid == 0){
 				std::cout << "startCollecting" << std::endl;
-				DsauServer::startCollecting(new_s);
-				std::cout << "Terminating child start collector" << std::endl;
-				_exit(0);
-			}
-			else{
-				std::cout << "parent start collector" << std::endl;
-				pid_t pid2 = fork();
-				if(pid2 == 0){
-					len = recv(new_s, buf, sizeof(buf), 0);
-					if(buf[0] == 'c'){
-						std::cout << "Killing start collector" << std::endl;
-						kill(pid,SIGTERM);
-					} 
-				}
-				waitpid(pid, &status, WNOHANG);
-				if(WIFEXITED(status)){
-					std::cout << "Killing startCollecting killer" << std::endl;
-					kill(pid2,SIGTERM);
-				}
-			}
-*/			
+				startCollecting(new_s);
+//				std::cout << "Terminating child start collector" << std::endl;
+//				_exit(0);
+//			}
+//			else{
+//				std::cout << "parent start collector" << std::endl;
+//				pid_t pid2 = fork();
+//				if(pid2 == 0){
+//					len = recv(new_s, buf, sizeof(buf), 0);
+//					if(buf[0] == 'c'){
+//						std::cout << "Killing start collector" << std::endl;
+//						kill(pid,SIGTERM);
+//					} 
+//				}
+//				waitpid(pid, &status, WNOHANG);
+//				if(WIFEXITED(status)){
+//					std::cout << "Killing startCollecting killer" << std::endl;
+//					kill(pid2,SIGTERM);
+//				}
+//			}
+			
 		}
 		else if(buf[0] == 'w'){ 
 //			pid_t pid = fork();
 //			if(pid == 0){
 				char addrloc = buf[1];
-				DsauServer::writeToAddr(new_s, addrloc, param, buf);
-				DsauServer::saveToFile("Control_Settings.txt", param);
+				writeToAddr(new_s, addrloc, param, buf);
+				saveToFile("Control_Settings.txt", param);
 //				_exit(0);
 //			}
 //			else{
@@ -251,7 +255,7 @@ std::cout << "Starting persistent connection" << std::endl;
 //				if(pid2 == 0){
 //					len = recv(new_s, buf, sizeof(buf), 0);
 //					if(buf[0] == 'c'){
-//						std::cout << "Killing writer" << std::endl;
+///						std::cout << "Killing writer" << std::endl;
 //						kill(pid,SIGTERM);
 //					} 
 //				}
@@ -268,7 +272,7 @@ std::cout << "Starting persistent connection" << std::endl;
 				char addrloc = buf[1];
 				int iVal, type;
 				double dVal;
-				DsauServer::readFromAddress(new_s, addrloc, &iVal, &dVal, &type, param);
+				readFromAddress(new_s, addrloc, &iVal, &dVal, &type, param);
 				_exit(0);
 			}
 			else{
@@ -292,7 +296,7 @@ std::cout << "Starting persistent connection" << std::endl;
 			pid_t pid = fork();
 			if(pid == 0){
 				std::cout << "gotRandDebug" << std::endl;
-				DsauServer::gotRandDebug(new_s);
+				gotRandDebug(new_s);
 				std::cout << "Terminating child writeToAddr" << std::endl;
 				_exit(0);
 			}
@@ -317,7 +321,7 @@ std::cout << "Starting persistent connection" << std::endl;
 			pid_t pid = fork();
 			if(pid == 0){
 				std::cout << "fileCollecting" << std::endl;
-				DsauServer::fileCollecting(new_s);
+				fileCollecting(new_s);
 				std::cout << "Terminating child file collector" << std::endl;
 				_exit(0);
 			}
@@ -341,8 +345,11 @@ std::cout << "Starting persistent connection" << std::endl;
 		else{
 			std::cout << "no hits...What to do? \n";
 		}
-	std::cout << "/////////////////////////////////////////////////\n" << std::endl;	
+	std::cout << "______________________________________________________\n" << std::endl;	
 	std::cout << "waiting on client...\n" << std::endl;
+    	memset(buf, 0, MAX_LINE);
+ 
+	send( new_s, sendf, len, 0);
 
 	} //end while(len>0)
     close(new_s);
