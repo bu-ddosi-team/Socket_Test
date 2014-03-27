@@ -70,7 +70,7 @@ extern int startCollecting(int new_s);
 
 
 
-
+//
 //DsauServer Dsau;
 Control param; 
 //
@@ -241,6 +241,7 @@ std::cout << "Starting persistent connection" << std::endl;
 //			}
 			
 		}
+//TODO: You have issues with rapid commands because the child is probably handling the response instead of the parent. Try seperating who gets the corect message  by forking at the socket accept area?		
 		else if(buf[0] == 'w'){ 
 //			pid_t pid = fork();
 //			if(pid == 0){
@@ -267,80 +268,80 @@ std::cout << "Starting persistent connection" << std::endl;
 //			}
 		}
 		else if(buf[0] == 'r'){ 
-			pid_t pid = fork();
-			if(pid == 0){
+//			pid_t pid = fork();
+//			if(pid == 0){
 				char addrloc = buf[1];
 				int iVal, type;
 				double dVal;
 				readFromAddress(new_s, addrloc, &iVal, &dVal, &type, param);
-				_exit(0);
-			}
-			else{
-				std::cout << "parent addr reader" << std::endl;
-				pid_t pid2 = fork();
-				if(pid2 == 0){
-					len = recv(new_s, buf, sizeof(buf), 0);
-					if(buf[0] == 'c'){
-						std::cout << "Killing reader" << std::endl;
-						kill(pid,SIGTERM);
-					} 
-				}
-				waitpid(pid, &status, WNOHANG);
-				if(WIFEXITED(status)){
-					std::cout << "Killing reader killer" << std::endl;
-					kill(pid2,SIGTERM);
-				}
-			}
+//				_exit(0);
+//			}
+//			else{
+//				std::cout << "parent addr reader" << std::endl;
+//				pid_t pid2 = fork();
+//				if(pid2 == 0){
+//					len = recv(new_s, buf, sizeof(buf), 0);
+//					if(buf[0] == 'c'){
+//						std::cout << "Killing reader" << std::endl;
+//						kill(pid,SIGTERM);
+//					} 
+//				}
+//				waitpid(pid, &status, WNOHANG);
+//				if(WIFEXITED(status)){
+//					std::cout << "Killing reader killer" << std::endl;
+//					kill(pid2,SIGTERM);
+//				}
+//			}
 		}
 		else if(buf[0] == 't'){ 
-			pid_t pid = fork();
-			if(pid == 0){
+//			pid_t pid = fork();
+//			if(pid == 0){
 				std::cout << "gotRandDebug" << std::endl;
 				gotRandDebug(new_s);
-				std::cout << "Terminating child writeToAddr" << std::endl;
-				_exit(0);
-			}
-			else{
-				std::cout << "parent gotRandDebug" << std::endl;
-				pid_t pid2 = fork();
-				if(pid2 == 0){
-					len = recv(new_s, buf, sizeof(buf), 0);
-					if(buf[0] == 'c'){
-						std::cout << "Killing gotRandDebug" << std::endl;
-						kill(pid,SIGTERM);
-					} 
-				}
-				waitpid(pid, &status, WNOHANG);
-				if(WIFEXITED(status)){
-					std::cout << "killing gotRandDebug killer" << std::endl;
-					kill(pid2,SIGTERM);
-				}	
-			}
+//				std::cout << "Terminating child writeToAddr" << std::endl;
+//				_exit(0);
+//			}
+//			else{
+//				std::cout << "parent gotRandDebug" << std::endl;
+//				pid_t pid2 = fork();
+//				if(pid2 == 0){
+//					len = recv(new_s, buf, sizeof(buf), 0);
+//					if(buf[0] == 'c'){
+//						std::cout << "Killing gotRandDebug" << std::endl;
+//						kill(pid,SIGTERM);
+//					} 
+//				}
+///				waitpid(pid, &status, WNOHANG);
+//				if(WIFEXITED(status)){
+//					std::cout << "killing gotRandDebug killer" << std::endl;
+//					kill(pid2,SIGTERM);
+//				}	
+//			}
 		}
 		else if(buf[0] == 'f'){ 
-			pid_t pid = fork();
-			if(pid == 0){
+//			pid_t pid = fork();
+//			if(pid == 0){
 				std::cout << "fileCollecting" << std::endl;
 				fileCollecting(new_s);
-				std::cout << "Terminating child file collector" << std::endl;
-				_exit(0);
-			}
-			else{
-				std::cout << "parent file collector" << std::endl;
-				pid_t pid2 = fork();
-				if(pid2 == 0){
-					len = recv(new_s, buf, sizeof(buf), 0);
-					if(buf[0] == 'c'){
-						std::cout << "Killing file collector" << std::endl;
-						kill(pid,SIGTERM);
-					} 
-				}
-				waitpid(pid, &status, WNOHANG);
-				if(WIFEXITED(status)){
-					std::cout << "Killing fileCollector killer" << std::endl;
-					kill(pid2,SIGTERM);
-				}
-			}
+//				std::cout << "Terminating child file collector" << std::endl;
+//				_exit(0);
+//			}
+//			else{
+//				std::cout << "parent file collector" << std::endl;
+//				pid_t pid2 = fork();
+//				if(pid2 == 0){
+//					len = recv(new_s, buf, sizeof(buf), 0);
+///					if(buf[0] == 'c'){
+//						std::cout << "Killing file collector" << std::endl;
+//						kill(pid,SIGTERM);
+//					} 
+//				}
+//				waitpid(pid, &status, WNOHANG);
+//				if(WIFEXITED(status)){
+//					std::cout << "Killing fileCollector killer" << std::endl;
+//					kill(pid2,SIGTERM);
+//				}
+//			}
 		}				
 		else{
 			std::cout << "no hits...What to do? \n";

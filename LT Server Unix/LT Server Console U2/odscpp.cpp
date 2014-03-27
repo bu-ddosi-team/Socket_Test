@@ -436,6 +436,37 @@ int gotRandDebug(int new_s)
 
 
 
+
+int sendint(int num, int fd)
+{
+    int32_t conv = htonl(num);
+    char *data = (char*)&conv;
+    int left = sizeof(conv);
+    int rc;
+//    std::ofstream ofile ("testingBinarySend.txt", std::ofstream::out | std::ios::binary);
+    while (left) {
+        rc = write(fd, data + sizeof(conv) - left, left);
+        if (rc < 0) return -1;
+        left -= rc;
+    }
+//    ofile.write(&conv, left);
+//    ofile.close();
+    return 0;
+}
+int receive(int *num, int fd)
+{
+    int32_t ret;
+    char *data = (char*)&ret;
+    int left = sizeof(ret);
+    int rc;
+    while (left) {
+        ret = read(fd, data + sizeof(ret) - left, left);
+        if (ret < 0) return -1;
+        left -= ret;
+    }
+    *num = ret;
+    return 0;
+}
 int startCollecting(int new_s)
 {
 
@@ -457,12 +488,14 @@ int startCollecting(int new_s)
 		 int my_id[100] = {0};
 		 int my_net_id[100];// = htonl(my_id);
 //		 send(new_s, (const char*)&my_net_id, 4, 0);
-		int integerl[100];
-		uint32_t integers[100];
+		uint16_t integerl[100];
+		uint16_t integers[100];
 		for (int i=0; i<100; i++) {
 
-		integers[i] = i;
-		
+		integers[i] = 1010;
+		integers[49] = 9;
+		integers[50] = 10;
+		integers[51] = 11;
 			if (i%2==0) {
 //				integerl[i] = (int)(10000*(double)cos((double)(i/30)+1.6));
 				integerl[i]=(int)(10000*(double)cos((double)(i/10.0)+1.57));	
@@ -473,16 +506,35 @@ int startCollecting(int new_s)
 			}
 		}
 	//uint32_t un = htonl((int)integerl);
-//	send(new_s, &integerl, sizeof(uint32_t)*100, 0);
-	for (int i = 0; i < 100; i++){
-	fprintf(stderr, " THIS INTEGER %d",integers[i]);
+//	send(new_s, &integerl, sizeof(uint16_t)*100, 0);
+
+//	for(int ii = 1; ii < 100; ii++){
+//		sendint(ii,new_s);		
+//	}
+//	uint32_t un = htonl((int)integers);
+	send(new_s, &integers, sizeof(uint16_t)*100, 0);
+	for(int ii = 1; ii < 100; ii++){
+//		send(new_s, &integers, sizeof(uint32_t)*100, 0);
+	fprintf(stderr, " number[%d]:%d \n ", ii, integers[ii]);
 	}
+//	int number_to_send = 200000; // Put your value
+//	int converted_number = htonl(number_to_send);
+
+	// Write the number to the opened socket
+//	write(new_s, &converted_number, sizeof(converted_number));
+	
+////////
 	fprintf(stderr, "int:%d integers:%d\n", sizeof(uint32_t), sizeof(integers));
 	//TODO: Client not receiving all data
-	send(new_s, &integers, sizeof(uint32_t)*200, 0);
+//	send(new_s, &integers, sizeof(uint32_t)*200, 0);
+//	sleep(10);
 	char *sendf= new char[MAX_LINE];
 	sprintf( sendf, "%c", f);
 	len = strlen( sendf);
+	for(int ii = 1; ii < 1000; ii++){
+		send( new_s, sendf, len, 0);
+
+	}
 	send( new_s, sendf, len, 0);
 
 }
