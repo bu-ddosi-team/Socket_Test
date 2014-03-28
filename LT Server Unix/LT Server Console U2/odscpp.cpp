@@ -467,6 +467,19 @@ int receive(int *num, int fd)
     *num = ret;
     return 0;
 }
+
+uint32_t encode(uint16_t numA, uint16_t numB) {
+    uint32_t result = numA << 16 | numB;
+    return  result;
+}
+
+uint16_t decodeNum1(uint32_t num) {
+    return (num >> 16) & 0xFFFF;
+}
+
+uint16_t decodeNum2(uint32_t num) {
+    return (num) & 0xFFFF;
+}
 int startCollecting(int new_s)
 {
 
@@ -488,21 +501,43 @@ int startCollecting(int new_s)
 		 int my_id[100] = {0};
 		 int my_net_id[100];// = htonl(my_id);
 //		 send(new_s, (const char*)&my_net_id, 4, 0);
-		uint16_t integerl[100];
-		uint16_t integers[100];
-		for (int i=0; i<100; i++) {
-
-		integers[i] = 1010;
-		integers[49] = 9;
-		integers[50] = 10;
-		integers[51] = 11;
+		uint32_t integerl[250];
+		int16_t scl[500];
+		//int integers[200];
+		uint16_t integers[500];
+		uint32_t sendint;
+		uint16_t ca = 0;
+		uint16_t cb = 0;
+		//unsigned int ca = 0;
+		//unsigned int cb = 0;
+		int kk = 0;
+		for (int i=0; i<500; i++) {
+	
+//		integers[0] = 0;
+//		integerl[10] = 129;//65535;
+		integers[i] = i;
+//		integers[49] = 9;
+//		integers[50] = 10;
+//		integers[51] = 11;
 			if (i%2==0) {
 //				integerl[i] = (int)(10000*(double)cos((double)(i/30)+1.6));
-				integerl[i]=(int)(10000*(double)cos((double)(i/10.0)+1.57));	
+				scl[i]=(int)(10000*(double)cos((double)(i/30.0)+1.6));	 					
+//				scl[i]=(uint16_t) 10000*(double)cos(i);
+
+				ca = i; //if( i == 10) { ca = 20;}
+//				integers[i] = (ca << 16 ) | cb;
+//				integers[i] = encode(ca, cb);
+				if(i != 0){
+				    sendint = encode(ca, cb);
+				    integerl[kk++] = sendint;
+				}
 			}
 			else {
 //				integerl[i] =(int)(10000*(double)cos((double)(i/30)));
-				integerl[i]=(int)(10000*(double)cos((double)(i/10.0)));
+				scl[i]=(int)(10000*(double)cos((double)(i/30.0)));
+//				scl[i]=(uint16_t) 10000*(double) cos(i/2);
+		
+				cb = i;
 			}
 		}
 	//uint32_t un = htonl((int)integerl);
@@ -512,10 +547,24 @@ int startCollecting(int new_s)
 //		sendint(ii,new_s);		
 //	}
 //	uint32_t un = htonl((int)integers);
-	send(new_s, &integers, sizeof(uint16_t)*100, 0);
-	for(int ii = 1; ii < 100; ii++){
+	send(new_s, &integers, sizeof(uint16_t)*500, 0);
+//	send(new_s, &integerl, sizeof(uint32_t)*250,0);
+//	send(new_s, &scl, sizeof(int16_t)*500, 0);
+	uint16_t n1 = 0;
+	uint16_t n2 = 0;
+	//unsigned int n1 = 0;
+	//unsigned int n2 = 0;
+	for(int ii = 0; ii < 248; ii++){
 //		send(new_s, &integers, sizeof(uint32_t)*100, 0);
-	fprintf(stderr, " number[%d]:%d \n ", ii, integers[ii]);
+//		fprintf(stderr, " number[%d]:%d \n ", ii, integers[ii]);
+//		 n1 = integers[ii] >> 16;
+//		 n2 = integers[ii] & 0xFFFF;
+//		 fprintf(stderr, "number[%d]:  Ca:%d      Cb:%d \n ",ii, n1, n2);
+		fprintf(stderr, "int16:%d, hex check:%x    ", scl[ii], integers[ii]);
+		n1 = decodeNum1(integerl[ii]);
+		n2 = decodeNum2(integerl[ii]);
+ 		fprintf(stderr, "number[%d]:%d  Ca:%d      Cb:%d \n ",ii,integerl[ii], n1, n2);
+		
 	}
 //	int number_to_send = 200000; // Put your value
 //	int converted_number = htonl(number_to_send);
@@ -531,10 +580,12 @@ int startCollecting(int new_s)
 	char *sendf= new char[MAX_LINE];
 	sprintf( sendf, "%c", f);
 	len = strlen( sendf);
+
 	for(int ii = 1; ii < 1000; ii++){
 		send( new_s, sendf, len, 0);
 
 	}
+	
 	send( new_s, sendf, len, 0);
 
 }
