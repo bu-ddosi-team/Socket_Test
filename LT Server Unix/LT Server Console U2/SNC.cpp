@@ -31,7 +31,7 @@
 
 
 #define MAX_PENDING     1
-#define MAX_LINE	256
+#define MAX_LINE	512
 
 
 typedef struct Control
@@ -208,7 +208,7 @@ std::cout << "Starting persistent connection" << std::endl;
     	char *sendf= new char[MAX_LINE];
 	sprintf( sendf, "%c", f);
 	len = strlen( sendf);
-	while ( len = recv(new_s, buf, sizeof(buf), 0))
+	while ( len = recv(new_s, buf, sizeof(buf), 0) && new_s > 0)
 	{
 //		std::cout << "Message received: \"" << buf<< "\"" << std::endl;
 //		len = recv(new_s, buf, sizeof(buf), 0);
@@ -219,7 +219,7 @@ std::cout << "Starting persistent connection" << std::endl;
 //			pid_t pid = fork();
 //			if(pid == 0){
 				std::cout << "startCollecting" << std::endl;
-				startCollecting(new_s);
+				int sss = startCollecting(new_s);				
 //				std::cout << "Terminating child start collector" << std::endl;
 //				_exit(0);
 //			}
@@ -350,7 +350,7 @@ std::cout << "Starting persistent connection" << std::endl;
 	std::cout << "waiting on client...\n" << std::endl;
     	memset(buf, 0, MAX_LINE);
  
-	send( new_s, sendf, len, 0);
+//	send( new_s, sendf, len, 0);
 
 	} //end while(len>0)
     close(new_s);
