@@ -1,15 +1,21 @@
-
+//TODO: make a neater version in document format
 dDOSI Server Code
+
+
+Relevant Files:----------------------------------------------------------------------
+TheMainServer.cpp -- main implementation of the zedboard server.
+DsauServer.cpp    -- Contains implementation of functions that interact with the board.
+DsauServer.h      -- Header file containing information on the DsauServer.cpp functions.
+odscpp.cpp        -- suppose to be stripped down version of DsauServer.cpp without the classes.
+SNC.cpp           -- simpler TheMainServer.cpp version without the classes or forks.
+MTserver.cpp      -- Multithreaded version of TheMainServer.cpp (less complete).
+Makefile          -- Use this to check dependancies or to automatically build the relevant libraries and programs.
 
 Building the Server:-----------------------------------------------------------------
 Type make in current directory to build server files. 
-Type ./test or sh server.sh to run server.
-
-
-The main server file is TheMainServer.cpp
-The function implementations are defined in DsauServer.cpp
-
-The server functions are defined and explained below as well as in DsauServer.h (Though the file is not currently used as the function implementations have not been linked with the class yet.)
+Type ./test or sh server.sh to run the main server.
+Type ./otest to run the simple server.
+Type ./mtest to run the multithreaded server.
 
 
 -------------------------------------------------------------------------------------
@@ -20,9 +26,9 @@ You can test server functions with the SocketTest client. Just run the server fr
 -------------------------------------------------------------------------------------
 Information Regarding Packet Format--------------------------------------------------
 The packet is composed of three sections. 
-The first section is the message type, which is represented by the first character of the packet.
-The second section is the address location, which is represented by the second character of the packet.
-The third section is the data section. It composes of the rest of the packet.
+The first section is the message type, which is represented by the first character of the packet. Size of this is 1 byte.
+The second section is the address location, which is represented by the second character of the packet. Size of this is 1 byte.
+The third section is the data section. It composes of the rest of the packet. Size of each individual sample of data from both channels is 4 bytes, with each channel taking 2 bytes.
 
 
 -------------------------------------------------------------------------------------
@@ -46,7 +52,7 @@ Delay between Sweeps		'd'
 Minimum Frequency		'e'
 Maximum Frequency		'f'
 
-TODO:
+
 Gains				'g'
 Laser Diode Settings		'h'
 
@@ -108,12 +114,42 @@ int saveToFile(char *fileName, DsauServer& settings);---------------------------
 
 int startCollecting(int new_s);------------------------------------------------------
 	startCollecting calculates sin and cos values and sends it to the client. This is to simulate getting data from the board.
-
 int gotRandDebug(int new_s);---------------------------------------------------------
+
 	gotRandDebug tells the server to send to the client a string of random numbers with randomized response message types for each random number sent. (currently uses only f, b, and e. I should probably include every possible character for full testing).
 
 int fileCollecting(int new_s);-------------------------------------------------------
 	fileCollecting reads in a specified file and sends it to the client.
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+//--------------------------------------------------------------------------------------
+
+
+
+issues to work out: 
+1......	Stream based issues: You will miss requests if two or more are collected in the same recv. You will also lose at least two requests if an intruction gets split between two recv calls.
+1......	Fix (p79-80): add end sequences for all requests. Have set sizes for client requests to allow for easier aquisition of requests within a single recv.
+	
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
