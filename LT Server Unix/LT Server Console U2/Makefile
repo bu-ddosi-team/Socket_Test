@@ -1,7 +1,7 @@
 $(shell export LD_LIBRARY_PATH=$PWD:$LD_LIBRARY_PATH)
 
 
-PROGS = test otest
+PROGS = test otest client mtest
 OBJS = DsauServer.o odscpp.o
 LIBS = libDsauServer.a libods.a#libDsauServer.so
 all: $(LIBS) $(PROGS) $(OBJS)
@@ -33,6 +33,12 @@ odscpp.o: odscpp.cpp
 	
 otest: SNC.cpp odscpp.o
 	g++ -o $@ SNC.cpp -L. -lods	
+	
+mtest: MTserver.cpp DsauServer.o
+	g++ -o $@ MTserver.cpp -pthread -L. -lDsauServer
+		
+client: ClientTester.cpp
+	g++ -o $@ ClientTester.cpp
 	
 clean:
 	rm -f *.0 *~ *.so *.a *.o $(PROGS)
