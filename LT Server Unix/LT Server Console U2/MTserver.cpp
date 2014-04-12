@@ -28,7 +28,7 @@
 
 
 
-#define rdtsc(x)      __asm__ __volatile__("rdtsc \n\t" : "=A" (*(x)))
+//#define rdtsc(x)      __asm__ __volatile__("rdtsc \n\t" : "=A" (*(x)))
 unsigned long long start, finish;
 clock_t  begin, end;
 time_t   begint, endt;
@@ -88,11 +88,11 @@ void *cHandler(void *socket_desc)
 //		std::cout << "Message received: \"" << buf<< "\"" << std::endl;
 		fprintf(stderr, "Message received:%s \" ", buf);
 		if(buf[0] == 's'){ 
-			rdtsc(&start);	
+//			rdtsc(&start);	
 			DsauServer::startCollecting(new_s);
-			rdtsc(&finish);
-			double rtime = ((double)(finish-start))/(double)250000000; 
-			std::cout << "scan performance:" << rtime << std::endl;
+//			rdtsc(&finish);
+//			double rtime = ((double)(finish-start))/(double)250000000; 
+//			std::cout << "scan performance:" << rtime << std::endl;
 		}
 		else if(buf[0] == 'w'){ 
 				char addrloc = buf[1];

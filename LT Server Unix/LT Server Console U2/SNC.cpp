@@ -68,7 +68,7 @@ extern int fileCollecting(int new_s);
 extern int startCollecting(int new_s);
 //////////////////////////////////////////////////////////////////////////////////
 
-#define rdtsc(x)      __asm__ __volatile__("rdtsc \n\t" : "=A" (*(x)))
+//#define rdtsc(x)      __asm__ __volatile__("rdtsc \n\t" : "=A" (*(x)))
 unsigned long long start, finish;
 //
 //DsauServer Dsau;
@@ -104,11 +104,11 @@ int S_Handler(int new_s, char *buf){
 	pid_t pid = fork();
 	if(pid == 0){
 		std::cout << "startCollecting" << std::endl;
-		rdtsc(&start);	
+//		rdtsc(&start);	
 		startCollecting(new_s);
-		rdtsc(&finish);
-		double rtime = ((double)(finish-start))/(double)250000000; 
-		std::cout << "scan performance:" << rtime << std::endl;
+//		rdtsc(&finish);
+//		double rtime = ((double)(finish-start))/(double)250000000; 
+//		std::cout << "scan performance:" << rtime << std::endl;
 		std::cout << "Terminating child start collector" << std::endl;
 		_exit(0);
 	}
@@ -219,136 +219,40 @@ std::cout << "Starting persistent connection" << std::endl;
 		fprintf(stderr, "Message received:%s \" ", buf);
 		if(buf[0] == 's'){ 
 //			S_Handler(new_s, buf);
-						     
-//			pid_t pid = fork();
-//			if(pid == 0){
 				std::cout << "startCollecting" << std::endl;
-				rdtsc(&start);	
+//				rdtsc(&start);	
 				startCollecting(new_s);
-				rdtsc(&finish);
-				double rtime = ((double)(finish-start))/(double)250000000; 					std::cout << "scan performance:" << rtime << std::endl;
-//				std::cout << "Terminating child start collector" << std::endl;
-//				_exit(0);
-//			}
-//			else{
-//				std::cout << "parent start collector" << std::endl;
-//				pid_t pid2 = fork();
-//				if(pid2 == 0){
-//					len = recv(new_s, buf, sizeof(buf), 0);
-//					if(buf[0] == 'c'){
-//						std::cout << "Killing start collector" << std::endl;
-//						kill(pid,SIGTERM);
-//					} 
-//				}
-//				waitpid(pid, &status, WNOHANG);
-//				if(WIFEXITED(status)){
-//					std::cout << "Killing startCollecting killer" << std::endl;
-//					kill(pid2,SIGTERM);
-//				}
-//			}
+//				rdtsc(&finish);
+//				double rtime = ((double)(finish-start))/(double)250000000; 					std::cout << "scan performance:" << rtime << std::endl;
+
 			
 		}
-//TODO: You have issues with rapid commands because the child is probably handling the response instead of the parent. Try seperating who gets the corect message  by forking at the socket accept area?		
+
 		else if(buf[0] == 'w'){ 
-//			pid_t pid = fork();
-//			if(pid == 0){
+
 				char addrloc = buf[1];
 				writeToAddr(new_s, addrloc, param, buf);
 				saveToFile("Control_Settings.txt", param);
-//				_exit(0);
-//			}
-//			else{
-//				std::cout << "parent addr writer" << std::endl;
-//				pid_t pid2 = fork();
-//				if(pid2 == 0){
-//					len = recv(new_s, buf, sizeof(buf), 0);
-//					if(buf[0] == 'c'){
-///						std::cout << "Killing writer" << std::endl;
-//						kill(pid,SIGTERM);
-//					} 
-//				}
-//				waitpid(pid, &status, WNOHANG);
-//				if(WIFEXITED(status)){
-//					std::cout << "Killing writer killer" << std::endl;
-//					kill(pid2,SIGTERM);
-//				}
-//			}
+
 		}
 		else if(buf[0] == 'r'){ 
-//			pid_t pid = fork();
-//			if(pid == 0){
+
 				char addrloc = buf[1];
 				int iVal, type;
 				double dVal;
 				readFromAddress(new_s, addrloc, &iVal, &dVal, &type, param);
-//				_exit(0);
-//			}
-//			else{
-//				std::cout << "parent addr reader" << std::endl;
-//				pid_t pid2 = fork();
-//				if(pid2 == 0){
-//					len = recv(new_s, buf, sizeof(buf), 0);
-//					if(buf[0] == 'c'){
-//						std::cout << "Killing reader" << std::endl;
-//						kill(pid,SIGTERM);
-//					} 
-//				}
-//				waitpid(pid, &status, WNOHANG);
-//				if(WIFEXITED(status)){
-//					std::cout << "Killing reader killer" << std::endl;
-//					kill(pid2,SIGTERM);
-//				}
-//			}
+
 		}
 		else if(buf[0] == 't'){ 
-//			pid_t pid = fork();
-//			if(pid == 0){
+
 				std::cout << "gotRandDebug" << std::endl;
 				gotRandDebug(new_s);
-//				std::cout << "Terminating child writeToAddr" << std::endl;
-//				_exit(0);
-//			}
-//			else{
-//				std::cout << "parent gotRandDebug" << std::endl;
-//				pid_t pid2 = fork();
-//				if(pid2 == 0){
-//					len = recv(new_s, buf, sizeof(buf), 0);
-//					if(buf[0] == 'c'){
-//						std::cout << "Killing gotRandDebug" << std::endl;
-//						kill(pid,SIGTERM);
-//					} 
-//				}
-///				waitpid(pid, &status, WNOHANG);
-//				if(WIFEXITED(status)){
-//					std::cout << "killing gotRandDebug killer" << std::endl;
-//					kill(pid2,SIGTERM);
-//				}	
-//			}
+
 		}
 		else if(buf[0] == 'f'){ 
-//			pid_t pid = fork();
-//			if(pid == 0){
 				std::cout << "fileCollecting" << std::endl;
 				fileCollecting(new_s);
-//				std::cout << "Terminating child file collector" << std::endl;
-//				_exit(0);
-//			}
-//			else{
-//				std::cout << "parent file collector" << std::endl;
-//				pid_t pid2 = fork();
-//				if(pid2 == 0){
-//					len = recv(new_s, buf, sizeof(buf), 0);
-///					if(buf[0] == 'c'){
-//						std::cout << "Killing file collector" << std::endl;
-//						kill(pid,SIGTERM);
-//					} 
-//				}
-//				waitpid(pid, &status, WNOHANG);
-//				if(WIFEXITED(status)){
-//					std::cout << "Killing fileCollector killer" << std::endl;
-//					kill(pid2,SIGTERM);
-//				}
-//			}
+
 		}				
 		else{
 			std::cout << "no hits...What to do? \n";
