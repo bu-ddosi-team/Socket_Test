@@ -28,8 +28,8 @@
 
 
 
-//#define rdtsc(x)      __asm__ __volatile__("rdtsc \n\t" : "=A" (*(x)))
-//unsigned long long start, finish;
+#define rdtsc(x)      __asm__ __volatile__("rdtsc \n\t" : "=A" (*(x)))
+unsigned long long start, finish;
 clock_t  begin, end;
 time_t   begint, endt;
 #define SERVER_PORT	27015
@@ -38,7 +38,7 @@ time_t   begint, endt;
 
 #define MAX_PENDING     1
 #define MAX_LINE	512
-#define MaxThreads 10  
+#define MaxThreads 5 
 
 typedef struct {
 	int id;
@@ -72,10 +72,11 @@ void *cHandler(void *socket_desc)
 	 int len;
  	 int new_s = (int) socket_desc;
  	 int n;
-//	pthread_mutex_lock(&mutexloc);//------	
+//	pthread_mutex_lock(&mutexloc);//------
+//	rdtsc(&start);	
 //	rdtsc(&finish);					
 //	double rtime = ((double)(finish-start))/(double)250000000; 
-//	sprintf(sendf, "Greetings. Server has served %d clients and has been running for %lf seconds.\n",totalConnections, rtime);
+//	fprintf(sendf, " running time for scan is %lf seconds.\n", rtime);
 //	int64_t t1 = get_time();
 //        double timepassed = (t1 - t0)/CLOCKS_PER_SEC;
 //     	sprintf(sendf, "Server has been running for %lf seconds.\n", timepassed);	
@@ -87,8 +88,11 @@ void *cHandler(void *socket_desc)
 //		std::cout << "Message received: \"" << buf<< "\"" << std::endl;
 		fprintf(stderr, "Message received:%s \" ", buf);
 		if(buf[0] == 's'){ 
+			rdtsc(&start);	
 			DsauServer::startCollecting(new_s);
-
+			rdtsc(&finish);
+			double rtime = ((double)(finish-start))/(double)250000000; 
+			std::cout << "scan performance:" << rtime << std::endl;
 		}
 		else if(buf[0] == 'w'){ 
 				char addrloc = buf[1];
@@ -142,22 +146,6 @@ int main(int argc, char *argv[])
   
   struct timeval tv;
   init_time();
-  t0 = get_time();
-//  rdtsc(&start);		
-//  begin = clock();
-
- // gettimeofday(&begint, 0);
-
-/*							
-	pthread_t *threads;
-	pthread_attr_t pthread_custom_attr;
-	Sobj *p;
-	
-	threads=(pthread_t *)malloc(10*sizeof(*threads));
-	pthread_attr_init(&pthread_custom_attr);
-
-	p=(Sobj *)malloc(sizeof(Sobj)*10);	
-*/	
 
   printf("Starting Server...\n");
 
@@ -204,11 +192,11 @@ int main(int argc, char *argv[])
     ++totalConnections;
     ++curThreads;
     fprintf(stderr, "curThreads: %d  .\n", curThreads);	
-    if(curThreads > 5)
+    if(curThreads > 3)
     {
 	fprintf(stderr, "Attempted connection while full...\n");	
 	char sendf[MAX_LINE];
-	sprintf( sendf, "%s\n", "Peer limit of 5 reached. Please try again later. \n" );
+	sprintf( sendf, "%s\n", "eeeeeToo many connections, there should really only be one persistent connection. \n" );
 	len = strlen( sendf);
 	send( new_s, sendf, len, 0);   
 	close(new_s); 
@@ -235,18 +223,6 @@ int main(int argc, char *argv[])
 	/////////////////////////////////////////////////
      }
 
-
-     t1 = get_time();
-
-     double timepassed = (t1 - t0)/CLOCKS_PER_SEC;
-//     gettimeofday(&endt, 0);
-//     long elapsed = (endt.tv_sec-begint.tv_sec)*1000000 + endt.tv_usec-begint.tv_usec;
-     fprintf(stderr, "Server has been running for %lf seconds.\n", timepassed);
-/*   
-     	rdtsc(&finish);					
-	 double rtime = ((double)(finish-start))/(double)800000000;   			
-	fprintf(stderr, "Server has been running for %lf seconds.\n", rtime);
-*/
   } //end while(1)p
   
   close(s);

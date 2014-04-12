@@ -25,7 +25,8 @@
 #include <exception>
 #include "DsauServer.h"
 
-
+#define rdtsc(x)      __asm__ __volatile__("rdtsc \n\t" : "=A" (*(x)))
+unsigned long long start, finish;
 #define SERVER_PORT	27015
 // #define MAX_PENDING	5
 
@@ -104,7 +105,11 @@ int S_Handler(int new_s, char *buf){
 	pid_t pid = fork();
 	if(pid == 0){
 		std::cout << "startCollecting" << std::endl;
+		rdtsc(&start);	
 		DsauServer::startCollecting(new_s);
+		rdtsc(&finish);
+		double rtime = ((double)(finish-start))/(double)250000000; 
+		std::cout << "scan performance:" << rtime << std::endl;
 		std::cout << "Terminating child start collector" << std::endl;
 		_exit(0);
 	}
@@ -242,7 +247,7 @@ std::cout << "Starting persistent connection" << std::endl;
 //			if(pid == 0){
 				char addrloc = buf[1];
 				DsauServer::writeToAddr(new_s, addrloc, param, buf);
-				DsauServer::saveToFile("Control_Settings.txt", param);
+//				DsauServer::saveToFile("Control_Settings.txt", param);
 //				_exit(0);
 //			}
 //			else{

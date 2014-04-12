@@ -432,88 +432,8 @@ int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type,
 return 1;
 }
 
-int gotRandDebug(int new_s)
-{
-	char *sendbuf;// = "this is a test";
-	int fileSize;
-	char f = 'f';
-	char buf[MAX_LINE];
-	char reply[MAX_LINE];
- 	int conn, line;
- 	int len;
- 	int s;
-  	int strSize = MAX_LINE;
-  	
-  	int rnum;
-	int mnum;
-	char mtype;
-	int setting = 10000;
 
 
-//	    std::cout << "w is hit" << std::endl;
-	    while ( line < 1000) {
-	      rnum = rand()%setting;
-	      mnum = rand()%1000;
-		if(mnum == 0){mtype = 'f';}
-		else if(mnum == 1){mtype = 'e';}
-		else {mtype = 'b';}
-	      ++line;
-	      sprintf( reply, "%c%d\n", mtype, rnum);
-	      len = strlen( reply);
-	      send( new_s, reply, len, 0);
-	    }
-	      sprintf( reply, "%c", f);
-	      len = strlen( reply);
-	      send( new_s, reply, len, 0);
-
-}
-
-
-
-
-int sendint(int num, int fd)
-{
-    int32_t conv = htonl(num);
-    char *data = (char*)&conv;
-    int left = sizeof(conv);
-    int rc;
-//    std::ofstream ofile ("testingBinarySend.txt", std::ofstream::out | std::ios::binary);
-    while (left) {
-        rc = write(fd, data + sizeof(conv) - left, left);
-        if (rc < 0) return -1;
-        left -= rc;
-    }
-//    ofile.write(&conv, left);
-//    ofile.close();
-    return 0;
-}
-int receive(int *num, int fd)
-{
-    int32_t ret;
-    char *data = (char*)&ret;
-    int left = sizeof(ret);
-    int rc;
-    while (left) {
-        ret = read(fd, data + sizeof(ret) - left, left);
-        if (ret < 0) return -1;
-        left -= ret;
-    }
-    *num = ret;
-    return 0;
-}
-
-uint32_t encode(uint16_t numA, uint16_t numB) {
-    uint32_t result = numA << 16 | numB;
-    return  result;
-}
-
-uint16_t decodeNum1(uint32_t num) {
-    return (num >> 16) & 0xFFFF;
-}
-
-uint16_t decodeNum2(uint32_t num) {
-    return (num) & 0xFFFF;
-}
 int startCollecting(int new_s)
 {
 
@@ -531,8 +451,9 @@ int startCollecting(int new_s)
 	   sprintf( reply, "%c", f);
 	   len = strlen( reply);
 	   send( new_s, reply, len, 0);
+	   memset(reply, 0, MAX_LINE);
 	   
-		int sendcount = 520;
+		int sendcount = 110;
 		 int my_id[100] = {0};
 		 int my_net_id[100];// = htonl(my_id);
 //		 send(new_s, (const char*)&my_net_id, 4, 0);
@@ -611,11 +532,14 @@ int startCollecting(int new_s)
 	len = strlen( sendf);
 //	send( new_s, sendf, len, 0);
 	uint8_t sendfchar = 102;
-	for(int ii = 0; ii < 10; ii++){
+	//sleep(2);
+//	for(int ii = 0; ii < 10; ii++){
 //		send( new_s, sendf, len, 0);
-		send( new_s, &sendfchar, 1, 0);
-	}
-	
+//		send( new_s, &sendfchar, 1, 0);
+//	}
+	   sprintf( reply, "%c%c%c%c%c", f,f,f,f,f);
+	   len = strlen( reply);
+	   send( new_s, reply, len, 0);
 	return 0;
 	//int numcount = 0;
 	//send(new_s, &numcount, sizeof(uint32_t), 0);	
@@ -624,6 +548,183 @@ int startCollecting(int new_s)
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+int gotRandDebug(int new_s)
+{
+	char *sendbuf;// = "this is a test";
+	int fileSize;
+	char f = 'f';
+	char buf[MAX_LINE];
+	char reply[MAX_LINE];
+ 	int conn, line;
+ 	int len;
+ 	int s;
+  	int strSize = MAX_LINE;
+  	
+  	int rnum;
+	int mnum;
+	char mtype;
+	int setting = 10000;
+
+
+//	    std::cout << "w is hit" << std::endl;
+	    while ( line < 1000) {
+	      rnum = rand()%setting;
+	      mnum = rand()%1000;
+		if(mnum == 0){mtype = 'f';}
+		else if(mnum == 1){mtype = 'e';}
+		else {mtype = 'b';}
+	      ++line;
+	      sprintf( reply, "%c%d\n", mtype, rnum);
+	      len = strlen( reply);
+	      send( new_s, reply, len, 0);
+	    }
+	      sprintf( reply, "%c", f);
+	      len = strlen( reply);
+	      send( new_s, reply, len, 0);
+
+}
+
+
+int loadData(int fd, int nsamples, uint16_t numtosend[] )
+{
+//put stuff into numtosend
+	for(int ii = 0; ii < 100; ii++)
+	{
+		numtosend[ii] = ii;
+	}
+
+}
+int sendData(int new_s, int sendcount, uint16_t numtosend[] )
+{
+/*
+	send(new_s, &numtosend, sizeof(uint16_t)*sendcount, 0);//	send(new_s,
+	char *sendf= new char[MAX_LINE];
+	sprintf( sendf, "%c", f);
+	len = strlen( sendf);
+
+	   sprintf( reply, "%c%c%c%c%c", f,f,f,f,f);
+	   len = strlen( reply);
+	   send( new_s, reply, len, 0);
+*/
+}
+int scanning(int new_s)
+{
+	struct Control settings;
+	int size = 100;
+	uint16_t numtosend[size];
+	for(int ii = 0; ii < settings.nSweep; ii++)
+	{
+		for(int kk = 0; kk < settings.nStep; kk++)
+		{
+			if(!loadData(new_s, settings.nSample, numtosend))
+			{
+				//error
+			}
+			else
+			{
+				sendData(new_s, size, numtosend);
+			}
+		}
+	}
+
+}
+
+
+int sendint(int num, int fd)
+{
+    int32_t conv = htonl(num);
+    char *data = (char*)&conv;
+    int left = sizeof(conv);
+    int rc;
+//    std::ofstream ofile ("testingBinarySend.txt", std::ofstream::out | std::ios::binary);
+    while (left) {
+        rc = write(fd, data + sizeof(conv) - left, left);
+        if (rc < 0) return -1;
+        left -= rc;
+    }
+//    ofile.write(&conv, left);
+//    ofile.close();
+    return 0;
+}
+int receive(int *num, int fd)
+{
+    int32_t ret;
+    char *data = (char*)&ret;
+    int left = sizeof(ret);
+    int rc;
+    while (left) {
+        ret = read(fd, data + sizeof(ret) - left, left);
+        if (ret < 0) return -1;
+        left -= ret;
+    }
+    *num = ret;
+    return 0;
+}
+
+uint32_t encode(uint16_t numA, uint16_t numB) {
+    uint32_t result = numA << 16 | numB;
+    return  result;
+}
+
+uint16_t decodeNum1(uint32_t num) {
+    return (num >> 16) & 0xFFFF;
+}
+
+uint16_t decodeNum2(uint32_t num) {
+    return (num) & 0xFFFF;
+}
 int fileCollecting(int new_s)
 {
 
@@ -660,7 +761,6 @@ int fileCollecting(int new_s)
 	file.close();
 	std::cout << "Closing file" << std::endl;
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////
 //Deprecrated?

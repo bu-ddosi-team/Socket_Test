@@ -68,8 +68,8 @@ extern int fileCollecting(int new_s);
 extern int startCollecting(int new_s);
 //////////////////////////////////////////////////////////////////////////////////
 
-
-
+#define rdtsc(x)      __asm__ __volatile__("rdtsc \n\t" : "=A" (*(x)))
+unsigned long long start, finish;
 //
 //DsauServer Dsau;
 Control param; 
@@ -104,7 +104,11 @@ int S_Handler(int new_s, char *buf){
 	pid_t pid = fork();
 	if(pid == 0){
 		std::cout << "startCollecting" << std::endl;
+		rdtsc(&start);	
 		startCollecting(new_s);
+		rdtsc(&finish);
+		double rtime = ((double)(finish-start))/(double)250000000; 
+		std::cout << "scan performance:" << rtime << std::endl;
 		std::cout << "Terminating child start collector" << std::endl;
 		_exit(0);
 	}
@@ -219,7 +223,10 @@ std::cout << "Starting persistent connection" << std::endl;
 //			pid_t pid = fork();
 //			if(pid == 0){
 				std::cout << "startCollecting" << std::endl;
-				int sss = startCollecting(new_s);				
+				rdtsc(&start);	
+				startCollecting(new_s);
+				rdtsc(&finish);
+				double rtime = ((double)(finish-start))/(double)250000000; 					std::cout << "scan performance:" << rtime << std::endl;
 //				std::cout << "Terminating child start collector" << std::endl;
 //				_exit(0);
 //			}
