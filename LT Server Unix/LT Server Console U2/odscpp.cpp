@@ -186,6 +186,9 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 	int iVal = 0;
 	double dVal = 0;
 	char *sendf= new char[MAX_LINE];
+	   char reply[MAX_LINE];
+	   sprintf( reply, "%c", 'f');
+	   send( new_s, reply, strlen(reply), 0);
 	switch(addrloc)
 	{
 		case 'a':	//nsweep		
@@ -364,7 +367,9 @@ int saveToFile(char *fileName, Control settings)
 
 int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type, Control& settings){
 //we'll be simulating reading from the zynq with reading from a txt file. If we are using xml for settings data, we'll need to add code to handle it but it will be much more convient for accessing data.
-
+	   char reply[MAX_LINE];
+	   sprintf( reply, "%c", 'f');
+	   send( new_s, reply, strlen(reply), 0);
  	loadSavedSettings("Control_Settings.txt", settings);
 	char *sendf= new char[MAX_LINE];	
 	switch(addrloc)
