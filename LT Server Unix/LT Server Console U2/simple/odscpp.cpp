@@ -17,7 +17,7 @@
 //#include "Control.h"
 
 
-#define MAX_LINE	512
+#define MAX_LINE 1024
 #define maxSweep 1000000
 #define minSweep 0
 #define maxStep 4000000
@@ -187,7 +187,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 	double dVal = 0;
 	char *sendf= new char[MAX_LINE];
 	   char reply[MAX_LINE];
-	   sprintf( reply, "%c", 'f');
+	   sprintf( reply, "%s", "ffffffffff");
 	   send( new_s, reply, strlen(reply), 0);
 	switch(addrloc)
 	{
@@ -299,6 +299,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 	send( new_s, sendf, strlen( sendf), 0);
 //	sprintf( sendf, "%c%s ", 'e', "Not a Valid Value");
 //	send( new_s, sendf, strlen( sendf), 0);
+	send( new_s, reply, strlen(reply), 0);
  return 0;
 }
 
@@ -429,10 +430,9 @@ int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type,
 	***/
 //	fprintf(stderr, "%s \n", sendf);
 	send( new_s, sendf, strlen( sendf), 0);
-	sprintf( sendf, "%c", 'f');
-//	fprintf(stderr, "%s \n", sendf);	
+	sprintf( sendf, "%s", "ffffffffffff");
 	send( new_s, sendf, strlen( sendf), 0);
-		
+
 	
 return 1;
 }
@@ -451,107 +451,73 @@ int startCollecting(int new_s)
  	 int len;
  	 int s;
 
-  	
-//  	   std::cout << "s is hit" << std::endl;
 	   sprintf( reply, "%c", f);
 	   len = strlen( reply);
 	   send( new_s, reply, len, 0);
 	   memset(reply, 0, MAX_LINE);
-	   //TODO:Can't send it too large like this. Make a loop to send it in smaller increments. 
-	   //TODO:Buffer errors causing zero's to be written to fill in space. 
-	   //TODO:
-//	   for(int ii = 0; ii < nstep; ii++)
-	   //TODO:
-		int sendcount = 10000;
-		 int my_id[100] = {0};
-		 int my_net_id[100];// = htonl(my_id);
-//		 send(new_s, (const char*)&my_net_id, 4, 0);
-		uint32_t integerl[250];
-		int16_t scl[sendcount];
-		//int integers[200];	
-		uint16_t integers[sendcount];
-		uint32_t sendint;
-		uint16_t ca = 0;
-		uint16_t cb = 0;
-		//unsigned int ca = 0;
-		//unsigned int cb = 0;
-		int kk = 0; int down = 500;
-		for (int i = 0; i < sendcount; i++) {
+		int sendcount = 1450;
+		
+
+	int i = 0; 					
+	int16_t stest[sendcount];	
+	int16_t scw[sendcount];
+	int ijk = 0;
+	int loopcount = sendcount;
+	int forcount = 100;
+	bool moreData = true;
+	while(moreData == true)
+	{	
+		if(loopcount < 100)
+		{
+		forcount = loopcount;
+		moreData = false;
+		}
+		for (i = 0; i < forcount; i++) {
+		stest[i] = ijk;
+			if (ijk%2==0) {
+		//		scw[i]=(int)(10000*(double)cos((double)(ijk/30.0)+1.6));						
+			}
+			else {
+		//		scw[i]=(int)(10000*(double)cos((double)(ijk/30.0)));
+			}
+			ijk++;
+		}
+		for(int iii = 0; iii < forcount; iii++){
+		std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
+		}
+		send(new_s, &stest, sizeof(uint16_t)*forcount, 0);		
+		loopcount -= forcount;		
+	}
+	
+
+	   sprintf( reply, "%s", "ffffffffffff");
+	   len = strlen( reply);
+	   send( new_s, reply, len, 0);
+	return 0;
+/*
+	//uint32_t integerl[250];
+	int16_t scl[sendcount];
+	uint16_t integers[sendcount];
+	int kk = 0;
+
+		for (i = 0; i < sendcount; i++) {
 		integers[i] = i;
-//		integers[49] = 9;
-//		integers[50] = 10;
-//		integers[51] = 11;
-//			if(i > 150) { down--; integers[i] = down; }
 			if (i%2==0) {
 //				integerl[i] = (int)(10000*(double)cos((double)(i/30)+1.6));
 				scl[i]=(int)(10000*(double)cos((double)(i/30.0)+1.6));						
-				ca = i; //if( i == 10) { ca = 20;}
-//				integers[i] = (ca << 16 ) | cb;
-//				integers[i] = encode(ca, cb);
-				if(i != 0){
-				    //sendint = encode(ca, cb);
-				    //integerl[kk++] = sendint;
-				}
-				//integers[i] = i;
 			}
 			else {
 //				integerl[i] =(int)(10000*(double)cos((double)(i/30)));
 				scl[i]=(int)(10000*(double)cos((double)(i/30.0)));
-				cb = i;
-				//integers[i] = down--; down--;
 			}
 		}
-	//uint32_t un = htonl((int)integerl);
-//	send(new_s, &integerl, sizeof(uint16_t)*100, 0);
 
-//	for(int ii = 1; ii < 100; ii++){
-//		sendint(ii,new_s);		
-//	}
-//	uint32_t un = htonl((int)integers);
-	send(new_s, &integers, sizeof(uint16_t)*sendcount, 0);//	send(new_s, &integerl, sizeof(uint32_t)*250,0);
+//	send(new_s, &integers, sizeof(uint16_t)*sendcount, 0);//	send(new_s, &integerl, sizeof(uint32_t)*250,0);
 //	send(new_s, &scl, sizeof(int16_t)*sendcount, 0);
-	uint16_t n1 = 0;
-	uint16_t n2 = 0;
-	//unsigned int n1 = 0;
-	//unsigned int n2 = 0;
-	for(int ii = 0; ii < 248; ii++){
-//		send(new_s, &integers, sizeof(uint32_t)*100, 0);
-		fprintf(stderr, " number[%d]:%d \n ", ii, integers[ii]);
-//		 n1 = integers[ii] >> 16;
-//		 n2 = integers[ii] & 0xFFFF;
-//		 fprintf(stderr, "number[%d]:  Ca:%d      Cb:%d \n ",ii, n1, n2);
-		//fprintf(stderr, "int16:%d, hex check:%x    ", scl[ii], integers[ii]);
-		//n1 = decodeNum1(integerl[ii]);
-		//n2 = decodeNum2(integerl[ii]);
- 		//fprintf(stderr, "number[%d]:%d  Ca:%d      Cb:%d \n ",ii,integerl[ii], n1, n2);
-		
-	}
-	// Write the number to the opened socket
-//	write(new_s, &converted_number, sizeof(converted_number));
-	
-////////
-	fprintf(stderr, "int:%d integers:%d\n", sizeof(uint32_t), sizeof(integers));
 //	send(new_s, &integers, sizeof(uint32_t)*200, 0);
-//	sleep(10);
-	char *sendf= new char[MAX_LINE];
-	sprintf( sendf, "%c", f);
-	len = strlen( sendf);
-//	send( new_s, sendf, len, 0);
-	uint8_t sendfchar = 102;
-	//sleep(2);
-//	for(int ii = 0; ii < 10; ii++){
-//		send( new_s, sendf, len, 0);
-//		send( new_s, &sendfchar, 1, 0);
-//	}
-	   sprintf( reply, "%c%c%c%c%c", f,f,f,f,f);
-	   len = strlen( reply);
-	   send( new_s, reply, len, 0);
-	return 0;
-	//int numcount = 0;
-	//send(new_s, &numcount, sizeof(uint32_t), 0);	
-	
-}
+*/
 
+}
 
 
 

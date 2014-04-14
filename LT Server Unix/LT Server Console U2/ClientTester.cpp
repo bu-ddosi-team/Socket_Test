@@ -17,12 +17,12 @@
 #include <fstream>
 #include <iostream>
 #define SERVER_PORT	27015
-#define MAX_LINE	256
+#define MAX_LINE	1024
 
 using namespace std;
 
 	const char* DEFAULT_PORT = "27015";
-	int DEFAULT_BUFLEN = 512;
+	int DEFAULT_BUFLEN = 1024;
 
 	int iResult = 0;
 	int iSendResult = 0;
@@ -75,21 +75,21 @@ int  sendThis(string msgstring, int ClientSocket)
 			char *recvbuf = new char[DEFAULT_BUFLEN];
 			int recvbuflen = DEFAULT_BUFLEN; 
 			//Open File for data storage
-			ofstream ofile("fwrite_test.txt", ios::out | ios::binary );
+			ofstream ofile("fwrite_test1", ios::out | ios::binary );
 			int index;
 			int rcount = 0;
 			// Receive until the peer shuts down the connection
 			do {
-				rcount++;
-				 memset(recvbuf, 0, DEFAULT_BUFLEN);
+				rcount++;cout << "TETst" << endl;
+				memset(recvbuf, 0, DEFAULT_BUFLEN);
 				iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
 				if (iResult > 0) {
 				printf("\n");
-				ofile.write(recvbuf, DEFAULT_BUFLEN);
+				ofile.write(recvbuf, iResult);
 				cout << recvbuf;
 				}
 				else if (iResult == 0)
-					printf("Connection closing...\n");
+					printf("11Connection closing...\n");
 				else  {
 					close(ClientSocket);
 					return 1;
@@ -108,7 +108,7 @@ int  sendThis(string msgstring, int ClientSocket)
 									{		
 										if(ret == 0)
 										{
-											int temp = 512*rcount;
+											int temp = 512*rcount;cout << "rarwar\n" << endl;
 											ret = temp - 512 + i;//this is wrong
 										}
 										iResult = 0;
@@ -123,6 +123,8 @@ int  sendThis(string msgstring, int ClientSocket)
 		} while (iResult > 0);
 		//		fclose(pFile);
 		ofile.close();
+		cout << "TETERPOIER" << endl;
+		delete[] recvbuf;
 		return ret;
 	}
 
