@@ -458,21 +458,21 @@ int startCollecting(int new_s)
 	   send( new_s, reply, len, 0);
 	   memset(reply, 0, MAX_LINE);
 	   
-		int sendcount = 110;
+		int sendcount = 200;
 		 int my_id[100] = {0};
 		 int my_net_id[100];// = htonl(my_id);
 //		 send(new_s, (const char*)&my_net_id, 4, 0);
 		uint32_t integerl[250];
 		int16_t scl[500];
 		//int integers[200];	
-		uint16_t integers[sendcount];
+		uint16_t integers[200];
 		uint32_t sendint;
 		uint16_t ca = 0;
 		uint16_t cb = 0;
 		//unsigned int ca = 0;
 		//unsigned int cb = 0;
 		int kk = 0; int down = 500;
-		for (int i = 0; i < sendcount; i++) {
+		for (int i = 0; i < 200; i++) {
 	
 //		integers[0] = 0;
 //		integerl[10] = 129;//65535;
@@ -507,7 +507,7 @@ int startCollecting(int new_s)
 //		sendint(ii,new_s);		
 //	}
 //	uint32_t un = htonl((int)integers);
-	send(new_s, &integers, sizeof(uint16_t)*sendcount, 0);//	send(new_s, &integerl, sizeof(uint32_t)*250,0);
+	send(new_s, &integers, sizeof(uint16_t)*200, 0);//	send(new_s, &integerl, sizeof(uint32_t)*250,0);
 //	send(new_s, &scl, sizeof(int16_t)*500, 0);
 	uint16_t n1 = 0;
 	uint16_t n2 = 0;

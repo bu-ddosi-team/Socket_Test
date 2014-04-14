@@ -214,6 +214,11 @@ std::cout << "Starting persistent connection" << std::endl;
 	len = strlen( sendf);
 	while ( len = recv(new_s, buf, sizeof(buf), 0) && new_s > 0)
 	{
+	
+		for(int kk = 0; kk < len; kk++)
+		{
+		
+		}
 //		std::cout << "Message received: \"" << buf<< "\"" << std::endl;
 //		len = recv(new_s, buf, sizeof(buf), 0);
 		fprintf(stderr, "Message received:%s \" ", buf);

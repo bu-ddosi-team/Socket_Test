@@ -170,7 +170,16 @@ int DsauServer::a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf)
 
 
 }
-
+/*
+int DsauServer::get_nSweep(int iVal)
+{
+	return this->nSweep = iVal;
+}
+void DsauServer::set_nSweep(int iVal)
+{
+	
+}
+*/
 int DsauServer::writeToAddr(int new_s, char addrloc, DsauServer& param, char *buf)
 {
 	int iVal = 0;
@@ -189,7 +198,7 @@ int DsauServer::writeToAddr(int new_s, char addrloc, DsauServer& param, char *bu
 		  else
 		  {   
 		  fprintf(stderr, "%d is %s \n", iVal, "Not a valid value for number of Sweeps");
-		  sprintf( sendf, "%c%s", 'e', "Not a valid value for number of Sweeps");
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid value for number of Sweeps");
 		  }
 		  break;
 		case 'b':	//nstep
@@ -203,7 +212,7 @@ int DsauServer::writeToAddr(int new_s, char addrloc, DsauServer& param, char *bu
 		  else
 		  {  
 		  fprintf(stderr, "%d is %s \n", iVal, "Not a valid value for number of steps");		
-		  sprintf( sendf, "%c%s", 'e', "Not a valid value for number of Steps");  
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid value for number of Steps");  
 		  }
 		  break;	
 		case 'c':	//nSample
@@ -217,7 +226,7 @@ int DsauServer::writeToAddr(int new_s, char addrloc, DsauServer& param, char *bu
 		  else
 		  {  
 		  fprintf(stderr, "%d is %s \n",iVal,  "Not a valid value for number of samples");	  
-		  sprintf( sendf, "%c%s", 'e', "Not a valid value for number of samples");
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid value for number of samples");
 		  } 
 		  break;
 		case 'd':	//dsweeep
@@ -231,7 +240,7 @@ int DsauServer::writeToAddr(int new_s, char addrloc, DsauServer& param, char *bu
 		  else
 		  {  
 		  fprintf(stderr, "%f is %s \n", dVal, "Not a valid value for sweep delay");	 
-		  sprintf( sendf, "%c%s", 'e', "Not a valid value for Sweep delay");
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid value for Sweep delay");
 		  }
 		  break;	
 		case 'e':	//minF
@@ -245,7 +254,7 @@ int DsauServer::writeToAddr(int new_s, char addrloc, DsauServer& param, char *bu
 		  else
 		  {  
 		  fprintf(stderr, "%f is %s \n", dVal, "Not a valid value for minimum frequency");	  
-		  sprintf( sendf, "%c%s", 'e', "Not a valid value for minimum frequency");
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid value for minimum frequency");
 		  }		
 		  break;
 		case 'f':	//maxF
@@ -259,12 +268,12 @@ int DsauServer::writeToAddr(int new_s, char addrloc, DsauServer& param, char *bu
 		  else
 		  { 
 		   fprintf(stderr, "%f is %s \n",dVal, "Not a valid value for maximum frequency");	  
-		   sprintf( sendf, "%c%s", 'e', "Not a valid value for maximum frequency");
+		   sprintf( sendf, "%s%s", "eeeee", "Not a valid value for maximum frequency");
 		   }		 
 		  break;			  		  	
 		default:
 		  fprintf(stderr, "%s \n", "Not a valid address");
-		  sprintf( sendf, "%c%s ", 'e', "Not a valid address");
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid address");
 		  send( new_s, sendf, strlen( sendf), 0);		  
 		  return -1;
 	}	//include print error function for error codes
@@ -378,7 +387,7 @@ int DsauServer::readFromAddress(int new_s, char addrloc, int *iVal, double *dVal
 		  break;			  		  	
 		default:
 		  fprintf(stderr, "%s \n", "Not a valid address");
-		  sprintf( sendf, "%c%s", 'e', "Not a valid address");
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid address");
 		  send( new_s, sendf,strlen( sendf), 0);
 		  return 0;
 	

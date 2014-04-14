@@ -451,6 +451,20 @@ int startCollecting(int new_s)
 				integerl[i]=(int)(10000*(double)cos((double)(i/10.0)));
 			}
 		}
+		
+/*		
+    int32_t conv = htonl(num);
+    char *data = (char*)&conv;
+    int left = sizeof(conv);
+    int rc;
+    while (left) {
+        rc = write(fd, data + sizeof(conv) - left, left);
+        if (rc < 0) return -1;
+        left -= rc;
+    }
+*/
+		
+		
 	//uint32_t un = htonl((int)integerl);
 	send(new_s, &integerl, sizeof(uint32_t)*100, 0);
 	char *sendf= new char[MAX_LINE];

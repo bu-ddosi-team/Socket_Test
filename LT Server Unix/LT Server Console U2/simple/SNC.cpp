@@ -229,16 +229,14 @@ std::cout << "Starting persistent connection" << std::endl;
 				startCollecting(new_s);
 //				rdtsc(&finish);
 //				double rtime = ((double)(finish-start))/(double)250000000; 					std::cout << "scan performance:" << rtime << std::endl;
-
-			
+//				double throu = (10000/2)/ (rtime*1000000); 
+//				std:: cout << "speed estimation:" << throu << std::endl;
 		}
 
 		else if(buf[0] == 'w'){ 
 
 				char addrloc = buf[1];
 				writeToAddr(new_s, addrloc, param, buf);
-				saveToFile("Control_Settings.txt", param);
-
 		}
 		else if(buf[0] == 'r'){ 
 
