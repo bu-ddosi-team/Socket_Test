@@ -81,12 +81,13 @@ int  sendThis(string msgstring, int ClientSocket)
 			// Receive until the peer shuts down the connection
 			do {
 				rcount++;cout << "TETst" << endl;
-				memset(recvbuf, 0, DEFAULT_BUFLEN);
+		//		memset(recvbuf, 0, DEFAULT_BUFLEN);
 				iResult = recv(ClientSocket, recvbuf, recvbuflen, 0);
 				if (iResult > 0) {
 				printf("\n");
 				ofile.write(recvbuf, iResult);
-				cout << recvbuf;
+				num += iResult;
+				printf("num:%d  ret:%d \n", num, ret);
 				}
 				else if (iResult == 0)
 					printf("11Connection closing...\n");
@@ -94,6 +95,18 @@ int  sendThis(string msgstring, int ClientSocket)
 					close(ClientSocket);
 					return 1;
 				}
+
+			
+		} while (iResult > 0);
+		//		fclose(pFile);
+		ofile.close();
+		cout << "TETERPOIER" << endl;
+		delete[] recvbuf;
+		return ret;
+	}
+
+/*
+
 				for (int i=0; i<DEFAULT_BUFLEN; i++)
 				{
 					if((recvbuf[i] == 102)  )
@@ -109,7 +122,9 @@ int  sendThis(string msgstring, int ClientSocket)
 										if(ret == 0)
 										{
 											int temp = 512*rcount;cout << "rarwar\n" << endl;
+										
 											ret = temp - 512 + i;//this is wrong
+											printf("num:%d  ret:%d \n", num, ret);
 										}
 										iResult = 0;
 									}
@@ -119,16 +134,7 @@ int  sendThis(string msgstring, int ClientSocket)
 						
 					}
 				}
-			
-		} while (iResult > 0);
-		//		fclose(pFile);
-		ofile.close();
-		cout << "TETERPOIER" << endl;
-		delete[] recvbuf;
-		return ret;
-	}
-
-
+*/
 int main(int argc, char *argv[])
 {
   FILE *fp;

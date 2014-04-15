@@ -187,7 +187,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 	double dVal = 0;
 	char *sendf= new char[MAX_LINE];
 	   char reply[MAX_LINE];
-	   sprintf( reply, "%s", "ffffffffff");
+	   sprintf( reply, "%s", "fffff");
 	   send( new_s, reply, strlen(reply), 0);
 	switch(addrloc)
 	{
@@ -430,7 +430,7 @@ int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type,
 	***/
 //	fprintf(stderr, "%s \n", sendf);
 	send( new_s, sendf, strlen( sendf), 0);
-	sprintf( sendf, "%s", "ffffffffffff");
+	sprintf( sendf, "%s", "fffff");
 	send( new_s, sendf, strlen( sendf), 0);
 
 	
@@ -455,9 +455,9 @@ int startCollecting(int new_s)
 	   len = strlen( reply);
 	   send( new_s, reply, len, 0);
 	   memset(reply, 0, MAX_LINE);
-		int sendcount = 1450;
 		
-
+	int sendcount = 25128;
+	
 	int i = 0; 					
 	int16_t stest[sendcount];	
 	int16_t scw[sendcount];
@@ -482,17 +482,17 @@ int startCollecting(int new_s)
 			}
 			ijk++;
 		}
-		for(int iii = 0; iii < forcount; iii++){
-		std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
-		}
+	//	for(int iii = 0; iii < forcount; iii++){
+	//	std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
+	//	}
 		send(new_s, &stest, sizeof(uint16_t)*forcount, 0);		
 		loopcount -= forcount;		
 	}
 	
 
-	   sprintf( reply, "%s", "ffffffffffff");
-	   len = strlen( reply);
-	   send( new_s, reply, len, 0);
+//	   sprintf( reply, "%s", "fffff");
+//	   len = strlen( reply);
+//	   send( new_s, reply, len, 0);
 	return 0;
 /*
 	//uint32_t integerl[250];

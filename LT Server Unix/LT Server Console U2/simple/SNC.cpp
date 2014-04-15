@@ -145,7 +145,6 @@ int main(int argc, char *argv[])
   int s, new_s;
   int c_one = 1;
   int rc;
-//try{
   printf("Starting Server...\n");
 
   //Initialize the addres data structure
@@ -212,13 +211,10 @@ std::cout << "Starting persistent connection" << std::endl;
     	char *sendf= new char[MAX_LINE];
 	sprintf( sendf, "%c", f);
 	len = strlen( sendf);
+	sprintf( reply, "%s", "ffffffffff");
+
 	while ( len = recv(new_s, buf, sizeof(buf), 0) && new_s > 0)
 	{
-	
-		for(int kk = 0; kk < len; kk++)
-		{
-		
-		}
 //		std::cout << "Message received: \"" << buf<< "\"" << std::endl;
 //		len = recv(new_s, buf, sizeof(buf), 0);
 		fprintf(stderr, "Message received:%s \" ", buf);
@@ -227,6 +223,8 @@ std::cout << "Starting persistent connection" << std::endl;
 				std::cout << "startCollecting" << std::endl;
 //				rdtsc(&start);	
 				startCollecting(new_s);
+				std::cout << "endCollecting" << std::endl;
+				break;
 //				rdtsc(&finish);
 //				double rtime = ((double)(finish-start))/(double)250000000; 					std::cout << "scan performance:" << rtime << std::endl;
 //				double throu = (10000/2)/ (rtime*1000000); 
@@ -237,6 +235,7 @@ std::cout << "Starting persistent connection" << std::endl;
 
 				char addrloc = buf[1];
 				writeToAddr(new_s, addrloc, param, buf);
+				send( new_s, reply, strlen(reply), 0);
 		}
 		else if(buf[0] == 'r'){ 
 
@@ -244,18 +243,18 @@ std::cout << "Starting persistent connection" << std::endl;
 				int iVal, type;
 				double dVal;
 				readFromAddress(new_s, addrloc, &iVal, &dVal, &type, param);
-
+				send( new_s, reply, strlen(reply), 0);
 		}
 		else if(buf[0] == 't'){ 
 
 				std::cout << "gotRandDebug" << std::endl;
-				gotRandDebug(new_s);
-
+				//gotRandDebug(new_s);
+				send( new_s, reply, strlen(reply), 0);
 		}
 		else if(buf[0] == 'f'){ 
 				std::cout << "fileCollecting" << std::endl;
-				fileCollecting(new_s);
-
+				//fileCollecting(new_s);
+				send( new_s, reply, strlen(reply), 0);
 		}				
 		else{
 			std::cout << "no hits...What to do? \n";
@@ -263,19 +262,11 @@ std::cout << "Starting persistent connection" << std::endl;
 	std::cout << "______________________________________________________\n" << std::endl;	
 	std::cout << "waiting on client...\n" << std::endl;
     	memset(buf, 0, MAX_LINE);
- 
-//	send( new_s, sendf, len, 0);
 
-	} //end while(len>0)
+	} //end while(recv)
+	std::cout << "Closing socket" << std::endl;
     close(new_s);
   } //end while(1)p
-
-//  }//end try
-//  catch(int e) {	std::cout << "int exception...\n" << std::endl;		}
-//  catch(char e){	std::cout << "char exception...\n" << std::endl;	}
-//  catch (const std::exception& e)  {    std::cout << e.what() << std::endl;  }
-//  catch(...){	std::cout << "default exception...\n" << std::endl;	}
-
 
 }
 
