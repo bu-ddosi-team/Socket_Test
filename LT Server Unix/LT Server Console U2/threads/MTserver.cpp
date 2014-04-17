@@ -116,7 +116,7 @@ void *cHandler(void *socket_desc)
 		}
 		else if(buf[0] == 'f'){ 
 				std::cout << "fileCollecting" << std::endl;
-				DsauServer::fileCollecting(new_s);
+//				DsauServer::fileCollecting(new_s);
 				send( new_s, reply, strlen(reply), 0);
 		}				
 		else{

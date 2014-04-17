@@ -2,8 +2,9 @@
 
 CC = g++
 
+PROGS = testing
 
-all: testing
+all: $(PROGS) 
 
 testing: SNC.cpp odscpp.cpp
 	$(CC) -o $@ SNC.cpp odscpp.cpp 

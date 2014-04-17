@@ -29,26 +29,9 @@
 #define mminF 100
 #define mmaxF 100000
 //TODO: Add Gain and LaserDiode Patter.
+#define minGain 0
+#define maxGain 100000
 
-/*
-struct Control
-{
-	int nSweep; //a
-	int nStep;//b
-	int nSample;//c		
-	double dSweep;//d
-	double minF;//e
-	double maxF;//f
-
-	char *C_sweep;
-	char *C_step;
-	char *C_sample;
-	char *C_delay;
-	char *C_min;
-	char *C_max;
-		
-}; 	
-*/
 /*
 	int writeToAddr(int, char, Control, char*);
 	int gotRandDebug(int);
@@ -124,7 +107,12 @@ int DsauServer::isValid(char addrloc, int iVal, double dVal)
 		if((dVal > 0) && (dVal < mmaxF))
 		{	return 1;	}
 		else
-		{	return 0;	}	      
+		{	return 0;	}
+	      case 'g':
+		if((dVal > 0) && (dVal < maxGain))
+		{	return 1;	}
+		else
+		{	return 0;	}				      
 	      default:
 		return 0;
 	
@@ -270,7 +258,21 @@ int DsauServer::writeToAddr(int new_s, char addrloc, DsauServer& param, char *bu
 		   fprintf(stderr, "%f is %s \n",dVal, "Not a valid value for maximum frequency");	  
 		   sprintf( sendf, "%s%s", "eeeee", "Not a valid value for maximum frequency");
 		   }		 
-		  break;			  		  	
+		  break;
+		case 'g':	//maxF
+//	  	  dVal = d_getPCVal(buf);
+	  	  if(a_getPCVal(&iVal, &dVal, addrloc, buf))//isValid(addrloc, dVal))
+	  	  {  
+	  	 	param.maxF = dVal;   
+	  	 	printf("Setting gain to %f\n", dVal);
+	  	 	return 1;	  	  	  	  
+	  	  }
+		  else
+		  { 
+		   fprintf(stderr, "%f is %s \n",dVal, "Not a valid value for gain");	  
+		   sprintf( sendf, "%s%s", "eeeee", "Not a valid value for gain");
+		   }		 
+		  break;		  			  		  	
 		default:
 		  fprintf(stderr, "%s \n", "Not a valid address");
 		  sprintf( sendf, "%s%s", "eeeee", "Not a valid address");
@@ -289,6 +291,7 @@ int DsauServer::loadSavedSettings(char *fileName, DsauServer& settings){
 	char pset1[128];	char pset4[128];
 	char pset2[128];	char pset5[128];
 	char pset3[128];	char pset6[128];
+	char pset7[128];
 	fprintf(stderr, "opening %s \n", fileName);
 	std::ifstream ifile (fileName, std::ifstream::in );
 		ifile.getline(pset1, 128);
@@ -305,6 +308,7 @@ int DsauServer::loadSavedSettings(char *fileName, DsauServer& settings){
 	 settings.C_delay  = pset4;
 	 settings.C_min    = pset5;
 	 settings.C_max    = pset6;
+	 settings.C_gain   = pset7;
 	 
 	 settings.nSweep   = atoi(pset1); 
 	 settings.nStep    = atoi(pset2);
@@ -312,6 +316,7 @@ int DsauServer::loadSavedSettings(char *fileName, DsauServer& settings){
 	 settings.dSweep   = atof(pset4);
 	 settings.minF 	   = atof(pset5);
 	 settings.maxF     = atof(pset6);
+	 settings.gain     = atof(pset7);
 /*	
 	fprintf(stdout, "nsweep = %s \n", pset1);
 	fprintf(stdout, "nsweep = %s \n", pset2);
@@ -336,6 +341,7 @@ int DsauServer::saveToFile(char *fileName, DsauServer settings)
 	ofile << settings.C_delay;
 	ofile << settings.C_min;
 	ofile << settings.C_max;
+	ofile << settings.C_gain;
  	ofile.close();
  	printf("Settings Saved\n");
   return 0;
@@ -384,7 +390,13 @@ int DsauServer::readFromAddress(int new_s, char addrloc, int *iVal, double *dVal
 	  	  printf("Max Frequency is %f \n", *dVal);
 	  	  sprintf( sendf, "%c%f", 'b',*dVal);
 		  *type = 6;		 
-		  break;			  		  	
+		  break;
+		case 'g':	//gain
+	  	  *dVal = settings.gain;
+	  	  printf("Gain is %f \n", *dVal);
+	  	  sprintf( sendf, "%c%f", 'b',*dVal);
+		  *type = 6;		 
+		  break;		  			  		  	
 		default:
 		  fprintf(stderr, "%s \n", "Not a valid address");
 		  sprintf( sendf, "%s%s", "eeeee", "Not a valid address");
@@ -489,7 +501,6 @@ int DsauServer::startCollecting(int new_s)
 */
 int DsauServer::startCollecting(int new_s)
 {
-
 	char *sendbuf;// = "this is a test";
 	int fileSize;
 	char f = 'f';
@@ -499,103 +510,50 @@ int DsauServer::startCollecting(int new_s)
  	 int len;
  	 int s;
 
-  	
-//  	   std::cout << "s is hit" << std::endl;
 	   sprintf( reply, "%c", f);
 	   len = strlen( reply);
 	   send( new_s, reply, len, 0);
 	   memset(reply, 0, MAX_LINE);
-	   
-		int sendcount = 110;
-		 int my_id[100] = {0};
-		 int my_net_id[100];// = htonl(my_id);
-//		 send(new_s, (const char*)&my_net_id, 4, 0);
-		uint32_t integerl[250];
-		int16_t scl[500];
-		//int integers[200];	
-		uint16_t integers[sendcount];
-		uint32_t sendint;
-		uint16_t ca = 0;
-		uint16_t cb = 0;
-		//unsigned int ca = 0;
-		//unsigned int cb = 0;
-		int kk = 0; int down = 500;
-		for (int i = 0; i < sendcount; i++) {
+		
+	int sendcount = 800;
 	
-//		integers[0] = 0;
-//		integerl[10] = 129;//65535;
-		integers[i] = i;
-//		integers[49] = 9;
-//		integers[50] = 10;
-//		integers[51] = 11;
-//			if(i > 150) { down--; integers[i] = down; }
-			if (i%2==0) {
-//				integerl[i] = (int)(10000*(double)cos((double)(i/30)+1.6));
-//				scl[i]=(int)(10000*(double)cos((double)(i/30.0)+1.6));						
-				ca = i; //if( i == 10) { ca = 20;}
-//				integers[i] = (ca << 16 ) | cb;
-//				integers[i] = encode(ca, cb);
-				if(i != 0){
-				    //sendint = encode(ca, cb);
-				    //integerl[kk++] = sendint;
-				}
-				//integers[i] = i;
+	int i = 0; 					
+	int16_t stest[sendcount];	
+	int16_t scw[sendcount];
+	int ijk = 0;
+	int loopcount = sendcount;
+	int forcount = 100;
+	bool moreData = true;
+	while(moreData == true)
+	{	
+		if(loopcount < 100)
+		{
+		forcount = loopcount;
+		moreData = false;
+		}
+		for (i = 0; i < forcount; i++) {
+		stest[i] = ijk;
+			if (ijk%2==0) {
+				scw[i]=(int)(10000*(double)cos((double)(ijk/30.0)+1.6));						
 			}
 			else {
-//				integerl[i] =(int)(10000*(double)cos((double)(i/30)));
-//				scl[i]=(int)(10000*(double)cos((double)(i/30.0)));
-				cb = i;
-				//integers[i] = down--; down--;
+				scw[i]=(int)(10000*(double)cos((double)(ijk/30.0)));
 			}
+			ijk++;
 		}
-	//uint32_t un = htonl((int)integerl);
-//	send(new_s, &integerl, sizeof(uint16_t)*100, 0);
-
-//	for(int ii = 1; ii < 100; ii++){
-//		sendint(ii,new_s);		
-//	}
-//	uint32_t un = htonl((int)integers);
-	send(new_s, &integers, sizeof(uint16_t)*sendcount, 0);//	send(new_s, &integerl, sizeof(uint32_t)*250,0);
-//	send(new_s, &scl, sizeof(int16_t)*500, 0);
-	uint16_t n1 = 0;
-	uint16_t n2 = 0;
-	//unsigned int n1 = 0;
-	//unsigned int n2 = 0;
-	for(int ii = 0; ii < 248; ii++){
-//		send(new_s, &integers, sizeof(uint32_t)*100, 0);
-		fprintf(stderr, " number[%d]:%d \n ", ii, integers[ii]);
-//		 n1 = integers[ii] >> 16;
-//		 n2 = integers[ii] & 0xFFFF;
-//		 fprintf(stderr, "number[%d]:  Ca:%d      Cb:%d \n ",ii, n1, n2);
-		//fprintf(stderr, "int16:%d, hex check:%x    ", scl[ii], integers[ii]);
-		//n1 = decodeNum1(integerl[ii]);
-		//n2 = decodeNum2(integerl[ii]);
- 		//fprintf(stderr, "number[%d]:%d  Ca:%d      Cb:%d \n ",ii,integerl[ii], n1, n2);
-		
+		for(int iii = 0; iii < forcount; iii++){
+		std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
+		}
+	//	send(new_s, &stest, sizeof(uint16_t)*forcount, 0);
+		send(new_s, &scw, sizeof(uint16_t)*forcount, 0);		
+		loopcount -= forcount;		
 	}
-	// Write the number to the opened socket
-//	write(new_s, &converted_number, sizeof(converted_number));
 	
-////////
-	fprintf(stderr, "int:%d integers:%d\n", sizeof(uint32_t), sizeof(integers));
-//	send(new_s, &integers, sizeof(uint32_t)*200, 0);
-//	sleep(10);
-	char *sendf= new char[MAX_LINE];
-	sprintf( sendf, "%c", f);
-	len = strlen( sendf);
-//	send( new_s, sendf, len, 0);
-	uint8_t sendfchar = 102;
-	//sleep(2);
-//	for(int ii = 0; ii < 10; ii++){
-//		send( new_s, sendf, len, 0);
-//		send( new_s, &sendfchar, 1, 0);
-//	}
-	   sprintf( reply, "%c%c%c%c%c", f,f,f,f,f);
-	   len = strlen( reply);
-	   send( new_s, reply, len, 0);
+
+//	   sprintf( reply, "%s", "fffff");
+//	   len = strlen( reply);
+//	   send( new_s, reply, len, 0);
 	return 0;
-	//int numcount = 0;
-	//send(new_s, &numcount, sizeof(uint32_t), 0);	
 	
 }
 

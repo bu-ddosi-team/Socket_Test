@@ -14,44 +14,23 @@
 #include <cstdio>
 #include <time.h>
 #include <ctime>
-//#include "Control.h"
+#include "DsauServer.h"
 
 
-#define MAX_LINE 1024
-#define maxSweep 1000000
-#define minSweep 0
-#define maxStep 4000000
-#define minStep 1
-#define maxSample 6400000
-#define minSample 0
-#define maxDelay 10000
-#define minDelay 0
-#define mminF 1000000
-#define mmaxF 1000000
-//TODO: Add LaserDiode Patter.
+#define MAX_LINE	256
+#define maxSweep 100
+#define minSweep 1
+#define maxStep 400
+#define minStep 10
+#define maxSample 64000
+#define minSample 1000
+#define maxDelay 100
+#define minDelay 1
+#define mminF 100
+#define mmaxF 100000
+//TODO: Add Gain and LaserDiode Patter.
 #define minGain 0
 #define maxGain 100000
-
-struct Control
-{
-	int nSweep; //a
-	int nStep;//b
-	int nSample;//c		
-	double dSweep;//d
-	double minF;//e
-	double maxF;//f
-
-	char *C_sweep;
-	char *C_step;
-	char *C_sample;
-	char *C_delay;
-	char *C_min;
-	char *C_max;
-	
-	double gain;
-	char *C_gain;
-		
-}; 	
 
 /*
 	int writeToAddr(int, char, Control, char*);
@@ -69,15 +48,15 @@ struct Control
 
 int isValid(int addrloc, int iVal, double dVal);
 int a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf);
-int writeToAddr(int new_s, char addrloc, Control& param, char *buf);
-int loadSavedSettings(char *fileName, Control& settings);
-int saveToFile(char *fileName, Control settings);
-int readFromAddress(int new_s,char addrloc, int *iVal, double *dVal, int *type, Control& settings);
+int writeToAddr(int new_s, char addrloc, DsauServer& param, char *buf);
+int loadSavedSettings(char *fileName, DsauServer& settings);
+int saveToFile(char *fileName, DsauServer settings);
+int readFromAddress(int new_s,char addrloc, int *iVal, double *dVal, int *type, DsauServer& settings);
 int gotRandDebug(int new_s);
 int fileCollecting(int new_s);
 int startCollecting(int new_s);
-*/	/*
-Control()
+*/	
+DsauServer::DsauServer()
 {
 		int nSweep=0;		//Number of Sweeps: pointed to with addrloc 'a'
 		int nStep=0;		//Number of Steps: pointed to with addrloc 'b'
@@ -95,8 +74,7 @@ Control()
 
 
 }
-*/
-int isValid(char addrloc, int iVal, double dVal)
+int DsauServer::isValid(char addrloc, int iVal, double dVal)
 {
 	switch(addrloc)
 	{
@@ -129,19 +107,19 @@ int isValid(char addrloc, int iVal, double dVal)
 		if((dVal > 0) && (dVal < mmaxF))
 		{	return 1;	}
 		else
-		{	return 0;	}	
+		{	return 0;	}
 	      case 'g':
 		if((dVal > 0) && (dVal < maxGain))
 		{	return 1;	}
 		else
-		{	return 0;	}			      
+		{	return 0;	}				      
 	      default:
 		return 0;
 	
 	}
 }
 
-int a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf)
+int DsauServer::a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf)
 {
 	int len = strlen(buf);
 	char data[len-2];
@@ -180,15 +158,21 @@ int a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf)
 
 
 }
-
-int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
+/*
+int DsauServer::get_nSweep(int iVal)
+{
+	return this->nSweep = iVal;
+}
+void DsauServer::set_nSweep(int iVal)
+{
+	
+}
+*/
+int DsauServer::writeToAddr(int new_s, char addrloc, DsauServer& param, char *buf)
 {
 	int iVal = 0;
 	double dVal = 0;
 	char *sendf= new char[MAX_LINE];
-	   char reply[MAX_LINE];
-	   sprintf( reply, "%s", "fffff");
-	   send( new_s, reply, strlen(reply), 0);
 	switch(addrloc)
 	{
 		case 'a':	//nsweep		
@@ -202,7 +186,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  else
 		  {   
 		  fprintf(stderr, "%d is %s \n", iVal, "Not a valid value for number of Sweeps");
-		  sprintf( sendf, "%c%s", 'e', "Not a valid value for number of Sweeps");
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid value for number of Sweeps");
 		  }
 		  break;
 		case 'b':	//nstep
@@ -216,7 +200,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  else
 		  {  
 		  fprintf(stderr, "%d is %s \n", iVal, "Not a valid value for number of steps");		
-		  sprintf( sendf, "%c%s", 'e', "Not a valid value for number of Steps");  
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid value for number of Steps");  
 		  }
 		  break;	
 		case 'c':	//nSample
@@ -230,7 +214,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  else
 		  {  
 		  fprintf(stderr, "%d is %s \n",iVal,  "Not a valid value for number of samples");	  
-		  sprintf( sendf, "%c%s", 'e', "Not a valid value for number of samples");
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid value for number of samples");
 		  } 
 		  break;
 		case 'd':	//dsweeep
@@ -244,7 +228,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  else
 		  {  
 		  fprintf(stderr, "%f is %s \n", dVal, "Not a valid value for sweep delay");	 
-		  sprintf( sendf, "%c%s", 'e', "Not a valid value for Sweep delay");
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid value for Sweep delay");
 		  }
 		  break;	
 		case 'e':	//minF
@@ -258,7 +242,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  else
 		  {  
 		  fprintf(stderr, "%f is %s \n", dVal, "Not a valid value for minimum frequency");	  
-		  sprintf( sendf, "%c%s", 'e', "Not a valid value for minimum frequency");
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid value for minimum frequency");
 		  }		
 		  break;
 		case 'f':	//maxF
@@ -272,7 +256,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  else
 		  { 
 		   fprintf(stderr, "%f is %s \n",dVal, "Not a valid value for maximum frequency");	  
-		   sprintf( sendf, "%c%s", 'e', "Not a valid value for maximum frequency");
+		   sprintf( sendf, "%s%s", "eeeee", "Not a valid value for maximum frequency");
 		   }		 
 		  break;
 		case 'g':	//maxF
@@ -286,12 +270,12 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  else
 		  { 
 		   fprintf(stderr, "%f is %s \n",dVal, "Not a valid value for gain");	  
-		   sprintf( sendf, "%c%s", 'e', "Not a valid value for gain");
+		   sprintf( sendf, "%s%s", "eeeee", "Not a valid value for gain");
 		   }		 
 		  break;		  			  		  	
 		default:
 		  fprintf(stderr, "%s \n", "Not a valid address");
-		  sprintf( sendf, "%c%s ", 'e', "Not a valid address");
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid address");
 		  send( new_s, sendf, strlen( sendf), 0);		  
 		  return -1;
 	}	//include print error function for error codes
@@ -299,11 +283,10 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 	send( new_s, sendf, strlen( sendf), 0);
 //	sprintf( sendf, "%c%s ", 'e', "Not a Valid Value");
 //	send( new_s, sendf, strlen( sendf), 0);
-	send( new_s, reply, strlen(reply), 0);
  return 0;
 }
 
-int loadSavedSettings(char *fileName, Control& settings){
+int DsauServer::loadSavedSettings(char *fileName, DsauServer& settings){
 	int buf_size = 128;
 	char pset1[128];	char pset4[128];
 	char pset2[128];	char pset5[128];
@@ -317,7 +300,6 @@ int loadSavedSettings(char *fileName, Control& settings){
 		ifile.getline(pset4, 128);
 		ifile.getline(pset5, 128);
 		ifile.getline(pset6, 128);
-		ifile.getline(pset7, 128);
 	ifile.close(); 
 	
 	 settings.C_sweep  = pset1;
@@ -346,7 +328,7 @@ int loadSavedSettings(char *fileName, Control& settings){
 
 }
 
-int saveToFile(char *fileName, Control settings)
+int DsauServer::saveToFile(char *fileName, DsauServer settings)
 {
 	if(settings.C_sweep == NULL || settings.C_step == NULL || settings.C_sample == NULL || settings.C_delay == NULL || settings.C_min == NULL || settings.C_max == NULL)
 	{
@@ -366,11 +348,9 @@ int saveToFile(char *fileName, Control settings)
 
 }
 
-int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type, Control& settings){
+int DsauServer::readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type, DsauServer& settings){
 //we'll be simulating reading from the zynq with reading from a txt file. If we are using xml for settings data, we'll need to add code to handle it but it will be much more convient for accessing data.
-	   char reply[MAX_LINE];
-	   sprintf( reply, "%c", 'f');
-	   send( new_s, reply, strlen(reply), 0);
+
  	loadSavedSettings("Control_Settings.txt", settings);
 	char *sendf= new char[MAX_LINE];	
 	switch(addrloc)
@@ -416,10 +396,10 @@ int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type,
 	  	  printf("Gain is %f \n", *dVal);
 	  	  sprintf( sendf, "%c%f", 'b',*dVal);
 		  *type = 6;		 
-		  break;			  			  		
+		  break;		  			  		  	
 		default:
 		  fprintf(stderr, "%s \n", "Not a valid address");
-		  sprintf( sendf, "%c%s", 'e', "Not a valid address");
+		  sprintf( sendf, "%s%s", "eeeee", "Not a valid address");
 		  send( new_s, sendf,strlen( sendf), 0);
 		  return 0;
 	
@@ -430,18 +410,97 @@ int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type,
 	***/
 //	fprintf(stderr, "%s \n", sendf);
 	send( new_s, sendf, strlen( sendf), 0);
-	sprintf( sendf, "%s", "fffff");
+	sprintf( sendf, "%c", 'f');
+//	fprintf(stderr, "%s \n", sendf);	
 	send( new_s, sendf, strlen( sendf), 0);
-
+		
 	
 return 1;
 }
 
+int DsauServer::gotRandDebug(int new_s)
+{
+	char *sendbuf;// = "this is a test";
+	int fileSize;
+	char f = 'f';
+	char buf[MAX_LINE];
+	char reply[MAX_LINE];
+ 	int conn, line;
+ 	int len;
+ 	int s;
+  	int strSize = MAX_LINE;
+  	
+  	int rnum;
+	int mnum;
+	char mtype;
+	int setting = 10000;
 
 
-int startCollecting(int new_s)
+//	    std::cout << "w is hit" << std::endl;
+	    while ( line < 1000) {
+	      rnum = rand()%setting;
+	      mnum = rand()%1000;
+		if(mnum == 0){mtype = 'f';}
+		else if(mnum == 1){mtype = 'e';}
+		else {mtype = 'b';}
+	      ++line;
+	      sprintf( reply, "%c%d\n", mtype, rnum);
+	      len = strlen( reply);
+	      send( new_s, reply, len, 0);
+	    }
+	      sprintf( reply, "%c", f);
+	      len = strlen( reply);
+	      send( new_s, reply, len, 0);
+
+}
+
+
+/*
+int DsauServer::startCollecting(int new_s)
 {
 
+	char *sendbuf;// = "this is a test";
+	int fileSize;
+	char f = 'f';
+	char buf[MAX_LINE];
+	  char reply[MAX_LINE];
+ 	 int conn, line;
+ 	 int len;
+ 	 int s;
+
+  	
+//  	   std::cout << "s is hit" << std::endl;
+	   sprintf( reply, "%c", f);
+	   len = strlen( reply);
+	   send( new_s, reply, len, 0);
+
+		 int my_id[100] = {0};
+		 int my_net_id[100];// = htonl(my_id);
+//		 send(new_s, (const char*)&my_net_id, 4, 0);
+		int integerl[100];
+		for (int i=0; i<100; i++) {
+
+
+			if (i%2==0) {
+//				integerl[i] = (int)(10000*(double)cos((double)(i/30)+1.6));
+				integerl[i]=(int)(10000*(double)cos((double)(i/10.0)+1.57));	
+			}
+			else {
+//				integerl[i] =(int)(10000*(double)cos((double)(i/30)));
+				integerl[i]=(int)(10000*(double)cos((double)(i/10.0)));
+			}
+		}
+	//uint32_t un = htonl((int)integerl);
+	send(new_s, &integerl, sizeof(uint32_t)*100, 0);
+	char *sendf= new char[MAX_LINE];
+	sprintf( sendf, "%c", f);
+	len = strlen( sendf);
+	send( new_s, sendf, len, 0);
+
+}
+*/
+int DsauServer::startCollecting(int new_s)
+{
 	char *sendbuf;// = "this is a test";
 	int fileSize;
 	char f = 'f';
@@ -495,168 +554,10 @@ int startCollecting(int new_s)
 //	   len = strlen( reply);
 //	   send( new_s, reply, len, 0);
 	return 0;
-/*
-	//uint32_t integerl[250];
-	int16_t scl[sendcount];
-	uint16_t integers[sendcount];
-	int kk = 0;
-
-		for (i = 0; i < sendcount; i++) {
-		integers[i] = i;
-			if (i%2==0) {
-//				integerl[i] = (int)(10000*(double)cos((double)(i/30)+1.6));
-				scl[i]=(int)(10000*(double)cos((double)(i/30.0)+1.6));						
-			}
-			else {
-//				integerl[i] =(int)(10000*(double)cos((double)(i/30)));
-				scl[i]=(int)(10000*(double)cos((double)(i/30.0)));
-			}
-		}
-
-//	send(new_s, &integers, sizeof(uint16_t)*sendcount, 0);//	send(new_s, &integerl, sizeof(uint32_t)*250,0);
-//	send(new_s, &scl, sizeof(int16_t)*sendcount, 0);
-//	send(new_s, &integers, sizeof(uint32_t)*200, 0);
-*/
-
+	
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-int gotRandDebug(int new_s)
-{
-	char *sendbuf;// = "this is a test";
-	int fileSize;
-	char f = 'f';
-	char buf[MAX_LINE];
-	char reply[MAX_LINE];
- 	int conn, line;
- 	int len;
- 	int s;
-  	int strSize = MAX_LINE;
-  	
-  	int rnum;
-	int mnum;
-	char mtype;
-	int setting = 10000;
-
-
-//	    std::cout << "w is hit" << std::endl;
-	    while ( line < 1000) {
-	      rnum = rand()%setting;
-	      mnum = rand()%1000;
-		if(mnum == 0){mtype = 'f';}
-		else if(mnum == 1){mtype = 'e';}
-		else {mtype = 'b';}
-	      ++line;
-	      sprintf( reply, "%c%d\n", mtype, rnum);
-	      len = strlen( reply);
-	      send( new_s, reply, len, 0);
-	    }
-	      sprintf( reply, "%c", f);
-	      len = strlen( reply);
-	      send( new_s, reply, len, 0);
-
-}
-
-
-
-
-
-int sendint(int num, int fd)
-{
-    int32_t conv = htonl(num);
-    char *data = (char*)&conv;
-    int left = sizeof(conv);
-    int rc;
-//    std::ofstream ofile ("testingBinarySend.txt", std::ofstream::out | std::ios::binary);
-    while (left) {
-        rc = write(fd, data + sizeof(conv) - left, left);
-        if (rc < 0) return -1;
-        left -= rc;
-    }
-//    ofile.write(&conv, left);
-//    ofile.close();
-    return 0;
-}
-int receive(int *num, int fd)
-{
-    int32_t ret;
-    char *data = (char*)&ret;
-    int left = sizeof(ret);
-    int rc;
-    while (left) {
-        ret = read(fd, data + sizeof(ret) - left, left);
-        if (ret < 0) return -1;
-        left -= ret;
-    }
-    *num = ret;
-    return 0;
-}
-
-uint32_t encode(uint16_t numA, uint16_t numB) {
-    uint32_t result = numA << 16 | numB;
-    return  result;
-}
-
-uint16_t decodeNum1(uint32_t num) {
-    return (num >> 16) & 0xFFFF;
-}
-
-uint16_t decodeNum2(uint32_t num) {
-    return (num) & 0xFFFF;
-}
-int fileCollecting(int new_s)
+int DsauServer::fileCollecting(int new_s)
 {
 
 	char *sendbuf;// = "this is a test";
@@ -693,27 +594,30 @@ int fileCollecting(int new_s)
 	std::cout << "Closing file" << std::endl;
 }
 
+
 /////////////////////////////////////////////////////////////////////////////////////
 //Deprecrated?
 
-int isValid(char addrloc, int iVal){
+int DsauServer::isValid(char addrloc, int iVal){
 //check nsweep, nstep, nsample
 //define ranges, but later move them to correct area.
-
+#define mSweep 100
+#define mStep 400
+#define mSample 64000
 	switch(addrloc)
 	{
 	      case 'a':
-		if((iVal > 0) && (iVal < maxSweep))
+		if((iVal > 0) && (iVal < mSweep))
 		{	return 1;	}
 		else
 		{	return 0;	}
 	      case 'b':
-		if((iVal > 0) && (iVal < maxStep))
+		if((iVal > 0) && (iVal < mStep))
 		{	return 1;	}
 		else
 		{	return 0;	}	      
 	      case 'c':
-		if((iVal > 0) && (iVal < maxSample))
+		if((iVal > 0) && (iVal < mSample))
 		{	return 1;	}
 		else
 		{	return 0;	}	      
@@ -723,15 +627,17 @@ int isValid(char addrloc, int iVal){
 	}
 	return 0;
 }
-double isValid(char addrloc, double dVal){
+double DsauServer::isValid(char addrloc, double dVal){
 //check delay, minf, maxf
 //define ranges, but later move them to correct area.
-
+#define mDelay 1
+#define mminF 100
+#define mmaxF 100000
 
 	switch(addrloc)
 	{
 	      case 'd':
-		if((dVal > 0) && (dVal < maxDelay))
+		if((dVal > 0) && (dVal < mDelay))
 		{	return 1;	}
 		else
 		{	return 0;	}
@@ -744,13 +650,7 @@ double isValid(char addrloc, double dVal){
 		if((dVal > 0) && (dVal < mmaxF))
 		{	return 1;	}
 		else
-		{	return 0;	}
-	      case 'g':
-		if((dVal > 0) && (dVal < maxGain))
-		{	return 1;	}
-		else
-		{	return 0;	}
-			      			      
+		{	return 0;	}	      
 	      default:
 		return 0;
 	
@@ -758,7 +658,7 @@ double isValid(char addrloc, double dVal){
 	return 0;
 
 }
-double d_getPCVal( char *buf){
+double DsauServer::d_getPCVal( char *buf){
 	int len = strlen(buf);
 	char data[len-2];
 	std::string buffer(buf);
@@ -771,7 +671,7 @@ double d_getPCVal( char *buf){
 	return pval;
 }
 
-int i_getPCVal( char *buf){
+int DsauServer::i_getPCVal( char *buf){
 	int len = strlen(buf);
 	char data[len-2];
 	std::string buffer(buf);

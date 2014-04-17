@@ -71,34 +71,9 @@ extern int startCollecting(int new_s);
 //#define rdtsc(x)      __asm__ __volatile__("rdtsc \n\t" : "=A" (*(x)))
 unsigned long long start, finish;
 //
-//DsauServer Dsau;
+
 Control param; 
 //
-/*
-void debuggingalone()
-{
-  int ival, type;
-  double dval;
-  
-  char test[] = "sd.13.s0";
-  printf("Starting test...%s\n",test);
-//  double test1 = i_getPCVal(test);
-  if(writeToAddr(1, test[1], param, test))
-  {
-     printf("Write Successful... " );
-    fprintf(stderr,"addr val at '%c' = %d\n",test[1], param.nSweep);
-  }
-  else
-  {
-    printf("Write Failed \n" );
-  }
-
- 
-  printf("----------------------------------------\n");
-  readFromAddress(1, test[1], &ival, &dval, &type, param);
-
-}
-*/
 int S_Handler(int new_s, char *buf){
 	int status, len;			     
 	pid_t pid = fork();
