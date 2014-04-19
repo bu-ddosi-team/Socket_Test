@@ -197,6 +197,7 @@ std::cout << "Starting persistent connection" << std::endl;
 //			S_Handler(new_s, buf);
 				std::cout << "startCollecting" << std::endl;
 //				rdtsc(&start);	
+				
 				startCollecting(new_s);
 				std::cout << "endCollecting" << std::endl;
 				break;
@@ -224,12 +225,12 @@ std::cout << "Starting persistent connection" << std::endl;
 
 				std::cout << "gotRandDebug" << std::endl;
 				//gotRandDebug(new_s);
-				send( new_s, reply, strlen(reply), 0);
+//				send( new_s, reply, strlen(reply), 0);
 		}
 		else if(buf[0] == 'f'){ 
 				std::cout << "fileCollecting" << std::endl;
 				//fileCollecting(new_s);
-				send( new_s, reply, strlen(reply), 0);
+//				send( new_s, reply, strlen(reply), 0);
 		}				
 		else{
 			std::cout << "no hits...What to do? \n";

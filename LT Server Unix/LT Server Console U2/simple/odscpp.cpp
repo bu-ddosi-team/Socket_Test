@@ -188,7 +188,7 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 	char *sendf= new char[MAX_LINE];
 	   char reply[MAX_LINE];
 	   sprintf( reply, "%s", "fffff");
-	   send( new_s, reply, strlen(reply), 0);
+//	   send( new_s, reply, strlen(reply), 0);
 	switch(addrloc)
 	{
 		case 'a':	//nsweep		
@@ -296,10 +296,10 @@ int writeToAddr(int new_s, char addrloc, Control& param, char *buf)
 		  return -1;
 	}	//include print error function for error codes
 
-	send( new_s, sendf, strlen( sendf), 0);
+	//send( new_s, sendf, strlen( sendf), 0);
 //	sprintf( sendf, "%c%s ", 'e', "Not a Valid Value");
 //	send( new_s, sendf, strlen( sendf), 0);
-	send( new_s, reply, strlen(reply), 0);
+	//send( new_s, reply, strlen(reply), 0);
  return 0;
 }
 
@@ -370,7 +370,7 @@ int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type,
 //we'll be simulating reading from the zynq with reading from a txt file. If we are using xml for settings data, we'll need to add code to handle it but it will be much more convient for accessing data.
 	   char reply[MAX_LINE];
 	   sprintf( reply, "%c", 'f');
-	   send( new_s, reply, strlen(reply), 0);
+//	   send( new_s, reply, strlen(reply), 0);
  	loadSavedSettings("Control_Settings.txt", settings);
 	char *sendf= new char[MAX_LINE];	
 	switch(addrloc)
@@ -429,9 +429,9 @@ int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type,
 	//Server code to send back response? or do something else?
 	***/
 //	fprintf(stderr, "%s \n", sendf);
-	send( new_s, sendf, strlen( sendf), 0);
+//	send( new_s, sendf, strlen( sendf), 0);
 	sprintf( sendf, "%s", "fffff");
-	send( new_s, sendf, strlen( sendf), 0);
+//	send( new_s, sendf, strlen( sendf), 0);
 
 	
 return 1;
@@ -450,13 +450,8 @@ int startCollecting(int new_s)
  	 int conn, line;
  	 int len;
  	 int s;
-
-	   sprintf( reply, "%c", f);
-	   len = strlen( reply);
-	   send( new_s, reply, len, 0);
-	   memset(reply, 0, MAX_LINE);
 		
-	int sendcount = 800;
+	int sendcount = 200;
 	
 	int i = 0; 					
 	int16_t stest[sendcount];	
@@ -465,6 +460,14 @@ int startCollecting(int new_s)
 	int loopcount = sendcount;
 	int forcount = 100;
 	bool moreData = true;
+	char bittest[7] = {0};
+		  char btest[7] = {0};
+			  int16_t bd1 = 0;
+			  int16_t bd2 = 0;
+			  int16_t bd3 = 0;
+			  int16_t bd4 = 0;
+
+			  
 	while(moreData == true)
 	{	
 		if(loopcount < 100)
@@ -474,6 +477,24 @@ int startCollecting(int new_s)
 		}
 		for (i = 0; i < forcount; i++) {
 		stest[i] = ijk;
+		bittest[0] = '1'; bittest[1] = '1'; bittest[2] = '1'; bittest[3] = '1'; bittest[4] = '1'; bittest[5] = '1'; bittest[6] = '1';
+		int tmp = 0;
+		char *bittest1 = "ffffffffffffff";
+       		 std::sscanf(bittest1, "%2x",&tmp); bittest[0] = tmp; std::cout << ((int)bittest[0]) << "  ";
+       		 std::sscanf(bittest1+2, "%2x",&tmp);bittest[1] = tmp;std::cout << ((int)bittest[1]) << "  ";
+       		 std::sscanf(bittest1+4, "%2x",&tmp);bittest[2] = tmp;std::cout << ((int)bittest[2]) << "  ";
+       		 std::sscanf(bittest1+6, "%2x",&tmp);bittest[3] = tmp;std::cout << ((int)bittest[3]) << "  ";
+       		 std::sscanf(bittest1+8, "%2x",&tmp);bittest[4] = tmp;std::cout << ((int)bittest[4]) << "  ";
+       		 std::sscanf(bittest1+10, "%2x",&tmp);bittest[5] = tmp;std::cout << ((int)bittest[5]) << "  ";
+       		 std::sscanf(bittest1+12, "%2x",&tmp);bittest[6] = tmp;std::cout << ((int)bittest[6]) << "  ";
+    	 
+		bd1 = *bittest >> 42; std::cout << ((int)bd1) << "____";
+		  bd2 = *bittest << 14; bd2 = bd2 >> 42; std::cout << ((int)bd2) << "____";
+		  bd3 = *bittest << 28; bd3 = bd3 >> 42; std::cout << ((int)bd3) << "____";
+		  bd4 = *bittest << 42; bd4 = bd4 >> 42; std::cout << ((int)bd4) << "____" << std::endl;
+		  
+	//	  std::cout << ((int)bd1) << "____" << ((int)bd2)<< "__" << ((int)bd3) << "____" << ((int)bd4)  <<  std::endl;
+		send(new_s, &bittest, sizeof(char)*7, 0);		
 			if (ijk%2==0) {
 				scw[i]=(int)(10000*(double)cos((double)(ijk/30.0)+1.6));						
 			}
@@ -482,11 +503,12 @@ int startCollecting(int new_s)
 			}
 			ijk++;
 		}
-		for(int iii = 0; iii < forcount; iii++){
-		std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
-		}
+	//	for(int iii = 0; iii < forcount; iii++){
+	//	std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
+	//	}
 	//	send(new_s, &stest, sizeof(uint16_t)*forcount, 0);
-		send(new_s, &scw, sizeof(uint16_t)*forcount, 0);		
+	//	send(new_s, &scw, sizeof(uint16_t)*forcount, 0);
+
 		loopcount -= forcount;		
 	}
 	
@@ -517,7 +539,6 @@ int startCollecting(int new_s)
 //	send(new_s, &scl, sizeof(int16_t)*sendcount, 0);
 //	send(new_s, &integers, sizeof(uint32_t)*200, 0);
 */
-
 }
 
 
@@ -626,8 +647,8 @@ int sendint(int num, int fd)
         left -= rc;
     }
 //    ofile.write(&conv, left);
-//    ofile.close();
     return 0;
+//    ofile.close();
 }
 int receive(int *num, int fd)
 {

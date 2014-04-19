@@ -392,7 +392,7 @@ int DsauServer::readFromAddress(int new_s, char addrloc, int *iVal, double *dVal
 		  *type = 6;		 
 		  break;
 		case 'g':	//gain
-	  	  *dVal = settings.maxF;
+	  	  *dVal = settings.gain;
 	  	  printf("Gain is %f \n", *dVal);
 	  	  sprintf( sendf, "%c%f", 'b',*dVal);
 		  *type = 6;		 
@@ -510,11 +510,6 @@ int DsauServer::startCollecting(int new_s)
  	 int len;
  	 int s;
 
-	   sprintf( reply, "%c", f);
-	   len = strlen( reply);
-	   send( new_s, reply, len, 0);
-	   memset(reply, 0, MAX_LINE);
-		
 	int sendcount = 800;
 	
 	int i = 0; 					
@@ -541,11 +536,11 @@ int DsauServer::startCollecting(int new_s)
 			}
 			ijk++;
 		}
-		for(int iii = 0; iii < forcount; iii++){
-		std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
-		}
-	//	send(new_s, &stest, sizeof(uint16_t)*forcount, 0);
-		send(new_s, &scw, sizeof(uint16_t)*forcount, 0);		
+	//	for(int iii = 0; iii < forcount; iii++){
+	//	std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
+	//	}
+		send(new_s, &stest, sizeof(uint16_t)*forcount, 0);
+	//	send(new_s, &scw, sizeof(uint16_t)*forcount, 0);		
 		loopcount -= forcount;		
 	}
 	

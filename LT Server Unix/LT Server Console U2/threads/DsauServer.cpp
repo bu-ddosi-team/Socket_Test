@@ -542,7 +542,7 @@ int DsauServer::startCollecting(int new_s)
 			ijk++;
 		}
 		for(int iii = 0; iii < forcount; iii++){
-		std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
+//		std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
 		}
 	//	send(new_s, &stest, sizeof(uint16_t)*forcount, 0);
 		send(new_s, &scw, sizeof(uint16_t)*forcount, 0);		
