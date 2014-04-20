@@ -70,6 +70,8 @@ extern int startCollecting(int new_s);
 
 //#define rdtsc(x)      __asm__ __volatile__("rdtsc \n\t" : "=A" (*(x)))
 unsigned long long start, finish;
+unsigned long long beg, end;
+
 //
 
 Control param; 
@@ -200,11 +202,12 @@ std::cout << "Starting persistent connection" << std::endl;
 				
 				startCollecting(new_s);
 				std::cout << "endCollecting" << std::endl;
-				break;
+				
 //				rdtsc(&finish);
 //				double rtime = ((double)(finish-start))/(double)250000000; 					std::cout << "scan performance:" << rtime << std::endl;
 //				double throu = (10000/2)/ (rtime*1000000); 
 //				std:: cout << "speed estimation:" << throu << std::endl;
+				break;
 		}
 
 		else if(buf[0] == 'w'){ 

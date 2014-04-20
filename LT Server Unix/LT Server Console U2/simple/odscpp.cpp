@@ -451,7 +451,7 @@ int startCollecting(int new_s)
  	 int len;
  	 int s;
 		
-	int sendcount = 200;
+	int sendcount = 1500000;
 	
 	int i = 0; 					
 	int16_t stest[sendcount];	
@@ -477,24 +477,26 @@ int startCollecting(int new_s)
 		}
 		for (i = 0; i < forcount; i++) {
 		stest[i] = ijk;
-		bittest[0] = '1'; bittest[1] = '1'; bittest[2] = '1'; bittest[3] = '1'; bittest[4] = '1'; bittest[5] = '1'; bittest[6] = '1';
+/*		bittest[0] = '1'; bittest[1] = '1'; bittest[2] = '1'; bittest[3] = '1'; bittest[4] = '1'; bittest[5] = '1'; bittest[6] = '1';
 		int tmp = 0;
-		char *bittest1 = "ffffffffffffff";
+		char *bittest1 = "000000000000ff";
        		 std::sscanf(bittest1, "%2x",&tmp); bittest[0] = tmp; std::cout << ((int)bittest[0]) << "  ";
        		 std::sscanf(bittest1+2, "%2x",&tmp);bittest[1] = tmp;std::cout << ((int)bittest[1]) << "  ";
        		 std::sscanf(bittest1+4, "%2x",&tmp);bittest[2] = tmp;std::cout << ((int)bittest[2]) << "  ";
        		 std::sscanf(bittest1+6, "%2x",&tmp);bittest[3] = tmp;std::cout << ((int)bittest[3]) << "  ";
        		 std::sscanf(bittest1+8, "%2x",&tmp);bittest[4] = tmp;std::cout << ((int)bittest[4]) << "  ";
        		 std::sscanf(bittest1+10, "%2x",&tmp);bittest[5] = tmp;std::cout << ((int)bittest[5]) << "  ";
-       		 std::sscanf(bittest1+12, "%2x",&tmp);bittest[6] = tmp;std::cout << ((int)bittest[6]) << "  ";
+       		 std::sscanf(bittest1+12, "%2x",&tmp);bittest[6] = tmp;std::cout << ((int)bittest[6]) << "           ";
     	 
-		bd1 = *bittest >> 42; std::cout << ((int)bd1) << "____";
-		  bd2 = *bittest << 14; bd2 = bd2 >> 42; std::cout << ((int)bd2) << "____";
-		  bd3 = *bittest << 28; bd3 = bd3 >> 42; std::cout << ((int)bd3) << "____";
-		  bd4 = *bittest << 42; bd4 = bd4 >> 42; std::cout << ((int)bd4) << "____" << std::endl;
+	//	bd1 = *bittest >> 42; std::cout << ((int)bd1) << "____";
+	//	  bd2 = *bittest << 14; bd2 = bd2 >> 42; std::cout << ((int)bd2) << "____";
+	//	  bd3 = *bittest << 28; bd3 = bd3 >> 42; std::cout << ((int)bd3) << "____";
+	//	  bd4 = *bittest << 42; bd4 = bd4 >> 42; std::cout << ((int)bd4) << "____" << std::endl;
+		  bd4 = *bittest;  std::cout << ((int)bd4) << "____" << std::endl;		  
 		  
 	//	  std::cout << ((int)bd1) << "____" << ((int)bd2)<< "__" << ((int)bd3) << "____" << ((int)bd4)  <<  std::endl;
-		send(new_s, &bittest, sizeof(char)*7, 0);		
+		send(new_s, &bittest, sizeof(char)*7, 0);
+		*/		
 			if (ijk%2==0) {
 				scw[i]=(int)(10000*(double)cos((double)(ijk/30.0)+1.6));						
 			}
@@ -506,8 +508,8 @@ int startCollecting(int new_s)
 	//	for(int iii = 0; iii < forcount; iii++){
 	//	std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
 	//	}
-	//	send(new_s, &stest, sizeof(uint16_t)*forcount, 0);
-	//	send(new_s, &scw, sizeof(uint16_t)*forcount, 0);
+		send(new_s, &stest, sizeof(uint16_t)*forcount, 0);
+		send(new_s, &scw, sizeof(uint16_t)*forcount, 0);
 
 		loopcount -= forcount;		
 	}

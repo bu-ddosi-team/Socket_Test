@@ -160,8 +160,15 @@ std::cout << "Starting persistent connection" << std::endl;
 		fprintf(stderr, "Message received:%s \" ", buf);
 		if(buf[0] == 's'){ 
 			std::cout << "startCollecting" << std::endl;
+//			rdtsc(&start);	
 			DsauServer::startCollecting(new_s);
+////			rdtsc(&finish);
+//			double rtime = ((double)(finish-start))/(double)250000000; 
+//			std::cout << "scan performance:" << rtime << std::endl;
+			std::cout << "collector done" << std::endl;
+			 break;
 			send( new_s, reply, strlen(reply), 0);
+
 		}
 		else if(buf[0] == 'w'){ 
 
@@ -205,7 +212,7 @@ int S_Handler(int new_s, char *buf){
 	if(pid == 0){
 		std::cout << "startCollecting" << std::endl;
 //		rdtsc(&start);	
-		DsauServer::startCollecting(new_s);
+//		DsauServer::startCollecting(new_s);
 //		rdtsc(&finish);
 //		double rtime = ((double)(finish-start))/(double)250000000; 
 //		std::cout << "scan performance:" << rtime << std::endl;

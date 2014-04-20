@@ -510,7 +510,7 @@ int DsauServer::startCollecting(int new_s)
  	 int len;
  	 int s;
 
-	int sendcount = 800;
+	int sendcount = 1024000;
 	
 	int i = 0; 					
 	int16_t stest[sendcount];	
@@ -519,6 +519,7 @@ int DsauServer::startCollecting(int new_s)
 	int loopcount = sendcount;
 	int forcount = 100;
 	bool moreData = true;
+	
 	while(moreData == true)
 	{	
 		if(loopcount < 100)
@@ -540,10 +541,21 @@ int DsauServer::startCollecting(int new_s)
 	//	std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
 	//	}
 		send(new_s, &stest, sizeof(uint16_t)*forcount, 0);
-	//	send(new_s, &scw, sizeof(uint16_t)*forcount, 0);		
+		send(new_s, &scw, sizeof(uint16_t)*forcount, 0);	
+		send(new_s, &stest, sizeof(uint16_t)*forcount, 0);	
 		loopcount -= forcount;		
 	}
 	
+	/*
+	int numSteps = 300;
+	
+	for (int step = 0; step < numSteps*100; step++) {
+		for (int iii=0; iii<4096; iii++) {
+		stest[iii] = ijk++;
+		}	
+		send(new_s, &stest, sizeof(uint16_t)*4096, 0);
+	}
+	*/
 
 //	   sprintf( reply, "%s", "fffff");
 //	   len = strlen( reply);
