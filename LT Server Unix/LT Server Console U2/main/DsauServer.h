@@ -27,13 +27,6 @@ class DsauServer{
 	static	int saveToFile(char *fileName, DsauServer settings);
 
 
-
-		//gotRandDebug tells the server to send to the client a string of random numbers with randomized response message types for each random number sent. (currently uses only f, b, and e.
-	static	int gotRandDebug(int new_s);
-		
-		//fileCollecting reads in a specified file and sends it to the client.
-	static	int fileCollecting(int new_s);
-		
 		//startCollecting calculates sin and cos values and sends it to the client. This is to simulate getting data from the board.		
 	static	int startCollecting(int new_s);
 		

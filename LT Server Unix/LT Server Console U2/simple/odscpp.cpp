@@ -451,7 +451,7 @@ int startCollecting(int new_s)
  	 int len;
  	 int s;
 		
-	int sendcount = 1500000;
+	int sendcount = 1024;
 	
 	int i = 0; 					
 	int16_t stest[sendcount];	
@@ -459,15 +459,7 @@ int startCollecting(int new_s)
 	int ijk = 0;
 	int loopcount = sendcount;
 	int forcount = 100;
-	bool moreData = true;
-	char bittest[7] = {0};
-		  char btest[7] = {0};
-			  int16_t bd1 = 0;
-			  int16_t bd2 = 0;
-			  int16_t bd3 = 0;
-			  int16_t bd4 = 0;
-
-			  
+	bool moreData = true;			  
 	while(moreData == true)
 	{	
 		if(loopcount < 100)
@@ -476,27 +468,7 @@ int startCollecting(int new_s)
 		moreData = false;
 		}
 		for (i = 0; i < forcount; i++) {
-		stest[i] = ijk;
-/*		bittest[0] = '1'; bittest[1] = '1'; bittest[2] = '1'; bittest[3] = '1'; bittest[4] = '1'; bittest[5] = '1'; bittest[6] = '1';
-		int tmp = 0;
-		char *bittest1 = "000000000000ff";
-       		 std::sscanf(bittest1, "%2x",&tmp); bittest[0] = tmp; std::cout << ((int)bittest[0]) << "  ";
-       		 std::sscanf(bittest1+2, "%2x",&tmp);bittest[1] = tmp;std::cout << ((int)bittest[1]) << "  ";
-       		 std::sscanf(bittest1+4, "%2x",&tmp);bittest[2] = tmp;std::cout << ((int)bittest[2]) << "  ";
-       		 std::sscanf(bittest1+6, "%2x",&tmp);bittest[3] = tmp;std::cout << ((int)bittest[3]) << "  ";
-       		 std::sscanf(bittest1+8, "%2x",&tmp);bittest[4] = tmp;std::cout << ((int)bittest[4]) << "  ";
-       		 std::sscanf(bittest1+10, "%2x",&tmp);bittest[5] = tmp;std::cout << ((int)bittest[5]) << "  ";
-       		 std::sscanf(bittest1+12, "%2x",&tmp);bittest[6] = tmp;std::cout << ((int)bittest[6]) << "           ";
-    	 
-	//	bd1 = *bittest >> 42; std::cout << ((int)bd1) << "____";
-	//	  bd2 = *bittest << 14; bd2 = bd2 >> 42; std::cout << ((int)bd2) << "____";
-	//	  bd3 = *bittest << 28; bd3 = bd3 >> 42; std::cout << ((int)bd3) << "____";
-	//	  bd4 = *bittest << 42; bd4 = bd4 >> 42; std::cout << ((int)bd4) << "____" << std::endl;
-		  bd4 = *bittest;  std::cout << ((int)bd4) << "____" << std::endl;		  
-		  
-	//	  std::cout << ((int)bd1) << "____" << ((int)bd2)<< "__" << ((int)bd3) << "____" << ((int)bd4)  <<  std::endl;
-		send(new_s, &bittest, sizeof(char)*7, 0);
-		*/		
+		stest[i] = ijk;				
 			if (ijk%2==0) {
 				scw[i]=(int)(10000*(double)cos((double)(ijk/30.0)+1.6));						
 			}
@@ -508,7 +480,7 @@ int startCollecting(int new_s)
 	//	for(int iii = 0; iii < forcount; iii++){
 	//	std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
 	//	}
-		send(new_s, &stest, sizeof(uint16_t)*forcount, 0);
+	//	send(new_s, &stest, sizeof(uint16_t)*forcount, 0);
 		send(new_s, &scw, sizeof(uint16_t)*forcount, 0);
 
 		loopcount -= forcount;		
@@ -563,158 +535,6 @@ int startCollecting(int new_s)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-int gotRandDebug(int new_s)
-{
-	char *sendbuf;// = "this is a test";
-	int fileSize;
-	char f = 'f';
-	char buf[MAX_LINE];
-	char reply[MAX_LINE];
- 	int conn, line;
- 	int len;
- 	int s;
-  	int strSize = MAX_LINE;
-  	
-  	int rnum;
-	int mnum;
-	char mtype;
-	int setting = 10000;
-
-
-//	    std::cout << "w is hit" << std::endl;
-	    while ( line < 1000) {
-	      rnum = rand()%setting;
-	      mnum = rand()%1000;
-		if(mnum == 0){mtype = 'f';}
-		else if(mnum == 1){mtype = 'e';}
-		else {mtype = 'b';}
-	      ++line;
-	      sprintf( reply, "%c%d\n", mtype, rnum);
-	      len = strlen( reply);
-	      send( new_s, reply, len, 0);
-	    }
-	      sprintf( reply, "%c", f);
-	      len = strlen( reply);
-	      send( new_s, reply, len, 0);
-
-}
-
-
-
-
-
-int sendint(int num, int fd)
-{
-    int32_t conv = htonl(num);
-    char *data = (char*)&conv;
-    int left = sizeof(conv);
-    int rc;
-//    std::ofstream ofile ("testingBinarySend.txt", std::ofstream::out | std::ios::binary);
-    while (left) {
-        rc = write(fd, data + sizeof(conv) - left, left);
-        if (rc < 0) return -1;
-        left -= rc;
-    }
-//    ofile.write(&conv, left);
-    return 0;
-//    ofile.close();
-}
-int receive(int *num, int fd)
-{
-    int32_t ret;
-    char *data = (char*)&ret;
-    int left = sizeof(ret);
-    int rc;
-    while (left) {
-        ret = read(fd, data + sizeof(ret) - left, left);
-        if (ret < 0) return -1;
-        left -= ret;
-    }
-    *num = ret;
-    return 0;
-}
-
-uint32_t encode(uint16_t numA, uint16_t numB) {
-    uint32_t result = numA << 16 | numB;
-    return  result;
-}
-
-uint16_t decodeNum1(uint32_t num) {
-    return (num >> 16) & 0xFFFF;
-}
-
-uint16_t decodeNum2(uint32_t num) {
-    return (num) & 0xFFFF;
-}
-int fileCollecting(int new_s)
-{
-
-	char *sendbuf;// = "this is a test";
-	int fileSize;
-	char f = 'f';
-	char buf[MAX_LINE];
-	char reply[MAX_LINE];
- 	int conn, line;
- 	int len;
- 	int s;
-
-
- // 	   std::cout << "s is hit" << std::endl;
-	   sprintf( reply, "%c", f);
-	   len = strlen( reply);
-	   send( new_s, reply, len, 0);
-	   std::ifstream file ("sincoswaves.txt", std::ifstream::in | std::ios::binary);
-	   while (!file.eof())
-		  {
-			  sendbuf = new char[MAX_LINE];
-			 
-			  file.read(sendbuf, MAX_LINE);
-			  int sss = send( new_s, sendbuf, len, 0);
-
-				std::cout << sendbuf<< std::endl;
-
-			      char *sendf= new char[MAX_LINE];
-			      sprintf( sendf, "%c", f);
-			      len = strlen( sendf);
-			      send( new_s, sendf, len, 0);
-
-		  }
-	file.close();
-	std::cout << "Closing file" << std::endl;
-}
 
 /////////////////////////////////////////////////////////////////////////////////////
 //Deprecrated?

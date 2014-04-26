@@ -64,8 +64,6 @@ extern int a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf);
 extern int loadSavedSettings(char *fileName, Control& settings);
 extern int saveToFile(char *fileName, Control settings);
 extern int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type, Control& settings);
-extern int gotRandDebug(int new_s);
-extern int fileCollecting(int new_s);
 extern int startCollecting(int new_s);
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -183,13 +181,7 @@ std::cout << "Starting persistent connection" << std::endl;
 				DsauServer::readFromAddress(new_s, addrloc, &iVal, &dVal, &type, param);
 				send( new_s, reply, strlen(reply), 0);
 
-		}
-		else if(buf[0] == 'f'){ 
-
-				std::cout << "fileCollecting" << std::endl;
-	//			DsauServer::fileCollecting(new_s);
-				send( new_s, reply, strlen(reply), 0);
-		}				
+		}			
 		else{
 			std::cout << "no hits...What to do? \n";
 		}
@@ -295,60 +287,4 @@ int R_Handler(int new_s, char *buf){
 		}
 	}
 }
-
-int T_Handler(int new_s, char *buf){
-	int status, len;
-	pid_t pid = fork();
-	if(pid == 0){
-		std::cout << "gotRandDebug" << std::endl;
-		DsauServer::gotRandDebug(new_s);
-		std::cout << "Terminating child writeToAddr" << std::endl;
-		_exit(0);
-	}
-	else{
-		std::cout << "parent gotRandDebug" << std::endl;
-		pid_t pid2 = fork();
-		if(pid2 == 0){
-			len = recv(new_s, buf, sizeof(buf), 0);
-			if(buf[0] == 'c'){
-				std::cout << "Killing gotRandDebug" << std::endl;
-				kill(pid,SIGTERM);
-			} 
-		}
-		waitpid(pid, &status, WNOHANG);
-		if(WIFEXITED(status)){
-			std::cout << "killing gotRandDebug killer" << std::endl;
-			kill(pid2,SIGTERM);
-		}	
-	}
-}
-
-int F_Handler(int new_s, char *buf){
-	int status, len;
-	pid_t pid = fork();
-	if(pid == 0){
-		std::cout << "fileCollecting" << std::endl;
-		DsauServer::fileCollecting(new_s);
-		std::cout << "Terminating child file collector" << std::endl;
-		_exit(0);
-	}
-	else{
-		std::cout << "parent file collector" << std::endl;
-		pid_t pid2 = fork();
-		if(pid2 == 0){
-			len = recv(new_s, buf, sizeof(buf), 0);
-			if(buf[0] == 'c'){
-				std::cout << "Killing file collector" << std::endl;
-				kill(pid,SIGTERM);
-			} 
-		}
-		waitpid(pid, &status, WNOHANG);
-		if(WIFEXITED(status)){
-			std::cout << "Killing fileCollector killer" << std::endl;
-			kill(pid2,SIGTERM);
-		}
-	}
-
-}
-
 

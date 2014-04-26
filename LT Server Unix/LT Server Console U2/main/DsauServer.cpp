@@ -418,87 +418,6 @@ int DsauServer::readFromAddress(int new_s, char addrloc, int *iVal, double *dVal
 return 1;
 }
 
-int DsauServer::gotRandDebug(int new_s)
-{
-	char *sendbuf;// = "this is a test";
-	int fileSize;
-	char f = 'f';
-	char buf[MAX_LINE];
-	char reply[MAX_LINE];
- 	int conn, line;
- 	int len;
- 	int s;
-  	int strSize = MAX_LINE;
-  	
-  	int rnum;
-	int mnum;
-	char mtype;
-	int setting = 10000;
-
-
-//	    std::cout << "w is hit" << std::endl;
-	    while ( line < 1000) {
-	      rnum = rand()%setting;
-	      mnum = rand()%1000;
-		if(mnum == 0){mtype = 'f';}
-		else if(mnum == 1){mtype = 'e';}
-		else {mtype = 'b';}
-	      ++line;
-	      sprintf( reply, "%c%d\n", mtype, rnum);
-	      len = strlen( reply);
-	      send( new_s, reply, len, 0);
-	    }
-	      sprintf( reply, "%c", f);
-	      len = strlen( reply);
-	      send( new_s, reply, len, 0);
-
-}
-
-
-/*
-int DsauServer::startCollecting(int new_s)
-{
-
-	char *sendbuf;// = "this is a test";
-	int fileSize;
-	char f = 'f';
-	char buf[MAX_LINE];
-	  char reply[MAX_LINE];
- 	 int conn, line;
- 	 int len;
- 	 int s;
-
-  	
-//  	   std::cout << "s is hit" << std::endl;
-	   sprintf( reply, "%c", f);
-	   len = strlen( reply);
-	   send( new_s, reply, len, 0);
-
-		 int my_id[100] = {0};
-		 int my_net_id[100];// = htonl(my_id);
-//		 send(new_s, (const char*)&my_net_id, 4, 0);
-		int integerl[100];
-		for (int i=0; i<100; i++) {
-
-
-			if (i%2==0) {
-//				integerl[i] = (int)(10000*(double)cos((double)(i/30)+1.6));
-				integerl[i]=(int)(10000*(double)cos((double)(i/10.0)+1.57));	
-			}
-			else {
-//				integerl[i] =(int)(10000*(double)cos((double)(i/30)));
-				integerl[i]=(int)(10000*(double)cos((double)(i/10.0)));
-			}
-		}
-	//uint32_t un = htonl((int)integerl);
-	send(new_s, &integerl, sizeof(uint32_t)*100, 0);
-	char *sendf= new char[MAX_LINE];
-	sprintf( sendf, "%c", f);
-	len = strlen( sendf);
-	send( new_s, sendf, len, 0);
-
-}
-*/
 int DsauServer::startCollecting(int new_s)
 {
 	char *sendbuf;// = "this is a test";
@@ -510,7 +429,7 @@ int DsauServer::startCollecting(int new_s)
  	 int len;
  	 int s;
 
-	int sendcount = 1024000;
+	int sendcount = 10240;
 	
 	int i = 0; 					
 	int16_t stest[sendcount];	
@@ -540,9 +459,9 @@ int DsauServer::startCollecting(int new_s)
 	//	for(int iii = 0; iii < forcount; iii++){
 	//	std::cout <<stest[iii]<<"  "<<forcount<<"  "<<loopcount<<std::endl;
 	//	}
-		send(new_s, &stest, sizeof(uint16_t)*forcount, 0);
+	//	send(new_s, &stest, sizeof(uint16_t)*forcount, 0);
 		send(new_s, &scw, sizeof(uint16_t)*forcount, 0);	
-		send(new_s, &stest, sizeof(uint16_t)*forcount, 0);	
+	//	send(new_s, &stest, sizeof(uint16_t)*forcount, 0);	
 		loopcount -= forcount;		
 	}
 	
@@ -562,43 +481,6 @@ int DsauServer::startCollecting(int new_s)
 //	   send( new_s, reply, len, 0);
 	return 0;
 	
-}
-
-int DsauServer::fileCollecting(int new_s)
-{
-
-	char *sendbuf;// = "this is a test";
-	int fileSize;
-	char f = 'f';
-	char buf[MAX_LINE];
-	char reply[MAX_LINE];
- 	int conn, line;
- 	int len;
- 	int s;
-
-
- // 	   std::cout << "s is hit" << std::endl;
-	   sprintf( reply, "%c", f);
-	   len = strlen( reply);
-	   send( new_s, reply, len, 0);
-	   std::ifstream file ("sincoswaves.txt", std::ifstream::in | std::ios::binary);
-	   while (!file.eof())
-		  {
-			  sendbuf = new char[MAX_LINE];
-			 
-			  file.read(sendbuf, MAX_LINE);
-			  int sss = send( new_s, sendbuf, len, 0);
-
-				std::cout << sendbuf<< std::endl;
-
-			      char *sendf= new char[MAX_LINE];
-			      sprintf( sendf, "%c", f);
-			      len = strlen( sendf);
-			      send( new_s, sendf, len, 0);
-
-		  }
-	file.close();
-	std::cout << "Closing file" << std::endl;
 }
 
 

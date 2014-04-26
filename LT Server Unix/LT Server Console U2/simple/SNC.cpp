@@ -63,8 +63,6 @@ extern int a_getPCVal(int *iVal, double *dVal, char addrloc, char *buf);
 extern int loadSavedSettings(char *fileName, Control& settings);
 extern int saveToFile(char *fileName, Control settings);
 extern int readFromAddress(int new_s, char addrloc, int *iVal, double *dVal, int *type, Control& settings);
-extern int gotRandDebug(int new_s);
-extern int fileCollecting(int new_s);
 extern int startCollecting(int new_s);
 //////////////////////////////////////////////////////////////////////////////////
 
@@ -161,9 +159,11 @@ int main(int argc, char *argv[])
     if ((new_s = accept(s, (struct sockaddr *)&sin, (socklen_t*)&len)) < 0) {
       fprintf(stderr, "%s: accept - %s\n",
 	      argv[0], strerror(errno));
-      exit(1);
+      fprintf(stderr, "%s: Connection Failed - %s\n");
+//      exit(1);
     }
-
+    else
+    {
     printf("New connection on fd:%d\n",new_s);
     ++conn;
     line = 0;
@@ -189,12 +189,17 @@ std::cout << "Starting persistent connection" << std::endl;
 	sprintf( sendf, "%c", f);
 	len = strlen( sendf);
 	sprintf( reply, "%s", "ffffffffff");
-
+	   
+        int argc = 0; int kk = 0;
+        char *token;
+        char **args;
+        char *buf9;		
+        std::cout << "NOT FAULT";
 	while ( len = recv(new_s, buf, sizeof(buf), 0) && new_s > 0)
 	{
-//		std::cout << "Message received: \"" << buf<< "\"" << std::endl;
-//		len = recv(new_s, buf, sizeof(buf), 0);
-		fprintf(stderr, "Message received:%s \" ", buf);
+
+	for( kk = 0; kk < argc; kk++)	
+	{	
 		if(buf[0] == 's'){ 
 //			S_Handler(new_s, buf);
 				std::cout << "startCollecting" << std::endl;
@@ -213,7 +218,7 @@ std::cout << "Starting persistent connection" << std::endl;
 		else if(buf[0] == 'w'){ 
 
 				char addrloc = buf[1];
-				writeToAddr(new_s, addrloc, param, buf);
+				writeToAddr(new_s, addrloc, param, buf9);
 				send( new_s, reply, strlen(reply), 0);
 		}
 		else if(buf[0] == 'r'){ 
@@ -223,21 +228,11 @@ std::cout << "Starting persistent connection" << std::endl;
 				double dVal;
 				readFromAddress(new_s, addrloc, &iVal, &dVal, &type, param);
 				send( new_s, reply, strlen(reply), 0);
-		}
-		else if(buf[0] == 't'){ 
-
-				std::cout << "gotRandDebug" << std::endl;
-				//gotRandDebug(new_s);
-//				send( new_s, reply, strlen(reply), 0);
-		}
-		else if(buf[0] == 'f'){ 
-				std::cout << "fileCollecting" << std::endl;
-				//fileCollecting(new_s);
-//				send( new_s, reply, strlen(reply), 0);
-		}				
+		}			
 		else{
 			std::cout << "no hits...What to do? \n";
 		}
+	}
 	std::cout << "______________________________________________________\n" << std::endl;	
 	std::cout << "waiting on client...\n" << std::endl;
     	memset(buf, 0, MAX_LINE);
@@ -245,6 +240,7 @@ std::cout << "Starting persistent connection" << std::endl;
 	} //end while(recv)
 	std::cout << "Closing socket" << std::endl;
     close(new_s);
+    }//end accept else
   } //end while(1)p
 
 }
