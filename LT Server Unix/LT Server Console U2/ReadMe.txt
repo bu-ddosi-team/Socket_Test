@@ -12,10 +12,7 @@ MTserver.cpp      -- Multithreaded version of TheMainServer.cpp (less complete).
 Makefile          -- Use this to check dependancies or to automatically build the relevant libraries and programs.
 
 Building the Server:-----------------------------------------------------------------
-Type make in current directory to build server files. 
-Type ./test or sh server.sh to run the main server.
-Type ./otest to run the simple server.
-Type ./mtest to run the multithreaded server.
+Type make in the simple directory to build server files. 
 
 
 -------------------------------------------------------------------------------------
@@ -116,10 +113,6 @@ int startCollecting(int new_s);-------------------------------------------------
 	startCollecting calculates sin and cos values and sends it to the client. This is to simulate getting data from the board.
 int gotRandDebug(int new_s);---------------------------------------------------------
 
-	gotRandDebug tells the server to send to the client a string of random numbers with randomized response message types for each random number sent. (currently uses only f, b, and e. I should probably include every possible character for full testing).
-
-int fileCollecting(int new_s);-------------------------------------------------------
-	fileCollecting reads in a specified file and sends it to the client.
 
 
 
